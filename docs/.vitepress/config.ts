@@ -1,64 +1,80 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  title: 'Adopt Agentic',
-  description: 'A practical guide to adopting agentic AI workflows',
-
-  // GitHub Pages deploys to https://<user>.github.io/<repo>/
-  // Update <user> to your GitHub username
   base: '/adopt-agentic/',
-
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/adopt-agentic/logo.svg' }],
   ],
 
+  title: 'Adopt Agentic',
+  description: '采用 Agentic AI 工作流的实用教程',
+
+  locales: {
+    root: {
+      label: '中文',
+      lang: 'zh-CN',
+      description: '采用 Agentic AI 工作流的实用教程',
+      themeConfig: {
+        nav: [
+          { text: '首页', link: '/' },
+          { text: '教程', link: '/guide/' },
+        ],
+        sidebar: {
+          '/guide/': [
+            { text: '介绍', link: '/guide/' },
+            { text: '上下文 — 第一原则', link: '/guide/context' },
+            { text: 'Agent、用户与 LLM API', link: '/guide/actors' },
+            { text: 'System Instructions', link: '/guide/system-instructions' },
+            { text: '内置工具', link: '/guide/built-in-tools' },
+            { text: 'MCP — 外部能力扩展', link: '/guide/mcp' },
+            { text: 'Slash Commands', link: '/guide/commands' },
+            { text: 'Skills — 领域知识模块', link: '/guide/skills' },
+            { text: 'Eval / 验证 / 可观测性', link: '/guide/eval' },
+            { text: 'Sub Agent — 上下文隔离', link: '/guide/sub-agents' },
+            { text: '术语表', link: '/guide/glossary' },
+          ],
+        },
+      },
+    },
+    en: {
+      label: 'English',
+      lang: 'en',
+      link: '/en/',
+      description: 'A practical guide to adopting agentic AI workflows',
+      themeConfig: {
+        nav: [
+          { text: 'Home', link: '/en/' },
+          { text: 'Guide', link: '/en/guide/' },
+        ],
+        sidebar: {
+          '/en/guide/': [
+            { text: 'Introduction', link: '/en/guide/' },
+            { text: 'Context — The First Principle', link: '/en/guide/context' },
+            { text: 'Agents Users & LLM APIs', link: '/en/guide/actors' },
+            { text: 'System Instructions', link: '/en/guide/system-instructions' },
+            { text: 'Built-in Tools', link: '/en/guide/built-in-tools' },
+            { text: 'MCP — External Capabilities', link: '/en/guide/mcp' },
+            { text: 'Slash Commands', link: '/en/guide/commands' },
+            { text: 'Skills — Domain Modules', link: '/en/guide/skills' },
+            { text: 'Eval / Verification / Observability', link: '/en/guide/eval' },
+            { text: 'Sub Agents — Context Isolation', link: '/en/guide/sub-agents' },
+            { text: 'Glossary', link: '/en/guide/glossary' },
+          ],
+        },
+      },
+    },
+  },
+
   themeConfig: {
     logo: '/logo.svg',
-
-    nav: [
-      { text: 'Home', link: '/' },
-      { text: 'Guide', link: '/guide/' },
-    ],
-
-    sidebar: {
-      '/guide/': [
-        {
-          text: 'Getting Started',
-          items: [
-            { text: 'Introduction', link: '/guide/' },
-            { text: 'Why Agentic?', link: '/guide/why-agentic' },
-            { text: 'Prerequisites', link: '/guide/prerequisites' },
-          ],
-        },
-        {
-          text: 'Core Concepts',
-          items: [
-            { text: 'Agentic Workflows', link: '/guide/agentic-workflows' },
-            { text: 'Tool Use & Function Calling', link: '/guide/tool-use' },
-            { text: 'Prompt Engineering', link: '/guide/prompt-engineering' },
-          ],
-        },
-        {
-          text: 'Hands-On',
-          items: [
-            { text: 'Your First Agent', link: '/guide/first-agent' },
-            { text: 'Multi-Agent Systems', link: '/guide/multi-agent' },
-            { text: 'Best Practices', link: '/guide/best-practices' },
-          ],
-        },
-      ],
-    },
-
-    socialLinks: [
-      { icon: 'github', link: 'https://github.com/anthropics/adopt-agentic' },
-    ],
-
-    footer: {
-      message: 'Released under the MIT License.',
-    },
+    // socialLinks removed (old link was invalid)
 
     search: {
       provider: 'local',
+    },
+
+    footer: {
+      message: 'Released under the MIT License.',
     },
   },
 })
