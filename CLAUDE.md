@@ -16,24 +16,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 docs/                       # VitePress 内容根目录
 ├── .vitepress/config.ts    # 站点配置：i18n locales、双语 sidebar/nav、搜索
 ├── index.md                # 中文首页（layout: home）
-├── guide/                  # 中文教程（10 个概念节点 + 术语表）
-│   ├── index.md            # 介绍
-│   ├── context.md          # 上下文 — 第一原则
-│   ├── actors.md           # Agent、用户与 LLM API
-│   ├── system-instructions.md  # System Instructions
-│   ├── built-in-tools.md   # 内置工具
-│   ├── mcp.md              # MCP — 外部能力扩展
-│   ├── commands.md         # Slash Commands
-│   ├── skills.md           # Skills — 领域知识模块
-│   ├── eval.md             # Eval / 验证 / 可观测性
-│   ├── sub-agents.md       # Sub Agent — 上下文隔离
+├── guide/                  # 中文教程（概念节点 + 术语表）
+│   ├── index.md ~ sub-agents.md  # 各概念节点页面
 │   └── glossary.md         # 术语表
-├── en/                     # 英文版（i18n 子目录）
+├── en/                     # 英文版（i18n 子目录，Phase 2 翻译）
 │   ├── index.md            # 英文首页
-│   └── guide/              # 英文教程（占位，Phase 2 翻译）
-│       ├── index.md ~ sub-agents.md  # 同结构 10 个占位页
-│       └── glossary.md     # 英文术语表
+│   └── guide/              # 英文教程占位页
 └── public/logo.svg         # 静态资源
+
+materials/                  # 行业洞见与研究素材（不发布到站点）
+└── industry-insights/      # 语义化分层
+    ├── README.md           # 结构索引
+    ├── global/             # 全球基础 + 工具/框架/治理
+    ├── china/              # 中国市场与实践者
+    ├── synthesis/          # 共识映射与节点交叉索引
+    └── archive-full.md     # 完整归档
+
+.sisyphus/drafts/           # 设计文档与草稿（agent 工作区）
+├── phase1-content-structure.md  # Phase 1 骨架设计文档
+└── ...
 ```
 
 ## 命令
@@ -89,6 +90,60 @@ VitePress 在大多数场景会自动拼接 `base` 前缀。
 ### 首次部署设置
 
 GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（不是 "Deploy from a branch"）。
+
+## 内容设计原则
+
+本站的内容策略经过系统化的 brainstorming 和行业素材审计确立。以下原则指导所有内容决策。
+
+### 读者定位
+
+- **用 agent tool 的人**，不是造 agent 的人。读者是开发者，使用 Claude Code、Cursor、Windsurf 等工具，想理解底层机制以用得更好。
+- **不造框架**：不教 LangChain / LangGraph / CrewAI 等框架实现。
+
+### Agent Agnostic 原则
+
+- 所有概念使用**通用术语**，不绑任何特定 agent 产品。
+- 举例可以多元（各种工具都可以提），但不能让某个产品成为主角。
+- 不分 persona、不分市场——讲通用概念，不区分谁在读。
+
+### 内容选择标准（"它山之石可以攻玉"）
+
+从"造 agent"的行业知识中，筛选出对"用 agent tool 的人"有价值的心智模型。筛选标准：
+
+1. **翻译得过来吗？** — 这个概念能否从框架实现视角翻译成工具使用者视角？
+2. **用户直接受益吗？** — 理解这个概念后，用户能更好地使用工具吗？
+3. **工具无关吗？** — 这个概念放到任何 agent tool 上都成立吗？
+
+通过筛选的概念进骨架；通不过的留在 `materials/` 作为参考素材。
+
+### Scope 边界
+
+| In scope | Out of scope |
+|----------|-------------|
+| 概念、心智模型、通用原则 | 特定框架实现（LangChain 等） |
+| 对使用者有直接价值的知识 | 成本/性能预算 |
+| Agent agnostic 的机制解释 | 特定工具操作手册 |
+
+轻提即可不展开的：工具信任边界/安全、prompt 作为可维护资产。
+
+### 骨架主线
+
+**上下文流动**——每个节点都显式关联回"上下文"这条主线。结构分三段：
+
+```
+基础概念 → 上下文的载体（从静态到动态）→ 串联与进阶
+```
+
+骨架详见 `.sisyphus/drafts/phase1-content-structure.md`。
+
+### 文件约定
+
+| 路径 | 用途 | 谁动 |
+|------|------|------|
+| `docs/guide/*.md` | 发布到站点的教程正文 | agent 填充内容 |
+| `materials/` | 行业洞见研究素材（不发布） | agent 可读可写 |
+| `.sisyphus/drafts/` | 设计文档与工作草稿 | agent 工作区 |
+| `.sisyphus/drafts/draft-ideas.md` | 用户私有构想 | **禁止 agent 修改** |
 
 ## 已知问题 / TODO
 

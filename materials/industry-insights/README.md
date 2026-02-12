@@ -11,6 +11,7 @@
 | --- | --- | --- |
 | 全球基础层 | [`global/foundations-core-voices.md`](./global/foundations-core-voices.md) | 思想起点与产品方向（Yegge/Karpathy/Fowler/Anthropic/OpenAI 等） |
 | 全球工程层 | [`global/tooling-frameworks-research-governance.md`](./global/tooling-frameworks-research-governance.md) | 工具作者、框架方法、评测与治理（G-L 主体） |
+| 全球工程层 | [`global/multi-agent-peer-messaging-analysis.md`](./global/multi-agent-peer-messaging-analysis.md) | Multi-Agent Peer-to-Peer Messaging 竞品分析（Agent Teams vs 全行业） |
 | 中国市场层 | [`china/market-platforms-and-practitioners.md`](./china/market-platforms-and-practitioners.md) | 企业落地约束、平台官方证据、人物向样本 |
 | 综合索引层 | [`synthesis/consensus-node-map.md`](./synthesis/consensus-node-map.md) | 跨源共识 + 节点映射 + 中国素材映射 |
 | 完整归档层 | [`archive-full.md`](./archive-full.md) | 原始 1311 行全文，供逐段核对与追溯 |
@@ -40,6 +41,7 @@
 | --- | --- |
 | 2026-02-12 | 从超长单文件拆分到 materials；建立逻辑分层结构（global/china/synthesis/archive） |
 | 2026-02-12 | 补齐中国人物向样本与平台官方一手证据 |
+| 2026-02-12 | 新增 Multi-Agent Peer-to-Peer Messaging 竞品分析（global/） |
 
 ---
 
