@@ -32,9 +32,14 @@ materials/                  # 行业洞见与研究素材（不发布到站点�
     ├── synthesis/          # 共识映射与节点交叉索引
     └── archive-full.md     # 完整归档
 
-.sisyphus/drafts/           # 设计文档与草稿（agent 工作区）
-├── phase1-content-structure.md  # Phase 1 骨架设计文档
-└── ...
+.sisyphus/                  # Agent 工作区（选择性 git track）
+├── plans/                  # 设计计划（git tracked）
+│   └── phase1-content-structure.md  # 骨架唯一真相来源
+├── drafts/                 # 设计草稿（git tracked，.claude/ 除外）
+│   ├── draft-ideas.md      # 用户私有构想（禁止 agent 修改）
+│   └── ...
+├── notepads/               # Agent 临时工作记录（gitignored）
+└── boulder.json            # 运行时状态（gitignored）
 ```
 
 ## 命令
@@ -134,7 +139,52 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
 基础概念 → 上下文的载体（从静态到动态）→ 串联与进阶
 ```
 
-骨架详见 `.sisyphus/drafts/phase1-content-structure.md`。
+骨架详见 `.sisyphus/plans/phase1-content-structure.md`。
+
+### 骨架状态
+
+**已锁定**。14 个概念节点 + 术语表，不再增减节点。完整序列：
+
+```
+━━ 基础概念 ━━
+ 0  介绍页
+ 1  上下文 — 第一原则                    [+ State & Memory]
+ 2  三角关系 + Agent Loop                [+ 怎么给 agent 下任务]
+━━ 上下文的载体（从静态到动态）━━
+ 3  System Instructions                  [+ Prompt 是资产]
+ 4  内置工具                              [+ 信任边界]
+ 5  MCP                                  [+ 信任边界]
+ 6  Slash Commands
+ 7  Skills
+━━ 串联与进阶 ━━
+ 8  知识喂养
+ 9  编排模式
+10  Sub Agent — 上下文隔离
+11  Eval / 验证 / 可观测性               [+ 可靠性]
+12  Human-in-the-loop                    [+ 认知债务]
+13  Peer-to-Peer Agents                  ← frontier
+```
+
+### 内容决策（已确认，不可违反）
+
+| 决策 | 结论 |
+|------|------|
+| 练习 / checklist / decision tree | **不做**。纯概念教程，不附可执行件 |
+| 工具适配附录 / 对照页 | **不做**。保持纯 agent-agnostic，不做 Cursor/Claude Code/Copilot 对照 |
+| 双语策略 | **同步更新**。中英文每个节点同时填充，不接受英文滞后 |
+| 站点页面引用 materials/ | **禁止**。站点页面不引用 materials/ 内部路径 |
+
+### 内容填充时可借鉴的竞品素材
+
+以下来自竞品调研，Phase 2 填充时融入，不改骨架：
+
+| 借鉴点 | 融入位置 | 力度 |
+|--------|---------|------|
+| "上下文即资产"叙事 | 节点 1 或 8 | 正常融入 |
+| "AI context is like milk"类比 | 节点 1 | 正常融入 |
+| amplifier 心智模型（agents 放大已有模式） | 适当位置 | **极轻** |
+| agent-friendly code 概念 | 节点 3 或 8 | 提一嘴 |
+| llms.txt 作为知识注入方式 | 节点 8 | 提一嘴 |
 
 ### 文件约定
 
@@ -142,8 +192,11 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
 |------|------|------|
 | `docs/guide/*.md` | 发布到站点的教程正文 | agent 填充内容 |
 | `materials/` | 行业洞见研究素材（不发布） | agent 可读可写 |
-| `.sisyphus/drafts/` | 设计文档与工作草稿 | agent 工作区 |
+| `.sisyphus/plans/` | 设计计划（git tracked） | agent 工作区 |
+| `.sisyphus/drafts/` | 设计草稿（git tracked） | agent 工作区 |
 | `.sisyphus/drafts/draft-ideas.md` | 用户私有构想 | **禁止 agent 修改** |
+| `.sisyphus/notepads/` | 临时工作记录（gitignored） | agent 临时用 |
+| `.sisyphus/boulder.json` | 运行时状态（gitignored） | 自动生成 |
 
 ## 已知问题 / TODO
 

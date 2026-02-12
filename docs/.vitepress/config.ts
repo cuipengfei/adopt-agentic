@@ -54,7 +54,7 @@ export default defineConfig({
           '/en/guide/': [
             { text: 'Introduction', link: '/en/guide/' },
             { text: 'Context — The First Principle', link: '/en/guide/context' },
-            { text: 'Agents Users & LLM APIs', link: '/en/guide/actors' },
+            { text: 'Agents, Users & LLM APIs', link: '/en/guide/actors' },
             { text: 'System Instructions', link: '/en/guide/system-instructions' },
             { text: 'Built-in Tools', link: '/en/guide/built-in-tools' },
             { text: 'MCP — External Capabilities', link: '/en/guide/mcp' },
