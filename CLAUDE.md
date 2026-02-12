@@ -14,20 +14,26 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```
 docs/                       # VitePress 内容根目录
-├── .vitepress/config.ts    # 站点配置：导航、侧边栏、base 路径、搜索
-├── index.md                # 首页（layout: home，hero + features）
-├── guide/                  # 教程章节（9 个 markdown 页面）
+├── .vitepress/config.ts    # 站点配置：i18n locales、双语 sidebar/nav、搜索
+├── index.md                # 中文首页（layout: home）
+├── guide/                  # 中文教程（10 个概念节点 + 术语表）
 │   ├── index.md            # 介绍
-│   ├── why-agentic.md      # Getting Started 分组
-│   ├── prerequisites.md
-│   ├── agentic-workflows.md  # Core Concepts 分组
-│   ├── tool-use.md
-│   ├── prompt-engineering.md
-│   ├── first-agent.md      # Hands-On 分组
-│   ├── multi-agent.md
-│   └── best-practices.md
-└── public/logo.svg         # 静态资源（站点根路径提供）
-.github/workflows/deploy.yml  # CI：构建 + 部署到 GitHub Pages
+│   ├── context.md          # 上下文 — 第一原则
+│   ├── actors.md           # Agent、用户与 LLM API
+│   ├── system-instructions.md  # System Instructions
+│   ├── built-in-tools.md   # 内置工具
+│   ├── mcp.md              # MCP — 外部能力扩展
+│   ├── commands.md         # Slash Commands
+│   ├── skills.md           # Skills — 领域知识模块
+│   ├── eval.md             # Eval / 验证 / 可观测性
+│   ├── sub-agents.md       # Sub Agent — 上下文隔离
+│   └── glossary.md         # 术语表
+├── en/                     # 英文版（i18n 子目录）
+│   ├── index.md            # 英文首页
+│   └── guide/              # 英文教程（占位，Phase 2 翻译）
+│       ├── index.md ~ sub-agents.md  # 同结构 10 个占位页
+│       └── glossary.md     # 英文术语表
+└── public/logo.svg         # 静态资源
 ```
 
 ## 命令
@@ -43,9 +49,9 @@ bun run docs:preview        # 本地预览生产构建
 
 ### 添加新页面
 
-1. 创建 `docs/guide/new-page.md`
-2. 在 `docs/.vitepress/config.ts` 的 `sidebar` 中添加条目
-3. 侧边栏使用按路径前缀分组的对象格式：
+1. 中文：创建 `docs/guide/new-page.md`；英文：创建 `docs/en/guide/new-page.md`
+2. 在 `docs/.vitepress/config.ts` 的对应 locale 下配置 sidebar（例如 `locales['/'].themeConfig.sidebar`、`locales['/en/'].themeConfig.sidebar`）
+3. 侧边栏仍使用按路径前缀分组的对象格式：
 
 ```ts
 sidebar: {
@@ -86,9 +92,8 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
 
 ## 已知问题 / TODO
 
-- `socialLinks` 和首页 hero action 指向 `anthropics/adopt-agentic` — 需更新为实际仓库 URL
 - `themeConfig.logo` 用 `/logo.svg`，但 `head` favicon 用 `/adopt-agentic/logo.svg` — 写法不一致（因 VitePress base 处理两者都能工作，但应统一）
-- 所有教程页面目前是占位内容（"_Content coming soon._"）
+- 所有教程页面目前是骨架大纲（Phase 2 填充内容）
 
 ## 反模式（本项目禁止）
 
