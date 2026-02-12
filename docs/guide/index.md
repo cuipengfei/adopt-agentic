@@ -1,19 +1,17 @@
-# Introduction
+# 介绍
 
-Welcome to **Adopt Agentic** — a practical guide to adopting agentic AI workflows.
+> **上下文视角**：一切皆上下文 — 这是理解 agentic AI 工作流的第一原则。
 
-::: tip What you'll learn
-How to move from simple prompt-response interactions to autonomous AI agents that plan, use tools, and iterate on their work.
-:::
+## 本教程是什么、适合谁
+<!-- TODO(Phase2): 内容填充 -->
 
-## What is Agentic AI?
+## 核心命题：一切皆上下文
+<!-- TODO(Phase2): 内容填充 -->
 
-_Content coming soon._
+## Agent 行动循环
+<!-- TODO(Phase2): Intent → Policy → Actions → Observations → Update → Iterate -->
 
-## Who is this for?
+## 节点导航
+<!-- TODO(Phase2): 10 个节点的链接列表 -->
 
-_Content coming soon._
-
-## How to use this guide
-
-_Content coming soon._
+<!-- TODO(Phase2): 详细内容、示例、图表 -->
