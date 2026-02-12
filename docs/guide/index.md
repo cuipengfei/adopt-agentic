@@ -12,6 +12,6 @@
 <!-- TODO(Phase2): Intent → Policy → Actions → Observations → Update → Iterate -->
 
 ## 节点导航
-<!-- TODO(Phase2): 13 个节点的链接列表 -->
+<!-- TODO(Phase2): 14 个节点的链接列表 -->
 
 <!-- TODO(Phase2): 详细内容、示例、图表 -->
