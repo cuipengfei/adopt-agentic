@@ -98,7 +98,26 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
 
 ## 内容设计原则
 
-本站的内容策略经过系统化的 brainstorming 和行业素材审计确立。以下原则指导所有内容决策。
+### 写作风格
+
+**十人混血儿** — Martin Fowler 的深度、Elon Musk 的锐利、Paul Graham 的常识感、Julia Evans 的可视化直觉、Derek Sivers 的节奏、Joel Spolsky 的幽默，再加上阮一峰的信息密度、陈皓的技术狠劲、张小龙的克制极简、李笑来的落地能力——全融合在一个人身上。
+
+这娃写东西会是什么样：
+
+| 从谁那继承       | 表现形式                               |
+| ---------------- | -------------------------------------- |
+| **Fowler**       | 概念挖得深，但不炫技                   |
+| **Musk**         | 一刀切开废话，直奔本质                 |
+| **Graham**       | 把复杂讲得像常识，读者觉得"我本就该懂" |
+| **Julia Evans**  | 具体例子先行，抽象靠边                 |
+| **Derek Sivers** | 一句话一段，呼吸感                     |
+| **Joel Spolsky** | 技术硬核，但不端着                     |
+| **阮一峰**       | 每周五的信息密度，长文也能一口气读完   |
+| **陈皓**         | 技术观点狠，不妥协，不留情面           |
+| **张小龙**       | 极简克制，"用完即走"，不拖泥带水       |
+| **李笑来**       | 抽象概念落地到可操作，读完能动手       |
+
+**一句话自检**：这句话如果删掉，读者会损失什么？没损失就删。
 
 ### 读者定位
 
@@ -123,11 +142,11 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
 
 ### Scope 边界
 
-| In scope | Out of scope |
-|----------|-------------|
-| 概念、心智模型、通用原则 | 特定框架实现（LangChain 等） |
-| 对使用者有直接价值的知识 | 成本/性能预算 |
-| Agent agnostic 的机制解释 | 特定工具操作手册 |
+| In scope                  | Out of scope                 |
+| ------------------------- | ---------------------------- |
+| 概念、心智模型、通用原则  | 特定框架实现（LangChain 等） |
+| 对使用者有直接价值的知识  | 成本/性能预算                |
+| Agent agnostic 的机制解释 | 特定工具操作手册             |
 
 轻提即可不展开的：工具信任边界/安全、prompt 作为可维护资产。
 
@@ -167,36 +186,36 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
 
 ### 内容决策（已确认，不可违反）
 
-| 决策 | 结论 |
-|------|------|
-| 练习 / checklist / decision tree | **不做**。纯概念教程，不附可执行件 |
-| 工具适配附录 / 对照页 | **不做**。保持纯 agent-agnostic，不做 Cursor/Claude Code/Copilot 对照 |
-| 双语策略 | **同步更新**。中英文每个节点同时填充，不接受英文滞后 |
-| 站点页面引用 materials/ | **禁止**。站点页面不引用 materials/ 内部路径 |
+| 决策                             | 结论                                                                  |
+| -------------------------------- | --------------------------------------------------------------------- |
+| 练习 / checklist / decision tree | **不做**。纯概念教程，不附可执行件                                    |
+| 工具适配附录 / 对照页            | **不做**。保持纯 agent-agnostic，不做 Cursor/Claude Code/Copilot 对照 |
+| 双语策略                         | **同步更新**。中英文每个节点同时填充，不接受英文滞后                  |
+| 站点页面引用 materials/          | **禁止**。站点页面不引用 materials/ 内部路径                          |
 
 ### 内容填充时可借鉴的竞品素材
 
 以下来自竞品调研，Phase 2 填充时融入，不改骨架：
 
-| 借鉴点 | 融入位置 | 力度 |
-|--------|---------|------|
-| "上下文即资产"叙事 | 节点 1 或 8 | 正常融入 |
-| "AI context is like milk"类比 | 节点 1 | 正常融入 |
-| amplifier 心智模型（agents 放大已有模式） | 适当位置 | **极轻** |
-| agent-friendly code 概念 | 节点 3 或 8 | 提一嘴 |
-| llms.txt 作为知识注入方式 | 节点 8 | 提一嘴 |
+| 借鉴点                                    | 融入位置    | 力度     |
+| ----------------------------------------- | ----------- | -------- |
+| "上下文即资产"叙事                        | 节点 1 或 8 | 正常融入 |
+| "AI context is like milk"类比             | 节点 1      | 正常融入 |
+| amplifier 心智模型（agents 放大已有模式） | 适当位置    | **极轻** |
+| agent-friendly code 概念                  | 节点 3 或 8 | 提一嘴   |
+| llms.txt 作为知识注入方式                 | 节点 8      | 提一嘴   |
 
 ### 文件约定
 
-| 路径 | 用途 | 谁动 |
-|------|------|------|
-| `docs/guide/*.md` | 发布到站点的教程正文 | agent 填充内容 |
-| `materials/` | 行业洞见研究素材（不发布） | agent 可读可写 |
-| `.sisyphus/plans/` | 设计计划（git tracked） | agent 工作区 |
-| `.sisyphus/drafts/` | 设计草稿（git tracked） | agent 工作区 |
-| `.sisyphus/drafts/draft-ideas.md` | 用户私有构想 | **禁止 agent 修改** |
-| `.sisyphus/notepads/` | 临时工作记录（gitignored） | agent 临时用 |
-| `.sisyphus/boulder.json` | 运行时状态（gitignored） | 自动生成 |
+| 路径                              | 用途                       | 谁动                |
+| --------------------------------- | -------------------------- | ------------------- |
+| `docs/guide/*.md`                 | 发布到站点的教程正文       | agent 填充内容      |
+| `materials/`                      | 行业洞见研究素材（不发布） | agent 可读可写      |
+| `.sisyphus/plans/`                | 设计计划（git tracked）    | agent 工作区        |
+| `.sisyphus/drafts/`               | 设计草稿（git tracked）    | agent 工作区        |
+| `.sisyphus/drafts/draft-ideas.md` | 用户私有构想               | **禁止 agent 修改** |
+| `.sisyphus/notepads/`             | 临时工作记录（gitignored） | agent 临时用        |
+| `.sisyphus/boulder.json`          | 运行时状态（gitignored）   | 自动生成            |
 
 ## 已知问题 / TODO
 
