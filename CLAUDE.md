@@ -119,6 +119,10 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
 
 **一句话自检**：这句话如果删掉，读者会损失什么？没损失就删。
 
+### 技术解释模式
+
+**用 HTTP 请求/响应来解释概念。** 读者是开发者——用 `→ REQUEST（agent → LLM API）` 和 `← RESPONSE（LLM API → agent，SSE 流）` 的方式展示 agent 和 LLM 之间的交互。让抽象概念落地到可感知的技术机制。所有涉及 agent-LLM 通信的节点内容都应遵循此模式。
+
 ### 读者定位
 
 - **用 agent tool 的人**，不是造 agent 的人。读者是开发者，使用 Claude Code、Cursor、Windsurf 等工具，想理解底层机制以用得更好。
@@ -162,7 +166,7 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
 
 ### 骨架状态
 
-**已锁定**。14 个概念节点 + 术语表，不再增减节点。完整序列：
+**已锁定**。15 个概念节点 + 术语表。完整序列：
 
 ```
 ━━ 基础概念 ━━
@@ -175,13 +179,14 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
  5  MCP                                  [+ 信任边界]
  6  Slash Commands
  7  Skills
+ 8  Agent-Native CLI Tools
 ━━ 串联与进阶 ━━
- 8  知识喂养
- 9  编排模式
-10  Sub Agent — 上下文隔离
-11  Eval / 验证 / 可观测性               [+ 可靠性]
-12  Human-in-the-loop                    [+ 认知债务]
-13  Peer-to-Peer Agents                  ← frontier
+ 9  知识喂养
+10  编排模式
+11  Sub Agent — 上下文隔离
+12  Eval / 验证 / 可观测性               [+ 可靠性]
+13  Human-in-the-loop                    [+ 认知债务]
+14  Peer-to-Peer Agents                  ← frontier
 ```
 
 ### 内容决策（已确认，不可违反）
@@ -199,11 +204,11 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
 
 | 借鉴点                                    | 融入位置    | 力度     |
 | ----------------------------------------- | ----------- | -------- |
-| "上下文即资产"叙事                        | 节点 1 或 8 | 正常融入 |
+| "上下文即资产"叙事                        | 节点 1 或 9 | 正常融入 |
 | "AI context is like milk"类比             | 节点 1      | 正常融入 |
 | amplifier 心智模型（agents 放大已有模式） | 适当位置    | **极轻** |
-| agent-friendly code 概念                  | 节点 3 或 8 | 提一嘴   |
-| llms.txt 作为知识注入方式                 | 节点 8      | 提一嘴   |
+| agent-friendly code 概念                  | 节点 3 或 9 | 提一嘴   |
+| llms.txt 作为知识注入方式                 | 节点 9      | 提一嘴   |
 
 ### 文件约定
 

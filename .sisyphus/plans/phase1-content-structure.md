@@ -121,9 +121,22 @@
 
 > 行业视角：OMO(声明式注册)、Kent Beck(上下文包)、OpenAI(白名单)。详见 materials/industry-insights/
 
+### 节点 8 — Agent-Native CLI Tools（新）
+
+- 定义：天然对 AI agent 友好的命令行工具，以及专门为 agent 使用场景设计的新一代 CLI 工具
+- 为什么 CLI 天然 agent-friendly：纯文本输入输出、行为可预测、无需 GUI 交互、可组合（pipe）、返回值直接就是上下文
+- 传统 CLI 工具的 agent-native 特质：git、ripgrep、jq、curl、docker 等——这些工具的设计哲学（Unix 哲学：做一件事、做好它、可组合）恰好就是 agent 需要的
+- 新一代 agent-native 工具：从 npm/pip/cargo 等 registry 安装的、专为 agent 设计的 CLI 工具包（类似 Skills 是可安装的知识模块，CLI Tools 是可安装的可执行能力）
+- 与内置工具的区别：内置工具由 Agent 硬编码提供；CLI Tools 是外部安装的，agent 通过 bash/shell 调用
+- 与 MCP 的区别：MCP 通过标准化协议接入；CLI Tools 通过传统命令行接口——更简单、更普遍、生态更成熟
+- 上下文视角：CLI 工具的输出直接成为上下文的一部分——agent 调用 `git log` 的结果、`rg` 的搜索结果，都被注入上下文供 LLM 推理
+- 设计启示：如果你要为 agent 构建工具，CLI-first 是最 agent-friendly 的选择
+
+> 行业视角：Willison(CLI优先)、Cline(Primitives/CLI哲学)、OpenCode(终端优先)、Aider(终端内结对)。详见 materials/industry-insights/
+
 ### ━━ 串联与进阶 ━━
 
-### 节点 8 — 知识喂养（新）
+### 节点 9 — 知识喂养（原节点 8，新）
 
 - 定义：如何把**你的知识**（项目文档、内部规范、领域经验）系统性地注入 agent
 - 为什么需要统一视角：前面三个节点（System Instructions / MCP / Skills）分别讲了知识注入的不同机制，但用户面对的实际问题是一个——"我有一堆知识，怎么让 agent 知道这些"
@@ -134,7 +147,7 @@
 - 选择标准：知识的持久性（始终需要 vs 偶尔需要）、体量（几百字 vs 几万字）、结构化程度
 - 上下文视角：无论哪条路径，最终都是在往上下文里放信息——区别在于**什么时候放、放多少、放多久**
 
-### 节点 9 — 编排模式（新）
+### 节点 10 — 编排模式（原节点 9，新）
 
 - 定义：agent 有不同的**干活方式**（顺序执行、并行分支、计划-执行循环），理解这些模式才能有意识地引导它
 - 为什么使用者需要懂：你知道 agent 能并行跑子任务，就会把任务拆成可并行的块；你知道它会做计划再执行，就能在计划阶段介入纠偏
@@ -146,7 +159,7 @@
 - 上下文视角：不同编排模式决定了上下文如何在多步骤/多分支间**流动、分裂、汇合**
 - 与 Sub Agent 的关系：Sub Agent 是实现隔离的手段之一，编排模式是更高层的组织方式
 
-### 节点 10 — Sub Agent — 上下文隔离
+### 节点 11 — Sub Agent — 上下文隔离（原节点 10）
 
 - 定义：从主 Agent 派生出的**独立上下文环境**，执行特定子任务后返回结果
 - 解决什么问题：主 Agent 上下文随着对话增长会被污染（无关信息越来越多），Sub Agent 提供了一种**上下文隔离**机制
@@ -156,7 +169,7 @@
 
 > 行业视角：Karpathy(planner/worker/critic)、Yegge(角色+事实库)、LangGraph(子图)、OMO(handoff)。详见 materials/industry-insights/
 
-### 节点 11 — Eval / 验证 / 可观测性
+### 节点 12 — Eval / 验证 / 可观测性（原节点 11）
 
 - 定义：如何知道 agent 做对了？验证机制是让 agentic 工作流可信赖的关键
 - 为什么独立成节：agent 不是"用一次就扔"，需要持续验证其行为
@@ -169,7 +182,7 @@
 
 > 行业视角：Anthropic(evals)、Kent Beck(TDD)、Devin(可验证=表现好)、Willison(重放)。详见 materials/industry-insights/
 
-### 节点 12 — Human-in-the-loop（新）
+### 节点 13 — Human-in-the-loop（原节点 12，新）
 
 - 定义：你——使用 agent tool 的人——在 agentic 工作流中的角色：什么时候放手、什么时候介入、怎么纠偏
 - 为什么独立成节：前面所有节点讲的是 agent 的机制；这一节回到**人**——你才是最终决策者
@@ -180,7 +193,7 @@
 - **认知债务**（子项）：过度委托的代价——agent 把活干了，但你还懂不懂你的系统？团队对代码的理解会不会被稀释？如何保持对系统的掌控
 - 上下文视角：人决定上下文的最终走向——选择接受、修正或丢弃 agent 的产出
 
-### 节点 13 — Peer-to-Peer Agents（新）
+### 节点 14 — Peer-to-Peer Agents（原节点 13，新）
 
 - 定义：从层级委派（orchestrator → worker）到平级协作（agent ↔ agent）的质变——agent 之间可以直接通信、互相 challenge、共享发现
 - 为什么独立成节：这是编排模式的前沿演进，和 sub-agent 的单向委派形成鲜明对比
@@ -206,6 +219,7 @@
 | MCP                 | 外部工具，同样进入上下文               |
 | Slash Commands      | 按需注入的上下文                       |
 | Skills              | 动态注入的 System Instructions         |
+| CLI Tools           | 外部 CLI 工具输出直接成为上下文        |
 | 知识喂养            | 统一回顾：所有知识如何进入上下文       |
 | 编排模式            | 上下文如何在多步骤/多分支间流动        |
 | Sub Agent           | 创造全新上下文（隔离）                 |
