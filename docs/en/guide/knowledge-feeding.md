@@ -1,83 +1,82 @@
 # Knowledge Feeding: Installing Your Brain into the Agent
 
-> **Context Perspective**: Regardless of the path used to inject knowledge, it's all about putting information into the context—the difference lies in **when, how much, and for how long**.
+> **Context Perspective**: No matter which path you use to inject knowledge, it all ends up as information in the context—the difference is **when it enters, how much, and how long it stays**.
 
-So far, we've discussed various carriers of context: System Instructions, Tools, MCP, Skills... each on its own. But as a user, you face a unified problem:
+The previous eight chapters dissected context carriers—System Instructions, Tools, MCP, Commands, Skills, CLI Tools. Each solves one problem: how to get information into the context.
 
-**I have a wealth of knowledge about my project, team standards, and personal preferences. How do I systematically make the Agent aware of it?**
+This chapter flips the perspective: **you're on the supply side. You have project knowledge, team conventions, personal preferences—how do you systematically get them in?**
 
-This is "Knowledge Feeding." It's not a standalone feature, but a strategy that combines the various context carriers we've discussed into a system for providing domain knowledge to the Agent.
+## Context Is Like Milk
 
-## Why a Unified Perspective is Needed
+An Agent's capability ceiling = the quality of its context. The LLM's built-in general knowledge is the public internet; what you feed it is your company intranet. Without the latter, it can't do the actual work.
 
-The upper limit of an Agent's capability is determined by the high-quality context it possesses. The LLM's own general knowledge is like the public internet, whereas the knowledge you feed it is your company's internal GitLab, Confluence, and Slack channels. Without the latter, it cannot perform specific tasks well.
+But context is like milk: nutritious when fresh, spoils over time, and you can only fit so much in the fridge. Knowledge feeding is building a supply chain—delivering the right dose of fresh milk through the right pipes at the right time.
 
-The mechanisms introduced in previous chapters were from the Agent's perspective: "What can I eat?" Now, we switch to your perspective: "What should I feed it, and how?"
+## Three Paths
 
-If context is like milk—nutritious when fresh, but spoils over time—then knowledge feeding is about establishing a modern dairy supply chain: delivering the right dose of fresh milk through the right pipes at the right time.
-
-## The Three Core Paths
-
-There are three main paths to feed your knowledge to an Agent, each corresponding to one or more mechanisms we've already covered.
-
-| Path | Core Mechanism | Persistence | Volume | Structure | Use Case |
+| Path | Core Mechanism | Injection Timing | Context Landing | Persistence | Use Case |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Rule Layer Injection** | `System Instructions` | Always-on | Small (KBs) | Low (Natural Lang) | Project standards, persona, safety rails |
-| **Capability Layer Extension** | `Skills` | On-demand Load | Medium (10s of KBs) | Medium (Instructions) | Domain-specific workflows, best practices |
-| **Data Layer Retrieval** | RAG (via Tools) | On-demand Query | Large (GBs/TBs) | High (Structured/Vector) | Docs, API specs, codebase, knowledge graphs |
+| **Rule Layer** | System Instructions | Session start, auto-loaded | system prompt | Always-on | Project standards, coding conventions, safety rails |
+| **Capability Layer** | Skills | On task demand, loaded as needed | system prompt (dynamic append) | Task-scoped | Domain-specific workflows, best practices |
+| **Project Layer** | Codebase + doc structure | When Agent reads files | user/assistant messages | On-demand | Project structure, README, comments, llms.txt |
 
-Let's break them down.
+### 1. Rule Layer: Setting the Ground Rules
 
-### 1. Rule Layer Injection (System Instructions)
+Through files like `CLAUDE.md`, `.cursorrules`, `copilot-instructions.md`, or similar, the rules you write get auto-injected into the system prompt at the start of every session.
 
-This is the most direct and fundamental form of knowledge feeding. By modifying files like `CLAUDE.md`, `copilot-settings.json`, or similar, your defined rules become part of the Agent's core identity, automatically loaded at the start of every session.
+This is the most direct form of knowledge feeding:
 
-- **What it does**: Defines the Agent's code of conduct, persona, tone, and non-negotiable boundaries.
-- **How to feed**: Write project specifications, coding conventions, commit message formats, etc., in natural language.
-- **Example**: "All code must follow the aio-libs community standards," "Do not use `import` outside of `.py` files," "Always write tests first."
+- What language, framework, and package manager the project uses
+- Code style conventions (indentation, naming, commit message format)
+- Non-negotiable boundaries ("Never use npm," "Always write tests first")
 
-This method is suitable for injecting knowledge that is **global, high-priority, and must be adhered to at all times**. It forms the bedrock of the Agent's worldview.
+The rule layer's defining trait: **globally effective, enforced on every session, always present**. It's the foundation of the Agent's worldview.
 
-### 2. Capability Layer Extension (Skills)
+The cost is equally clear: it permanently occupies context window space. Cram in too many rules and you leave less room for actual work.
 
-If the rule layer is about "setting the rules" for the Agent, the capability layer is about "hiring a tutor."
+### 2. Capability Layer: Hiring a Tutor
 
-When you load a Skill (e.g., `git-master` or `frontend-ui-ux`), you are essentially dynamically injecting a large chunk of domain-specific expertise and action guidelines into the Agent's System Prompt.
+The rule layer tells the Agent "what to do and not do." The capability layer tells it "how to do it."
 
-- **What it does**: Teaches the Agent how to think and act in specific scenarios, such as how to perform a git rebase or how to choose the right CSS layout.
-- **How to feed**: Write or install a Skill that contains best practices, decision-making flows, and common commands for that domain.
-- **Example**: After loading the `mermaid-diagrams` skill, the Agent "knows" how to use Mermaid syntax to create various diagrams and can produce syntactically correct code when you ask it to "draw a flowchart."
+Loading a Skill—say, one specialized in git operations, or one focused on frontend design—essentially injects an entire body of domain knowledge into the system prompt. The Agent instantly goes from "knows a bit of everything" to "expert in this domain."
 
-It's suited for encapsulating systematic knowledge that is **only needed for specific task scenarios**.
+The key difference: **loaded on demand, unloaded when done.** No context cost when not needed.
 
-### 3. Data Layer Retrieval (RAG)
+Writing a good Skill is like writing a domain handbook for the Agent. It contains: decision flows, best practices, common commands, common pitfalls. This knowledge is only needed in specific task scenarios—not worth stuffing into global rules, but must be fully present when called upon.
 
-The rule and capability layers handle "how-to" knowledge, but they are powerless against vast amounts of factual "what-is" information (like an entire codebase or hundreds of API documents). This requires data layer retrieval, commonly known as RAG (Retrieval-Augmented Generation).
+### 3. Project Layer: Making Your Project Agent-Friendly
 
-The Agent implements RAG through built-in tools (like code search, doc query). When you ask, "What are the statuses for our payment interface?", the Agent doesn't guess. Instead, it:
+The first two layers address "how-to" knowledge. But when an Agent works, it also needs a wealth of "what-is" factual information—what your codebase looks like, how APIs are called, how business logic flows.
 
-1.  **Calls a tool**: Executes a code search to find the definition of the `PaymentStatus` enum.
-2.  **Injects result into context**: Places the retrieved code snippet into the `messages` array.
-3.  **LLM answers based on result**: The LLM sees the original code and then summarizes all the statuses to answer your question.
+You don't directly "feed" this information. The Agent "reads" it during work. What you can do is **make it easier to read**.
 
-- **What it does**: Enables the Agent to access massive, dynamically changing structured and unstructured data on demand.
-- **How to feed**: Maintain your data sources well and ensure the Agent has the right tools to retrieve them. For instance, make your code more `agent-friendly`, or provide an `llms.txt` file to point out key information locations.
-- **Example**: The Agent uses the `grep` tool to search for `TODO`s in the codebase, injects the results into the context, and then generates a to-do list for you.
+This is the core idea of the project layer: **your codebase itself is the Agent's largest knowledge source. Make it Agent-friendly.**
 
-This is the only effective way to handle **large-scale, factual knowledge**.
+How:
 
-## Selection Criteria: When to Use What
+- **Knowledge entry files**: `CLAUDE.md`, `AGENTS.md`, `llms.txt`—tell the Agent "start here to understand this project." Like an onboarding doc for a new hire.
+- **Clear project structure**: Semantically named directories, clean module boundaries. Agents infer context from file paths—`src/utils/helpers.js` conveys almost nothing; `src/auth/jwt-validator.ts` is instantly understood.
+- **Code as documentation**: Meaningful variable and function names, comments on critical logic. Agents read code the same way you do—clear code is clear to them too.
+- **Keep READMEs and API docs up to date**: Stale documentation is worse than no documentation—the Agent will make decisions based on wrong information.
 
-| If your knowledge is... | Use... | Because... |
+The project layer's defining trait: **no extra context window cost** (information only enters the context when the Agent actually reads a file), but its quality directly determines how accurately the Agent understands your project.
+
+Think of it this way: optimizing your project structure for an Agent also optimizes it for human teammates. A codebase that an Agent can't navigate is one that new human team members probably can't either.
+
+## How to Choose
+
+| Your knowledge is... | Use... | Because... |
 | :--- | :--- | :--- |
-| A **global rule** that must always be followed | **Rule Layer Injection** | It ensures the knowledge is enforced in every session. |
-| A **domain-specific methodology** or workflow | **Capability Layer Extension** | It can be loaded when needed and unloaded after the task, preventing context pollution. |
-| **Massive, specific, factual** information | **Data Layer Retrieval** | It allows the Agent to "look up" info on the fly, avoiding the need to cram data into the limited context window. |
+| A global rule that must always hold | **Rule Layer** | Auto-effective every session, can't be skipped |
+| A domain-specific methodology or workflow | **Capability Layer** | Loaded on demand, no context cost when idle |
+| Project facts (code, docs, structure) | **Project Layer** | Let the Agent read it; you just maintain the source |
 
-A mature Agentic workflow is always a combination of these three paths.
+A mature agentic workflow is always a combination of all three. The rule layer sets the baseline, the capability layer fills in skills, the project layer provides facts.
 
-## Cross-Cutting Concerns
+## Three Things to Watch in Every Chapter
 
-- **Context Flow**: Consumes your project documents, internal standards, and domain expertise. Transforms them into persistent System Instructions, on-demand Skill instructions, or just-in-time retrieved data snippets, injecting them into the context window according to the chosen path.
-- **Risk Alert**: Injecting too much knowledge can dilute the available context for reasoning ("attention dilution"). Too little, and the Agent will "hallucinate" answers based on its general knowledge that don't fit the project's reality. The quality, freshness, and relevance of knowledge are critical.
-- **Auditability**: The source of knowledge must be traceable. When an Agent makes a decision, you should be able to clearly identify whether it was based on a specific rule, guidance from a Skill, or a particular piece of retrieved data.
+- **Context flow**: Three paths, three injection timings. The rule layer claims space at session start; the capability layer appends when a task triggers it; the project layer enters on-demand as the Agent reads files. Knowledge freshness and context cost are always in tension.
+- **Risk**: Too much knowledge dilutes reasoning capacity (attention dilution). Too little, and the Agent fabricates answers based on generic knowledge that don't match your project's reality. Stale docs are worse than no docs—the Agent won't question your README.
+- **Auditability**: When an Agent makes a decision, you should be able to trace it: was it based on a rule, a Skill's guidance, or a specific file it read? Untraceable knowledge sources = black box.
+
+Next up: orchestration patterns. Knowledge feeding solves "what to feed." Orchestration solves "how to make multiple steps work together efficiently."

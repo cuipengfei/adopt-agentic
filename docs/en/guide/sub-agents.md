@@ -1,94 +1,124 @@
 # Sub Agents — Context Isolation
 
-> **Context Perspective**: A Sub Agent creates an isolated, fresh context to solve a specific problem, preventing contamination of the main context.
+> **Context Perspective**: A Sub Agent creates an isolated context to tackle a specific sub-task, preventing contamination of the main context.
 
-## The Problem: When Context Gets Too "Dirty"
+The previous chapter covered orchestration patterns—how to organize steps. This chapter looks at the execution unit: when the main Agent needs a clean environment for a sub-task, it spawns a Sub Agent.
+
+## The Problem: Context Gets Dirty
 
 Remember "context pollution" from [The First Principle](./context.md)?
 
-The longer an agent conversation goes on, the longer the `messages` array gets. It becomes cluttered with early explorations, rejected solutions, and irrelevant tool outputs... all of which are noise.
-
-When you ask the agent to perform a complex, precise sub-task in this "dirty" context, like "write a unit test based on the latest API schema," the risk of failure is high. The LLM's attention gets diluted by irrelevant information. It might reference a long-outdated piece of code or follow a deprecated convention.
+The longer a conversation goes, the longer the `messages` array gets. Early explorations, rejected solutions, irrelevant tool outputs… all piling up. When you ask the Agent to perform a precise sub-task in this noise—say, "write an integration test based on the latest API schema"—the LLM’s attention gets diluted. It might reference outdated code or follow a deprecated convention.
 
 You need a clean room.
 
-## The Solution: Spawn a Sub Agent
+## Spawning a Sub Agent
 
-A Sub Agent is a temporary, clean room.
+A Sub Agent is that clean room.
 
-A Parent Agent can spawn one or more Sub Agents. Each Sub Agent has its own **completely independent context**. It can't see the Parent Agent's message history; it only receives an initial set of instructions given by the Parent Agent when it was created.
+The main Agent can spawn one or more Sub Agents. Each Sub Agent’s `messages` history **starts from zero**—it can’t see what the main Agent discussed with you. But "clean" doesn’t mean "blank": Sub Agents typically inherit the main Agent’s System Instructions. The project standards, coding conventions, and safety rails you wrote in CLAUDE.md—the Sub Agent follows those too.
 
-Think of it like an expert called in for a short meeting. You give them the briefing materials (the initial instructions), they go into the conference room to work independently, and finally emerge with the meeting minutes (the result summary). They don't need to know what you discussed with others all morning.
+What’s isolated is the conversation history, not the project rules.
+
+One more thing that’s easy to miss: **the Sub Agent’s initial prompt is constructed by the main Agent, not written by you directly.** You give the main Agent a big task. The main Agent analyzes it, decides "this sub-task needs isolated handling," and constructs an initial prompt for the Sub Agent. You influence the Sub Agent’s quality indirectly through clear instructions to the main Agent—the more precise your input, the better the prompt it constructs.
 
 ## How It Works
 
-The process of a Parent Agent delegating a task to a Sub Agent can be viewed as a function call:
+The main Agent delegating to a Sub Agent boils down to three steps:
 
 ```typescript
-// Parent Agent's workflow
+// Main Agent’s orchestration logic (local scheduling, not an LLM API call)
 function mainWorkflow() {
-  // ... The Parent Agent has had many rounds of conversation with the user, context is long ...
+  // ... The main Agent has had many rounds with the user, context is long ...
 
   const taskDescription = `
     You are a QA Engineer.
     Here is the API schema file:
-    ${await readFile('src/api/v2/schema.json')}
+    ${await readFile(‘src/api/v2/schema.json’)}
 
-    You need to write an integration test for the 'createUser' endpoint.
-    - The test must use the Vitest framework.
-    - Cover both the success case (201 Created) and the invalid input case (400 Bad Request).
-    - Write the test file to 'tests/integration/createUser.test.ts'.
+    Write an integration test for the ‘createUser’ endpoint.
+    - Use the Vitest framework.
+    - Cover both 201 Created and 400 Bad Request.
+    - Write to ‘tests/integration/createUser.test.ts’.
   `;
 
-  // 1. Create a Sub Agent, giving it a clear, self-contained task description
-  const subAgentResult = createSubAgent(taskDescription);
+  // 1. Create Sub Agent with a clear, self-contained task description
+  const subAgent = createSubAgent(taskDescription);
 
-  // 3. After the Sub Agent finishes, inject the result summary into the Parent Agent's context
-  const summary = `
-    Sub-task completed: An integration test for 'createUser' has been created.
-    File location: 'tests/integration/createUser.test.ts'
-    The test covers both success and failure scenarios.
-  `;
-  appendToContext(summary);
+  // 2. Sub Agent executes independently in isolated context (invisible to main Agent)
+  const result = await subAgent.run();
 
-  // ... The Parent Agent continues its next steps based on the sub-task's result ...
+  // 3. Inject result summary into main Agent’s context
+  appendToContext(result.summary);
+
+  // ... Main Agent continues based on the summary ...
 }
 ```
 
 **── Inside the Sub Agent ──**
 
-The Sub Agent's context starts **from scratch**. Its `messages` array only contains the `taskDescription` provided by the Parent Agent.
+The Sub Agent’s `messages` start from zero, but its system prompt inherits the project’s System Instructions:
 
-1.  **Request**: The Sub Agent's first request has a clean and focused `messages` array.
-    ```json
-    // → REQUEST (Sub Agent → LLM API)
-    {
-      "system": "You are a code assistant.",
-      "messages": [
-        { "role": "user", "content": "You are a QA Engineer..." }
-      ]
-    }
-    ```
+**Round 1: Receiving the task**
 
-2.  **Execution**: The Sub Agent might go through multiple rounds of tool calls internally (reading specs, writing files, running tests), but this all happens within its **isolated context**. The Parent Agent is neither aware of nor disturbed by this process.
+```json
+// → REQUEST (Sub Agent → LLM API)
+{
+  "system": "You are a code assistant.\n\n[Project System Instructions]\n- TypeScript strict mode\n- Tests use Vitest\n- No any types\n...",
+  "messages": [
+    { "role": "user", "content": "You are a QA Engineer. Here is the API schema: {...}\nWrite an integration test for createUser..." }
+  ]
+}
+```
 
-3.  **Return**: Once the task is complete, the Sub Agent returns a **summary** of its work to the Parent Agent. Note, it returns a summary, not its entire internal message history which could be dozens or hundreds of messages long.
+Notice `messages` has exactly one entry—clean, focused, no baggage from the main Agent’s history.
 
-This process is like `git stash`: you stash your current complex context, switch to a clean branch to perform an atomic task, and then switch back with the output.
+**Round 2: Context grows after tool calls**
+
+The Sub Agent reads the schema, writes a test file, runs the test, sees a failure, and corrects:
+
+```json
+// → REQUEST (Sub Agent → LLM API, Round 2)
+{
+  "system": "(same as above, unchanged)",
+  "messages": [
+    { "role": "user", "content": "You are a QA Engineer..." },
+    { "role": "assistant", "content": "Let me read the schema first...", "tool_calls": [{ "name": "read_file", "arguments": {"path": "src/api/v2/schema.json"} }] },
+    { "role": "tool", "content": "{ \"endpoints\": { \"createUser\": { ... } } }" },
+    { "role": "assistant", "content": "Schema loaded. Writing the test...", "tool_calls": [{ "name": "write_file", "arguments": {"path": "tests/integration/createUser.test.ts", "content": "..."} }] },
+    { "role": "tool", "content": "File written." },
+    { "role": "assistant", "content": "Running the test to verify...", "tool_calls": [{ "name": "bash", "arguments": {"command": "vitest run createUser"} }] },
+    { "role": "tool", "content": "FAIL: expected 201 but got 500..." },
+    { "role": "assistant", "content": "Test failed with 500. Checking the endpoint implementation—missing DB connection config. Fixing the test mock..." }
+  ]
+}
+```
+
+The Sub Agent might go through a dozen rounds of tool calls internally—reading specs, writing code, running tests, fixing bugs. **All of this happens in the isolated context. The main Agent can’t see it and isn’t disturbed by it.**
+
+**The Final Return**
+
+When the Sub Agent finishes, it returns a **summary** to the main Agent—not dozens of raw messages, but a compressed result. Think of it like `git stash`: stash your current complex context, do an atomic task on a clean branch, then switch back with the output.
+
+What the main Agent receives is just: "Tests created, covering 201 and 400, file at `tests/integration/createUser.test.ts`." Whatever struggles the Sub Agent went through in between—the main Agent doesn’t need to know.
 
 ## Connecting Back to the First Principle
 
-A Sub Agent's performance is entirely dependent on how good the initial instructions from the Parent Agent are.
+A Sub Agent’s performance depends on two things:
 
-This brings us back to [The First Principle](./context.md): **the quality of the context determines the quality of the output**. The instructions for a Sub Agent must be:
-- **Self-contained**: Not reliant on any hidden information from the parent context.
-- **Complete**: Including all necessary background materials (like code snippets, file paths, and clear objectives).
-- **Focused**: Containing only information relevant to the sub-task, with no added noise.
+1. **The quality of System Instructions**: The project rules you wrote in CLAUDE.md—the Sub Agent consumes those too. Good rules mean the Sub Agent’s behavior aligns with project standards. This is the [knowledge feeding](./knowledge-feeding.md) rule layer at work inside Sub Agents.
 
-Poor initial instructions will only spawn an equally confused Sub Agent.
+2. **The quality of the initial prompt the main Agent constructs**: This loops back to [The First Principle](./context.md)—context quality determines output quality. A good initial prompt must be:
+   - **Self-contained**: Not reliant on hidden information from the parent context.
+   - **Complete**: Including all necessary background materials (code snippets, file paths, clear objectives).
+   - **Focused**: Only information relevant to the sub-task, no noise.
 
-## Cross-cutting Concerns
+What you can do: give the main Agent clear instructions and sufficient background. The better the raw material the main Agent has, the better the prompt it constructs for the Sub Agent.
 
-- **Context Flow**: It consumes a slice of information from the Parent Agent's context (to build the initial prompt) and produces a compressed summary that is injected back into the Parent Agent's context.
-- **Risk Advisory**: Isolation is a double-edged sword. If the initial instructions miss a key constraint (like project-wide coding standards), the Sub Agent will complete its task in "ignorance," producing non-compliant code. Over-splitting tasks can also lead to high coordination overhead.
-- **Auditability**: The full session log of a Sub Agent should be saved independently for traceability. If the summary received by the Parent Agent is problematic, one can drill down into the Sub Agent's complete context to investigate the root cause.
+## Three Things to Watch in Every Chapter
+
+- **Context flow**: The main Agent extracts information from its own context to construct the initial prompt → Sub Agent executes independently in isolated context → returns a summary that gets injected back into the main Agent’s context. Runtime isolation and full logging coexist—they don’t conflict.
+- **Risk**: Isolation is a double-edged sword. If the main Agent omits a key constraint when constructing the prompt, the Sub Agent works in "ignorance" and may produce non-compliant code. Over-splitting also has costs—each Sub Agent needs to rebuild context from scratch, and coordination overhead accumulates.
+- **Auditability**: Each Sub Agent’s full session log is saved independently and can be traced. When a summary looks wrong, you can drill down into the Sub Agent’s complete context to investigate. A summary is compression, not truth—the next chapter covers how to verify.
+
+Next up: verification and observability. Is the summary a Sub Agent returned actually reliable? Every output from an Agent needs a verification mechanism as a safety net.
