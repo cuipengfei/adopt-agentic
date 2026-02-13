@@ -96,7 +96,7 @@ A tool returned the precise database schema? The next operation matches perfectl
 
 **Most of the frustrating problems you encounter** — generated code ignoring conventions, edits to wrong files, forgotten agreements — **are context problems at their root.** The model isn't stupid. It just didn't see what it needed to see.
 
-Every mechanism covered in subsequent chapters — System Instructions, tools, MCP, Commands, Skills — **is fundamentally answering the same question: how to get information into context.**
+Every mechanism covered in subsequent chapters — System Instructions, tools, MCP, Commands, Skills — **is fundamentally answering the same set of questions: what information to put in, when to put it in, and how to get it into context.**
 
 ## The Limits of Context
 
@@ -130,24 +130,22 @@ This explains a common phenomenon: the agent is fast and accurate early on, then
 
 Why does the agent "forget" things?
 
-Because it has no memory at all. What it has is **session state** — the accumulated message list in the current conversation. Close the conversation, it's all gone.
+Because it has no memory at all. What it has is **session state** — the accumulated message list in the current conversation.
 
-But you've probably noticed: some things seem "remembered." Your project rules file takes effect in every new conversation. Coding conventions are always respected.
-
-That's not memory. That's **persistent context** — the agent proactively reads these files at the start of each new session, re-injecting them into the `messages` array. It looks like memory, but it's a fresh reload every time.
+Your project rules file takes effect in every new conversation. Coding conventions are always respected. That's not memory. That's **persistent context** — the agent proactively reads these files at the start of each new session, re-injecting them into the `messages` array. Looks like memory. It's a fresh reload every time.
 
 | | Session State | Persistent Context |
 |---|---|---|
 | Lifetime | Disappears when conversation ends | Persists across sessions |
 | Storage | Message list in memory | Files on the filesystem |
-| Maintained by | Agent automatically | You, manually |
+| Maintained by | Agent automatically | You lead, tools assist |
 | Typical contents | Chat history, tool results | Project standards, architecture decisions, coding conventions |
 
 ### Context Has a Shelf Life
 
 Context is like milk — nutritious when fresh, spoiled when stale.
 
-A session that's gone through hundreds of tool calls has almost certainly suffered severe context degradation. Early key information has been pushed to the edge of the window or truncated entirely, stale intermediate state has piled up in the middle, and later reasoning is built on a foundation of noise.
+A session that's gone through hundreds of tool calls has almost certainly suffered context degradation. Early key information has been pushed to the edge of the window or truncated entirely, stale intermediate state has piled up in the middle, and later reasoning is built on a foundation of noise.
 
 **When should you start a new conversation?** When the agent starts "forgetting" early agreements, repeating mistakes you've already corrected, or behaving erratically — the context has spoiled. Cut it off, start fresh, and let the agent begin from clean persistent context. That's far more efficient than fighting pollution in a degraded session.
 
@@ -171,7 +169,7 @@ Every subsequent chapter covers a different context carrier:
 | Slash Commands | On-demand context injection |
 | Skills | Dynamically loaded domain knowledge |
 | Agent-Native CLI Tools | External tool output becomes context directly |
-| Knowledge Feeding | Unified view: how all knowledge enters context |
+| Knowledge Feeding | Turn what you know into what the agent knows |
 | Orchestration Patterns | How context flows, forks, and merges across steps |
 | Sub Agents | Creating fresh context (isolation) |
 | Eval / Verification | Verification results = feedback context |
@@ -180,8 +178,10 @@ Every subsequent chapter covers a different context carrier:
 
 One thread runs through it all: **how context flows.**
 
-## Cross-Cutting Concerns
+## Three Things to Watch in Every Chapter
 
-- **Context flow:** Consumed = initial system prompt; produced = foundation for all subsequent mechanisms.
-- **Risk:** Misunderstanding context boundaries amplifies errors across the entire chain.
-- **Auditability:** Context can be exported, replayed, and compared. The complete `messages` array in each HTTP request is the most primitive audit record.
+- **Context flow:** This chapter's context starts with the system prompt. Every subsequent chapter adds more — different injection methods, but it all ends up in the `messages` array.
+- **Risk:** Get the context boundary wrong and errors snowball — from this step to every step after it.
+- **Auditability:** Good news — the complete `messages` array in each HTTP request is your log. Something went wrong? Replay from the start.
+
+Next chapter breaks apart the three roles — you, the Agent, and the LLM — to see how context flows between them.

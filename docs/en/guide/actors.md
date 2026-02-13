@@ -2,15 +2,19 @@
 
 > **Context perspective:** Three roles jointly construct, consume, and update context. Clarify boundaries first before talking about controlled collaboration.
 
-## Who Are the Three Roles
+## The Three Roles
+
+Agent is not AI. Agent is glue code.
 
 | Role | What It Does |
 |------|--------------|
-| You | Gives intent |
-| Agent | Orchestrates context + executes tools |
-| LLM | Reasons |
+| You | Give intent |
+| Agent | Orchestrate context + execute tools |
+| LLM | Reason |
 
-Agent doesn't think—it **executes** the LLM's decisions. LLM doesn't act—it **reasons** what to do.
+That's it. The LLM has never touched your files — it only reasons about what to do. The Agent doesn't think — it faithfully executes the LLM's decisions.
+
+You think AI messed up your code? More likely the Agent fed the wrong context in, and the LLM faithfully reasoned on garbage.
 
 ## Collaboration Loop
 
@@ -51,21 +55,23 @@ Agent appends tool result, sends again:
   "system": "You are a coding assistant...",
   "messages": [
     { "role": "user", "content": "Extract login function" },
-    { "role": "assistant", "content": "Let me read first...", "tool_calls": [{ "name": "read_file", "arguments": { "path": "auth.js" } }] },
+    {
+      "role": "assistant",
+      "content": "Let me read first...",
+      "tool_calls": [
+        { "name": "read_file", "arguments": { "path": "auth.js" } }
+      ]
+    },
     { "role": "tool", "content": "function login() { ... }" }
   ]
 }
 ```
 
-LLM returns plan. Agent executes file operations.
+LLM returns the plan, Agent executes file operations.
 
-Three roles, each doing one thing: LLM reasons, Agent executes, You provide intent.
+Notice Round 2's request: the Agent **re-sent the entire history** — user message, LLM's previous reply, tool result, every last bit. The LLM has no memory; it reads from scratch every time. Every piece of junk you add to the message list, it has to re-consume every single round.
 
-A complete interaction should include full tool_calls:
-
-## File Operation Examples
-
-See a complete real-world example:
+The LLM may return multiple tool_calls at once. After extracting a function, it might request both writing a new file and modifying the old one:
 
 ```json
 {
@@ -74,6 +80,7 @@ See a complete real-world example:
     "path": "src/login.js",
     "content": "function login() { ... }"
   }
+}
 
 {
   "name": "edit_file",
@@ -84,6 +91,8 @@ See a complete real-world example:
   }
 }
 ```
+
+Agent executes them one by one, appending each result back to `messages` — next round the LLM sees all execution results.
 
 ## API Protocols
 
@@ -107,30 +116,22 @@ That's why it's called "agent"—it has agency, not just response.
 
 ## How to Task an Agent
 
-### Be Clear About What You Want
+Vague vs precise:
 
-"Optimize this" → "Extract login to separate file, stay compatible".
+> ❌ `"Optimize this module"`
+> Agent modifies 5 files, 3 of which shouldn't have been touched.
 
-Have agent restate, confirm before proceeding.
+> ✅ `"Extract login to src/login.js, keep auth.js export signatures unchanged"`
+> One clean cut.
 
-### Break Into Chunks
+Not sure the agent understood? Have it restate your intent. Confirm alignment before it moves.
 
-Large tasks into verifiable chunks. Check after each. Cheaper than running 20 files then rolling back.
+Break large tasks into small chunks — verify one before starting the next. Far cheaper than running 20 steps then rolling back. Unsure about direction? Have the agent build a minimal working version first. Verify, then expand.
 
-### Minimal Experiment
+Claude Code, Cursor, Windsurf, Copilot — different products, different mechanisms. But you provide intent, Agent orchestrates context, LLM reasons — **the triangular relationship stays the same.**
 
-Have agent do minimal working version first. Verify direction before refining.
+## Three Things to Watch in Every Chapter
 
-## Generic Terminology
-
-- Agent: Claude Code, Cursor, Windsurf, Copilot Chat are all agents
-- LLM API: Claude, OpenAI, Gemini all work
-- Tools: file read/write, code search, command execution, browser control
-
-Different mechanisms, **triangular relationship stays the same**.
-
-## Cross-Cutting Concerns
-
-- **Context flow:** Intent → system + messages → reasoning → tool_calls → execution → results back to messages → loop.
-- **Risk:** Ambiguous intent → wrong reasoning; excessive permissions → chaos; LLM hallucinations → wrong parameters.
-- **Auditability:** Each round's request body exportable, replayable; tool call logs traceable.
+- **Context flow:** Intent enters system + messages → LLM reasons → tool_calls → Agent executes → results appended back to messages → loop. This chapter showed the complete cycle.
+- **Risk:** Vague intent, LLM guesses. Excessive permissions, Agent runs wild. LLM hallucinates, parameters go wrong — blur the boundaries between the three roles and problems are inevitable.
+- **Auditability:** Every HTTP request body can be exported and replayed. Tool call logs are fully traceable. When things go wrong, trace back from the request body.
