@@ -125,7 +125,7 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
 
 ### 读者定位
 
-- **用 agent tool 的人**，不是造 agent 的人。读者是开发者，使用 Claude Code、Cursor、Windsurf 等工具，想理解底层机制以用得更好。
+- **用 agent tool 的人**，不是造 agent 的人。读者是开发者，日常使用各类 AI coding agent，想理解底层机制以用得更好。
 - **不造框架**：不教 LangChain / LangGraph / CrewAI 等框架实现。
 
 ### Agent Agnostic 原则
@@ -133,6 +133,7 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
 - 所有概念使用**通用术语**，不绑任何特定 agent 产品。
 - 举例可以多元（各种工具都可以提），但不能让某个产品成为主角。
 - 不分 persona、不分市场——讲通用概念，不区分谁在读。
+- **主内容产品名禁令**：`docs/guide/` 和 `docs/en/guide/` 中**禁止**出现 Cursor、Windsurf、GitHub Copilot 等具体产品名（含衍生名如 `.cursorrules`、`copilot-instructions.md`）。`materials/` 研究素材中可以提及。
 
 ### 内容选择标准（"它山之石可以攻玉"）
 
@@ -197,18 +198,23 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
 | 工具适配附录 / 对照页            | **不做**。保持纯 agent-agnostic，不做 Cursor/Claude Code/Copilot 对照 |
 | 双语策略                         | **同步更新**。中英文每个节点同时填充，不接受英文滞后                  |
 | 站点页面引用 materials/          | **禁止**。站点页面不引用 materials/ 内部路径                          |
+| AGENTS.md                        | **不创建**。所有项目知识保持在 CLAUDE.md 中                           |
 
 ### 内容填充时可借鉴的竞品素材
 
 以下来自竞品调研，Phase 2 填充时融入，不改骨架：
 
-| 借鉴点                                    | 融入位置    | 力度     |
-| ----------------------------------------- | ----------- | -------- |
-| "上下文即资产"叙事                        | 节点 1 或 9 | 正常融入 |
-| "AI context is like milk"类比             | 节点 1      | 正常融入 |
-| amplifier 心智模型（agents 放大已有模式） | 适当位置    | **极轻** |
-| agent-friendly code 概念                  | 节点 3 或 9 | 提一嘴   |
-| llms.txt 作为知识注入方式                 | 节点 9      | 提一嘴   |
+| 借鉴点                                    | 融入位置    | 力度     | 状态   |
+| ----------------------------------------- | ----------- | -------- | ------ |
+| "上下文即资产"叙事                        | 节点 1 或 9 | 正常融入 |        |
+| "AI context is like milk"类比             | 节点 1      | 正常融入 |        |
+| amplifier 心智模型（agents 放大已有模式） | 适当位置    | **极轻** |        |
+| agent-friendly code 概念                  | 节点 3 或 9 | 提一嘴   |        |
+| llms.txt 作为知识注入方式                 | 节点 9      | 提一嘴   |        |
+| CE/AE/PE 术语定义                         | 术语表      | 正常融入 | ✅ 已入 |
+| "只放决策需要的东西"（信噪比）            | 节点 1      | 正常融入 | ✅ 已入 |
+| scar tissue & crystals 比喻               | 节点 3 + 9  | 正常融入 | ✅ 已入 |
+| "别急着擦掉错误"洞察                     | 节点 12     | 正常融入 | ✅ 已入 |
 
 ### 文件约定
 
@@ -225,7 +231,6 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
 ## 已知问题 / TODO
 
 - `themeConfig.logo` 用 `/logo.svg`，但 `head` favicon 用 `/adopt-agentic/logo.svg` — 写法不一致（因 VitePress base 处理两者都能工作，但应统一）
-- 所有教程页面目前是骨架大纲（Phase 2 填充内容）
 
 ## 反模式（本项目禁止）
 
