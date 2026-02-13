@@ -22,7 +22,7 @@ But context is like milk: nutritious when fresh, spoils over time, and you can o
 
 ### 1. Rule Layer: Setting the Ground Rules
 
-Through files like `CLAUDE.md`, `.cursorrules`, `copilot-instructions.md`, or similar, the rules you write get auto-injected into the system prompt at the start of every session.
+Through project-level instruction files (e.g. `CLAUDE.md`, `AGENTS.md`—different tools use different filenames), the rules you write get auto-injected into the system prompt at the start of every session.
 
 This is the most direct form of knowledge feeding:
 

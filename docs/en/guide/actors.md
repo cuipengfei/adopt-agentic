@@ -128,7 +128,7 @@ Not sure the agent understood? Have it restate your intent. Confirm alignment be
 
 Break large tasks into small chunks — verify one before starting the next. Far cheaper than running 20 steps then rolling back. Unsure about direction? Have the agent build a minimal working version first. Verify, then expand.
 
-Claude Code, Cursor, Windsurf, Copilot — different products, different mechanisms. But you provide intent, Agent orchestrates context, LLM reasons — **the triangular relationship stays the same.**
+Different products, different mechanisms. But you provide intent, Agent orchestrates context, LLM reasons — **the triangular relationship stays the same.**
 
 ## Three Things to Watch in Every Chapter
 

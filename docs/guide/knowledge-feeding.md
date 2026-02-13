@@ -22,7 +22,7 @@ Agent 的能力上限 = 它拥有的高质量上下文。LLM 自带的通用知�
 
 ### 1. 规则层：给 Agent 立规矩
 
-通过 `CLAUDE.md`、`.cursorrules`、`copilot-instructions.md` 或类似文件，你写下的规则在每次会话开始时自动注入 system prompt。
+通过项目级指令文件（如 `CLAUDE.md`、`AGENTS.md` 等，不同工具使用不同文件名），你写下的规则在每次会话开始时自动注入 system prompt。
 
 这是最直接的知识喂养：
 

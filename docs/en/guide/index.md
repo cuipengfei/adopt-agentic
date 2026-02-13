@@ -2,7 +2,7 @@
 
 This guide doesn't teach you how to **build** AI agents.
 
-It teaches you how to **use** them—to get the most out of tools like Claude Code, Cursor, and GitHub Copilot by understanding their underlying mechanics.
+It teaches you how to **use** them—to get the most out of your agentic programming tools by understanding their underlying mechanics.
 
 It's for developers. If you want to level up from treating an agent like a chatbot to treating it like a pair programmer, this is your starting point.
 
