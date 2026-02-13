@@ -1,122 +1,110 @@
 # Agent-Native CLI Tools
 
-> **Context Perspective**: The output of a CLI tool becomes context directly—plain text, predictable, and composable, it's the perfect interface for an agent.
+> **Context Perspective**: The output of a CLI tool becomes context directly — plain text, predictable, and composable, it's the natural best interface for an agent.
 
-If an agent is the hands and feet of an LLM, then command-line interface (CLI) tools are its most trusted Swiss Army knife.
+The previous chapter's Skills inject behavioral knowledge — "how to do things." But knowledge needs to be put into action. How does the agent actually operate your system?
 
-Agent-native CLI tools fall into two categories:
-1.  **Traditionally agent-friendly CLIs**: Tools like `git`, `grep`, and `curl`.
-2.  **A new generation of CLIs designed for agents**: Tools built specifically for agentic workflows.
+Back to the conclusion from the built-in tools chapter: `bash` is the most versatile tool — in theory it can do anything. CLI tools are bash's ammo — the agent calls `git`, `curl`, `jq`, `rg` through bash, and their output becomes part of the context directly.
 
-Their shared characteristics are that their **input and output are text, their behavior is predictable, they require no graphical interface, and they are composable**. This perfectly matches an agent's working model.
+## Why CLI Is Naturally Agent-Friendly
 
-## The Unix Philosophy: Naturally Agent-Friendly
-
-> Make each program do one thing well. To do a new job, build afresh rather than complicate old programs by adding new "features".
+> Make each program do one thing well.
 > — Doug McIlroy, inventor of Unix pipes
 
-The Unix philosophy, established decades ago, unintentionally paved the way for today's agentic programming.
+The Unix philosophy, established decades ago, unintentionally paved the way for today's agentic programming:
 
-Tools like `git`, `ripgrep` (rg), `jq`, and `curl` are powerful because they adhere to these design principles. They are ideal collaborators for an agent because they:
-- **Do one thing well**: `rg` only searches, `jq` only parses JSON. Their functions are singular and their behavior is stable.
-- **Use a plain text interface**: Input is text arguments, output is a text stream (stdout/stderr). There are no complex UI states to manage.
-- **Are composable**: Multiple commands can be connected via pipes (`|`) to form powerful workflows, like `rg "error" | jq .message`.
+- **Plain text interface**: Input is arguments, output is stdout/stderr. No GUI state to manage.
+- **Predictable behavior**: Same input, same output. The agent can reliably parse results.
+- **Composable**: Chain multiple commands via pipes (`|`). `curl -s https://api.example.com/users | jq '.[0].name'` — one line, result in hand.
 
-This model is perfect for an agent. An agent doesn't need to understand the position and color of a button in a GUI application; it just needs to know how to construct a command string and then parse the returned text.
+An agent doesn't need to understand the position of buttons in a GUI. It just needs to construct a command string and parse the returned text.
 
-## Context Flow: Output is Context
+## Output Is Context
 
 When an agent needs to understand project history, it doesn't "open a Git client." It executes a command.
 
-**── Turn 1 ──**
-
-The agent receives a task and decides to call `git log`.
+**── Round 1 ──**
 
 ```json
 // → REQUEST (agent → LLM API)
 {
   "system": "You are a code assistant...",
-  "messages": [{ "role": "user", "content": "Help me check the recent commit history to understand the project's progress." }],
+  "messages": [{ "role": "user", "content": "Show me the recent commit history." }],
   "tools": [{ "name": "bash", "description": "Execute a shell command" }]
 }
 ```
-
-The LLM decides to use the `bash` tool.
 
 ```json
 // ← RESPONSE (LLM API → agent, SSE stream)
 {
   "role": "assistant",
-  "content": "Okay, I'll check the recent commit history.",
   "tool_calls": [
-    { "name": "bash", "arguments": { "command": "git log -n 3 --oneline" } }
+    { "id": "call_001", "name": "bash", "arguments": { "command": "git log -n 3 --oneline" } }
   ]
 }
 ```
 
-The agent executes the command locally and captures its `stdout`.
+The agent executes the command locally and captures stdout.
 
-**── Turn 2 ──**
+**── Round 2 ──**
 
-The agent appends the output of `git log` as content from the `tool` role, adds it to the context, and sends it to the LLM again.
+Notice the messages are longer than Round 1 — the context is growing.
 
 ```json
 // → REQUEST (agent → LLM API)
 {
-  "system": "You are a code assistant...",
   "messages": [
-    { "role": "user", "content": "Help me check the recent commit history to understand the project's progress." },
+    { "role": "user", "content": "Show me the recent commit history." },
     {
       "role": "assistant",
-      "content": "Okay, I'll check the recent commit history.",
-      "tool_calls": [{ "name": "bash", "arguments": { "command": "git log -n 3 --oneline" } }]
+      "tool_calls": [{ "id": "call_001", "name": "bash", "arguments": { "command": "git log -n 3 --oneline" } }]
     },
     {
       "role": "tool",
+      "tool_call_id": "call_001",
       "content": "f4b3c1d (HEAD -> main) feat: add user authentication\n2a1b9e5 fix: resolve payment gateway timeout\ne8d7f6c docs: update README with setup instructions"
     }
-  ],
-  "tools": [{ "name": "bash", "description": "Execute a shell command" }]
+  ]
 }
 ```
-
-The LLM now sees the output from `git` and proceeds with its next reasoning step based on this information.
 
 ```json
 // ← RESPONSE (LLM API → agent, SSE stream)
 {
   "role": "assistant",
-  "content": "I see. Recent progress mainly includes adding user authentication, fixing a payment gateway timeout, and updating the documentation. What would you like me to do next?"
+  "content": "Recent progress: added user authentication, fixed payment gateway timeout, updated docs. Want me to dig into any of these?"
 }
 ```
 
-The output of `git log`, no more and no less, becomes the LLM's "memory." This is the essence of how CLI tools collaborate with agents—**the output of the CLI becomes a direct part of the context**.
+The output of `git log`, as-is, becomes the LLM's context. And it's not just stdout — **exit codes and stderr are context signals too**. Command returns a non-zero exit code? The agent knows execution failed. stderr has an error message? The agent adjusts its strategy accordingly.
 
-## The New Generation of Agent-Native Tools
+## Structured Output: More Agent-Friendly
 
-In addition to traditional Unix tools, a new wave of CLI tools designed specifically for agents is emerging in the community.
+Traditional CLIs output plain text that the LLM has to parse on its own. But more and more modern CLIs support structured output (JSON, YAML), letting the agent extract information precisely instead of guessing:
 
-These tools are typically installed via package managers like `npm`, `pip`, or `cargo`. They are designed to be called within an agentic loop, providing more structured (e.g., JSON output) or more LLM-"cognizant" feedback.
+- `gh pr list --json number,title,state` — GitHub CLI, direct JSON output
+- `kubectl get pods -o json` — Kubernetes, structured cluster state
+- `rg --json "pattern"` — ripgrep, search results in JSON format
+- `docker inspect` — container details, native JSON
+- `ast-grep --json "pattern"` — AST-level code search, JSON output
 
-For example, a code search tool designed for an agent might return not just the matching lines, but also the function signature and class definition containing those lines, providing richer context in a single step.
+Structured output means: **fewer parsing errors, more precise information extraction, more reliable subsequent actions.** If the CLI you're calling supports a `--json` flag, prefer it.
 
 ## Differences from Built-in Tools and MCP
 
-|                    | Built-in Tools                      | MCP (Model Context Protocol)        | CLI Tools                             |
-| ------------------ | ----------------------------------- | ----------------------------------- | ------------------------------------- |
-| **Source**         | Hardcoded by the agent developer    | External services via a protocol    | External programs via the shell       |
-| **Interface**      | Internal function call within the agent | Standardized network protocol (HTTP)| Standard I/O (stdin/stdout)           |
-| **Ecosystem**      | Closed, decided by the agent        | Open, requires MCP compliance       | Extremely mature, vast existing tools |
-| **Flexibility**    | Low, user cannot add or remove      | Medium, can connect to any MCP service| High, can install and call any CLI    |
+|                | Built-in Tools | MCP | CLI Tools |
+| -------------- | -------------- | --- | --------- |
+| **Source**     | Hardcoded by agent developer | External services via protocol | External programs via bash |
+| **Interface**  | Internal agent function | Protocol abstraction (stdio or HTTP) | stdin/stdout |
+| **Ecosystem**  | Closed, decided by agent | Open, requires MCP compliance | Extremely mature, vast existing tools |
+| **Flexibility**| Low, user cannot add/remove | Medium, connect any MCP Server | High, install and call any CLI |
 
-Simply put, CLI tools are the **simplest, most universal, and most mature** way for an agent to interact with the outside world.
+CLI tools are the **simplest, most universal, and most mature** way for an agent to interact with the outside world. If you're building a tool for agents, CLI-first is usually the safest bet — it forces you to expose core functionality in the purest, most composable way.
 
-## Design Implications
+## Three Things to Watch in Every Chapter
 
-If you are building a tool for an agent, **a CLI-first approach is the safest and most agent-friendly choice**. It forces you to think about the core functionality and expose it in the purest, most composable way.
+- **Context flow**: CLI stdout/stderr is captured and injected directly into the next round's context. Exit codes serve as success/failure signals. Oversized output gets truncated by the agent — mind your output volume.
+- **Risk**: CLI tools directly manipulate the OS; the risk of `rm -rf /` is real. An agent might incorrectly construct a destructive command. Some command outputs may contain sensitive information (environment variables, API keys, private keys).
+- **Auditability**: Every shell command the agent executes and its output should be logged — a complete audit trail, the foundation for debugging and security reviews.
 
-## Cross-Cutting Concerns
-
-- **Context Flow**: The `stdout` and `stderr` of a CLI command are captured and injected directly into the next turn's context as plain text for the LLM to reason about. If the output is too large, it may be truncated by the agent.
-- **Risks**: CLI tools have the power to directly manipulate the operating system; the risk of `rm -rf /` is real. An agent might incorrectly construct a destructive command. Furthermore, the output of some commands could contain sensitive information (like environment variables or private keys).
-- **Auditability**: Every shell command executed by the agent and its output should be logged. This provides a complete audit trail for debugging and security reviews.
+Next chapter: Knowledge Feeding — CLI tool output is ephemeral context. How do you distill it into knowledge the agent can use persistently?
