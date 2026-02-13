@@ -1,73 +1,98 @@
 # Human-in-the-Loop: You Are the Final Decision-Maker
 
-> **Context Perspective**: You, the human user, are the final gatekeeper in the context flow. You decide whether to accept, modify, or discard everything an agent produces.
+> **Context Perspective**: Every time you approve, reject, or modify, you rewrite the next round of context and change the Agent’s behavior. You’re not just reviewing—you’re shaping the Agent’s decision path.
 
-## Your Role in the Workflow
+The previous chapter covered verification—the machine judging right from wrong on its own. But some things the machine can’t judge: Should this go to production? Is this refactoring direction correct? Is deleting this data actually safe?
 
-Previous chapters focused on the agent's mechanics: how it understands and acts.
+Those calls are yours to make.
 
-Now, let's turn to you.
+## An Ideal and a Reality
 
-You are not a passive spectator. You are an indispensable part of the agent's workflow—the **supervisor, the decision-maker, the course-corrector**. You determine whether the value an agent creates can actually be realized.
+The ideal: you express intent, the Agent does everything, you accept the result. Zero intervention in between.
 
-The agent is your co-pilot. It can handle a massive workload, but the steering wheel is ultimately in your hands.
+The reality: Agents make mistakes, get stuck, and need your confirmation before high-risk operations. Your intervention is the safety net.
 
-## Letting Go vs. Stepping In: A Decision Framework
+But here’s an important insight: **if you find yourself constantly fixing the Agent’s half-finished work, that’s not "collaboration"—that’s the Agent (or your instructions) failing.** Healthy Human-in-the-Loop means your interventions decrease over time, not increase. Each intervention should be a signal: either improve the Agent’s configuration (better System Instructions, clearer prompts) or accept the current capability boundary.
 
-When can you let the agent fly solo, and when must you intervene? This isn't an emotional question; it's a risk assessment.
+## Your Three Positions in the Flow
 
-You can use this simple framework to make decisions:
+```mermaid
+flowchart LR
+    A["① You define the task"] --> B["Agent plans"]
+    B --> C{"Approval\nneeded?"}
+    C -->|"Low risk"| D["Agent executes autonomously"]
+    C -->|"High risk"| E["② You approve"]
+    E -->|"Approved"| D
+    E -->|"Modified"| F["Your changes\ninjected into context"]
+    F --> B
+    D --> G{"Verification\npassed?"}
+    G -->|"Passed"| H["③ You accept the result"]
+    G -->|"Failed + self-recoverable"| D
+    G -->|"Failed + needs you"| E
+```
 
-| Risk Quadrant | Task Characteristics | Your Strategy | Examples |
-|:---:|---|---|---|
-| **Low-Risk / Reversible** | Small blast radius, easy to revert, low verification cost | **Let Go (Auto-Approve)** | - Generate unit tests<br>- Refactor pure functions<br>- Draft initial documentation |
-| **Medium-Risk / Controllable** | Affects multiple files but is under version control, can be reverted quickly | **Observe & Spot-Check** | - Add a new feature<br>- Modify an API endpoint<br>- Upgrade dependencies |
-| **High-Risk / Irreversible** | Affects production, deletes data, public-facing releases | **Mandatory Approval Gate** | - Database migrations<br>- `git push --force`<br>- Deploying to production |
+1. **Input: Define the task.** You provide the intent, the background, and what "done" means. This is your first injection into the context—instruction quality determines everything downstream.
 
-The core principle: **The greater the potential negative impact of an operation, the deeper your intervention should be.**
+2. **Middle: Critical decision points.** The Agent pauses at high-risk operations and waits for your call. Your decision (approve / modify / reject) gets injected back into context, rewriting the Agent’s next move.
 
-## Setting Up Approval Gates
+3. **Output: Accept the result.** The Agent says "done." You confirm whether it actually is. For low-risk tasks, you can skip this; for high-risk ones, it’s the final gate.
 
-For high-risk operations, you need to establish explicit **manual approval gates** in the agent's workflow.
+The essence at every position is the same: **your decision → context changes → Agent behavior changes.**
 
-Think of it as the launch key for a nuclear submarine; you must be the one to turn it.
+## Letting Go vs. Stepping In
 
-An agent should explicitly request your approval before performing operations like these:
+Not every task needs your attention. The criterion isn’t gut feeling—it’s risk assessment.
 
-- **External Write Operations**: `git push`, publishing an npm package, deploying a website.
-- **Destructive Operations**: Deleting files, `git reset --hard`, wiping a database.
-- **Cost-Sensitive Operations**: Running expensive API calls, triggering large-scale CI/CD pipelines.
+| Risk Level | Task Characteristics | Your Strategy | Examples |
+|:---|---|---|---|
+| **Low / Reversible** | Small blast radius, easy rollback, low verification cost | **Let go** | Generate unit tests, refactor pure functions, draft docs |
+| **Medium / Controllable** | Multiple files involved, version-controlled | **Spot-check** | Add a feature, modify an API, upgrade dependencies |
+| **High / Irreversible** | Production environment, data deletion, public release | **Mandatory approval** | Database migration, `git push --force`, deploy to production |
 
-Good agentic tools will pause before these operations by default and provide a clear diff, allowing you to make an informed decision at a glance.
+Three hard triggers—regardless of how much you trust the Agent, these operations **must** get human confirmation:
+
+- **External writes**: `git push`, publishing npm packages, deploying websites
+- **Irreversible operations**: Deleting files, `git reset --hard`, wiping databases
+- **High-cost operations**: Expensive API calls, large-scale CI/CD pipelines
+
+Some Agent tools automatically pause before these operations and show a diff. If yours doesn’t, write it into your System Instructions: "You must request confirmation before executing the following operations."
 
 ## Course-Correction Strategies
 
-When an agent goes off track, you have three options:
+When the Agent goes off track, you have three paths:
 
-1.  **Interrupt Immediately**: Use this when the agent misunderstands your intent from the start or is performing a clearly incorrect action. It's the most direct way to avoid wasted effort.
-2.  **Let It Finish, Then Revise**: Suitable when the agent's overall direction is correct, but the implementation details are flawed. Let it complete the task, then you can make corrections based on its output. This preserves most of the agent's work.
-3.  **Abandon and Restart**: Use this when the context has become severely polluted or the task is so complex that the agent is stuck in an unrecoverable mess. In this case, abandoning the current session and starting a new, clean one with a clearer prompt is often more efficient than struggling in the mud.
+**Interrupt immediately.** The Agent misunderstood your intent from the start, or is executing something clearly wrong. The earlier you interrupt, the lower the sunk cost.
 
-Your choice of strategy depends on your judgment of **"sunk cost"** versus **"future gain."**
+**Let it finish, then revise.** The overall direction is right, but details are off. Let it complete, then correct based on the output. This preserves most of the Agent’s work.
 
-## Cognitive Debt: The Price of Over-Delegation
+**Abandon the session and start fresh.** The context is severely polluted; the Agent is stuck in an unrecoverable mess. Starting a new, clean session with clearer instructions is more efficient than struggling in the mud. This isn’t waste—it’s cutting your losses.
 
-There's a hidden risk to be aware of: **cognitive debt**.
+How to choose? Ask yourself: is the expected return of continuing greater than the cost of starting over?
 
-When you rely too heavily on an agent to handle everything, your understanding of the system can gradually dilute. The agent writes the code, fixes the bugs, and adjusts the architecture—a few months later, you might no longer know how certain modules work.
+## Cognitive Debt
 
-This is a form of technical debt, but the liability isn't in the code; it's in **your and your team's cognition**.
+A hidden but serious risk: **over-delegation erodes your understanding of the system.**
 
-How to mitigate cognitive debt?
+The Agent writes the code, fixes the bugs, adjusts the architecture—a few months later, you might not be able to explain how certain modules work. This isn’t technical debt. It’s **cognitive debt**. The liability isn’t in the code—it’s in your brain.
 
-- **Regular Code Reviews**: Seriously review the agent's commits, just as you would a colleague's.
-- **Get Your Hands Dirty**: For core or complex modules, insist on writing the code yourself or pair-programming with the agent, rather than fully delegating.
-- **Draw Architecture Diagrams**: Periodically have the agent generate or update system architecture and data flow diagrams to help you maintain a high-level understanding of the system.
+How to tell if you’re accumulating cognitive debt? A few symptoms:
 
-Remember, an agent is a tool to amplify your capabilities, not to replace your thinking.
+- Someone asks how a module works, and you need the Agent to explain it to you
+- Your code review time keeps shrinking—because you can’t really follow the code anymore, so you just trust the Agent
+- When something breaks, your first instinct isn’t to debug it yourself, but to ask the Agent to diagnose
 
-## Cross-Cutting Concerns
+Mitigation:
 
-- **Context Flow**: You inject your decisions into the context by approving, rejecting, or modifying the agent's output, guiding its next steps. The agent's output is your input for decision-making; your decision is the agent's input for its next round of reasoning.
-- **Risk Advisory**: The biggest risks are **over-trust and over-delegation**, leading to an accumulation of cognitive debt and a loss of control over the system. Another risk is **approval fatigue**, where you mindlessly approve an agent's requests.
-- **Auditability**: Every intervention you make—approving, rejecting, what you edited—should be logged. This is not only for tracing the cause of problems but also valuable data for reviewing and improving your collaboration model with the agent.
+- **Seriously review the Agent’s commits**—the same way you’d review a colleague’s code
+- **Write core modules yourself**, or pair-program with the Agent
+- **Regularly draw architecture diagrams**—the Agent can generate them, but you must understand and confirm them
+
+An Agent amplifies your capabilities. But if you don’t maintain your own understanding, what it amplifies is your ignorance.
+
+## Three Things to Watch in Every Chapter
+
+- **Context flow**: Every decision you make (approve, reject, modify) is a context injection. The Agent’s output is your input for decision-making; your decision is the Agent’s input for its next reasoning round. This is the only bidirectional closed loop in the entire tutorial—human and Agent are each other’s context.
+- **Risk**: Danger in both directions. Over-trust leads to cognitive debt accumulation and loss of control; approval fatigue means you rubber-stamp the Agent’s requests without thinking—no different from not reviewing at all.
+- **Auditability**: Every intervention you make—what you approved, rejected, changed—should be logged. This isn’t just for tracing issues; it’s your data source for reviewing whether your collaboration model with the Agent is healthy.
+
+Next is the final stop: Peer-to-Peer Agents. Until now, the human has always been the ultimate arbiter of context. But when multiple Agents start collaborating as peers, context flow gets more complex.

@@ -1,35 +1,31 @@
-# Eval: Verification & Observability
+# Verification & Observability
 
-> **Context-aware Perspective**: Verification results are themselves feedback context—telling the agent whether it did the right thing and how to course-correct.
+> **Context Perspective**: Verification results are themselves context—exit codes, test reports, lint output all get injected back into messages, driving the Agent’s next decision.
 
-An agent's work isn't a one-shot, black-box operation, but a series of verifiable steps. As a user, understanding verification mechanisms is key to building trust and intervening when it goes off track.
+The previous chapter established that a Sub Agent’s summary is compression, not truth. So how do you know it got things right?
 
-Verification isn't an isolated action but a continuous feedback loop that runs throughout an agent's lifecycle.
+Not just Sub Agents. Every output from an Agent—every tool call, every task result—could be wrong. Verification is the safety net.
 
-## The Three Layers of Verification
+## Step-by-Step Verification: From Commands to Tasks
 
-Imagine you're coaching a junior developer. You don't wait until the entire project is done to conduct a review; you set checkpoints at different stages. The same principle applies to agents.
+Verification isn’t something you do at the end. It runs throughout every step of the Agent’s work, from fine-grained to coarse.
 
-### Layer 1: Tool Call Validation
+### Layer 1: Did the command succeed?
 
-This is the most fundamental check. Every time an agent calls a tool (like `read_file`, `bash`), the system performs sanity checks.
+Every time the Agent calls a tool, the system automatically checks the result.
 
-- **Input Validation**: Does the path for `read_file` exist? Is the `bash` command safe?
-- **Output Validation**: Did the tool execute successfully or fail? Was the `bash` command's exit code 0? Was the file read without errors?
-
-This layer of validation is typically handled automatically by the agent's framework or the tools themselves. The execution result—success or failure, along with any return value or error message—is packaged into a `tool`-role message and injected back into the context.
+- **What’s verified**: A single tool call (`bash`, `read_file`, `write_file`…)
+- **Success signal**: Exit code 0, file read successfully, API returns 200
+- **On failure**: Error message injected back into context; Agent adjusts automatically
 
 ```json
 // → REQUEST (Agent decides to call a tool)
 {
   "role": "assistant",
-  "content": "Okay, I will execute `npm install`.",
   "tool_calls": [{ "name": "bash", "arguments": { "command": "npm install" } }]
 }
 
-// (The agent executes the bash command locally)
-
-// ← RESPONSE (The tool's execution result is injected into the next context)
+// ← RESPONSE (Tool result injected into next context round)
 {
   "role": "tool",
   "name": "bash",
@@ -37,52 +33,71 @@ This layer of validation is typically handled automatically by the agent's frame
 }
 ```
 
-When the LLM sees this `tool` message in the next turn, it knows that `npm install` failed because the `npm` command wasn't found. Based on this new context, it might decide to try `bun install` or ask you for help.
+The LLM sees this `tool` message in the next turn, knows `npm install` failed—`npm` not found—and decides to try `bun install` instead.
 
-### Layer 2: Task-Level Validation
+This layer is fully automatic. You don’t need to be involved. But it’s the foundation of the entire verification stack: if signals from this layer don’t get properly injected into context, everything above it breaks.
 
-A successful tool call doesn't mean the task is complete. When the agent says, "I'm done," is it really?
+### Layer 2: Is the task actually done?
 
-A "refactor code" task is successful not because the `edit_file` tool call succeeded, but because the refactored code passes all unit tests.
-A "deploy application" task is successful not because the `bash` command ran without errors, but because the deployed URL returns an HTTP 200 status.
+A successful command ≠ a completed task.
 
-This is task-level validation: **using real-world, external standards to determine if the agent has achieved the user's ultimate intent.**
+`edit_file` succeeding doesn’t mean the refactor is correct—you need to run the tests. `bash deploy.sh` returning exit code 0 doesn’t mean the deployment worked—you need to hit the URL and check for a 200.
 
-A smart agent will proactively ask for verification:
+- **What’s verified**: The completed task’s actual intent
+- **Success signal**: Real-world external standards (tests pass, build succeeds, API reachable)
+- **On failure**: Failure signal injected into context; Agent enters a correction loop (the iterative pattern from the previous chapter)
 
-> "I've moved the `isValidUser` function to `validators.js` and updated its references. To confirm everything is working correctly, which test file should I run?"
+The key point: **task-level pass/fail must also be injected back into context.** If the Agent runs tests but can’t see the results, it can’t judge whether the task is truly done.
 
-As the user, you need to provide the agent with the means for validation. The most common methods include:
-- Running a test command (`npm test`)
-- Executing a lint check (`eslint .`)
-- Calling an API endpoint and asserting the response
-- Checking the file system state (whether a file exists, if its content matches expectations)
+```json
+// Agent ran the tests; result injected into messages
+{
+  "role": "tool",
+  "name": "bash",
+  "content": "exit code: 1\nFAILED tests/auth.test.ts > should reject expired tokens\nExpected: 401, Received: 200"
+}
+```
 
-### Layer 3: Observability
+The Agent sees this message, realizes the refactor broke expired token validation, and targets the fix.
 
-This is the highest level of "validation"—continuously monitoring the agent's "vital signs." It goes beyond a simple pass/fail for a single task and focuses on the overall health and efficiency of the system.
+As the user, your job is to **define what "done" means**:
+- Which test command to run (`bun test`, `pytest`)
+- Which lint check to run (`eslint .`, `tsc --noEmit`)
+- What file state to verify
 
-Observability answers questions like:
-- **Resource Consumption**: How much did this task cost (token usage)? How long did it take?
-- **Behavioral Patterns**: Is the agent flip-flopping between two solutions? Is it stuck in an "edit -> test fail -> revert" loop?
-- **Effectiveness Assessment**: On average, how many steps does the agent need to solve a certain type of problem? What percentage of its proposed solutions do you accept?
+The clearer your definition of "done," the stronger the Agent’s self-verification capability.
 
-Observability data (logs, traces, metrics) is often sent to specialized platforms (like LangSmith or LangFuse), allowing you to analyze the agent's performance from a macro perspective instead of getting lost in the details of a single conversation.
+### Layer 3: Is the system reliable overall?
 
-## Reliability & Error Recovery
+The first two layers focus on individual tasks. Layer 3 steps back to look at the big picture.
 
-Even the most capable agent will make mistakes. The crucial part is whether it can recover from them.
+After using an Agent for a while, you start asking:
+- How many tokens did that task burn? Is it too expensive?
+- On average, how many tool-call rounds does the Agent need for this type of task? Getting better or worse?
+- Is it flip-flopping between two approaches?
 
-- **Rollback Strategy**: When task-level validation fails, the safest course of action is to roll back to the last known good state. For instance, if a code refactor breaks the tests, the agent should be able to undo all file modifications using `git stash` or a similar mechanism before trying again.
+This is observability—continuous monitoring of the Agent’s behavioral patterns.
 
-- **Infinite Loop Detection**: If an agent attempts the exact same failing step three times in a row, it's likely stuck in a loop. A robust agent will recognize this pattern, pause, and report: "I seem to be stuck. I've tried this three times without success. Perhaps we should try a different approach?"
+- **What’s verified**: Long-term behavioral patterns and resource consumption
+- **Success signal**: Completion rate rising, average steps declining, token cost reasonable
+- **Triggered action**: On anomaly—downgrade strategy, pause task, or escalate to human
 
-- **"It said it's done, but it's not"**: This is the trickiest failure mode. The agent's final response might be "Task completed!", but task-level validation shows a failure. This usually stems from insufficient context—the LLM can't see the validation failure signal. The solution is to ensure the validation step is a mandatory part of the agent's workflow, with its result always injected back into the context.
+Some Agent tools have basic observability built in (token counts, execution time). For deeper analysis, platforms like LangSmith or LangFuse exist—but for most users, watching token consumption and execution rounds is sufficient.
 
-The outcome of verification, whether success or failure, is the most critical fuel driving the agent forward—or correcting its course.
+## Error Recovery
 
-## Cross-Cutting Concerns
+Agents make mistakes. What matters is whether they can pick themselves back up.
 
-- **Context Flow**: Consumes=The validation criteria you provide (e.g., a test command). Produces=Pass/fail signals, error messages, and performance metrics, all of which are injected back as new context to guide the next action.
-- **Risk Advisory**: Insufficient or missing validation is the root cause of runaway agent projects. A minor tool-level error, if not caught early, can be amplified in subsequent steps, leading to a catastrophic failure of the entire task.
-- **Auditability**: The logs from each layer of verification form a golden audit trail. The inputs and outputs of tool calls, the success/failure records of task validation, and the trace diagrams on an observability platform collectively create a complete, traceable history of operations.
+**Rollback**: When task-level verification fails, return to the last known good state. Say a code refactor breaks the tests—the Agent uses `git checkout` to undo the changes and tries a different approach. The key is establishing a rollback point before making changes. Good Agents check that git status is clean before starting major edits.
+
+**Stuck loop detection**: If the Agent keeps trying the same approach but keeps failing (hitting the retry threshold), it should stop and switch strategies instead of continuing to hit the wall. When you see the Agent say "I seem to be stuck"—that’s a good sign. It recognized the loop.
+
+**False completion**: The trickiest failure mode. The Agent says "Done!" but task-level verification shows failure. Usually because the verification step wasn’t enforced—the Agent skipped tests and declared victory. The fix: make verification mandatory in your instructions ("After editing, you must run `bun test`. All tests passing = done"), ensuring the result gets injected back into context.
+
+## Three Things to Watch in Every Chapter
+
+- **Context flow**: Each verification layer produces signals (exit codes, test reports, metrics) that get injected back into context, becoming the basis for the Agent’s next decision. Verification isn’t a post-mortem—it’s real-time navigation.
+- **Risk**: Insufficient verification is the root cause of runaway Agent projects. A small tool-level error, if not caught early, gets amplified through subsequent steps—leading to catastrophic task failure.
+- **Auditability**: Logs from all three verification layers form a complete audit chain. Tool call inputs/outputs, task verification pass/fail records, observability metrics—these let you trace what the Agent saw, what it did, and why, at every decision point.
+
+Next up: Human-in-the-Loop. Verification tells you whether things are right or wrong. When the answer is "wrong" and the operation is irreversible—it’s time for a human to step in.

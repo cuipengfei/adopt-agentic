@@ -100,6 +100,33 @@ Claude Code 随 Opus 4.6（2026-02-05）发布了 **Agent Teams** 功能（Resea
 
 ---
 
+## 实测验证（2026-02-13）
+
+用 Claude Code Agent Teams 实际跑了一次 P2P 验证。场景：Lead Agent spawn 两个 teammates（Alpha=前端、Beta=后端），Alpha 提 API 方案，Beta 做后端挑战。
+
+### 验证到的通信链路
+
+| 链路 | 方向 | 结果 |
+|------|------|------|
+| Lead → Teammate (DM) | team-lead → beta | ✅ |
+| Lead → All (Broadcast) | team-lead → alpha, beta | ✅ |
+| Teammate → Lead | alpha/beta → team-lead | ✅ |
+| Teammate ↔ Teammate (P2P) | alpha ↔ beta | ✅ |
+| Shared Task List | 创建/认领/完成 | ✅ |
+
+### 观察到的行为
+
+1. **异步时序竞争**：Alpha 发方案给 Beta，Beta 在处理 lead 的消息没看到，Alpha 又催了一次。Beta 回了挑战，Alpha 在处理广播又没收到。两个 agent 互相催"你回了没"。
+2. **Fire-and-forget**：Beta 给已 shutdown 的 Alpha 发消息不报错。
+3. **可观测性**：Lead 通过 idle notification 的 `summary` 字段看到 peer DM 摘要（如 `[to alpha] 后端评估：ID 枚举、鉴权与扩展性建议`），但看不到全文。
+4. **总耗时**：约 90 秒完成创建 team → spawn → 通信 → shutdown → cleanup 全流程。
+
+### 结论
+
+Claude Code Agent Teams 的 P2P messaging 机制实锤可用。Tier 1 分类中该产品的定位准确。
+
+---
+
 ## 来源与验证
 
 - **搜索引擎**：Tavily（advanced depth）、Exa、Firecrawl
