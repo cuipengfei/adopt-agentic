@@ -88,6 +88,8 @@ Some Agent tools have basic observability built in (token counts, execution time
 
 Agents make mistakes. What matters is whether they can pick themselves back up.
 
+A counterintuitive finding: **don't rush to erase errors.** Failed attempts left in context actually help the LLM avoid repeating the same mistake—it implicitly learns "that path doesn't work" from the failure record. Blindly pruning conversation history can backfire because you're wiping out valuable negative experience alongside the noise. This doesn't mean never clean up—context windows are finite. The key is distinguishing "stale noise" from "failure records that still inform."
+
 **Rollback**: When task-level verification fails, return to the last known good state. Say a code refactor breaks the tests—the Agent uses `git checkout` to undo the changes and tries a different approach. The key is establishing a rollback point before making changes. Good Agents check that git status is clean before starting major edits.
 
 **Stuck loop detection**: If the Agent keeps trying the same approach but keeps failing (hitting the retry threshold), it should stop and switch strategies instead of continuing to hit the wall. When you see the Agent say "I seem to be stuck"—that’s a good sign. It recognized the loop.

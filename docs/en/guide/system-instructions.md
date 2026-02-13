@@ -75,6 +75,8 @@ These user-level instructions are typically appended to the agent's base instruc
 
 Don't treat your system instructions as a one-off note. They are a **living document, an asset that needs to be maintained just like code**.
 
+Some call project-level instruction files "organizational scar tissue"—every prohibition traces back to a real incident. But instruction files aren't only scars. The proven patterns that survived repeated validation are in there too. **Scars tell the Agent what not to do; crystals tell it how things should be done.** Together, they form the team's complete institutional wisdom.
+
 -   **Version it**: Use Git to manage your instruction files and track every change.
 -   **Review it**: Have colleagues review your instructions just as they would review code.
 -   **Iterate on it**: Continuously refine and add new rules based on the agent's performance.

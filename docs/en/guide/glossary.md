@@ -27,4 +27,7 @@
 | Human-in-the-loop (HITL) | Human-in-the-loop | Inserting human decision points into an Agent's automated flow—for high-risk, irreversible, or validation-failure scenarios. |
 | Cognitive Debt | 认知债务 | The comprehension gap that builds when an Agent keeps requesting human input but the human can't keep up. Symptoms: rubber-stamping approvals, accepting diffs unread, skipping logs. |
 | Peer-to-Peer Agents (P2P) | P2P Agent | Multiple Agents collaborating as peers, with context flowing bidirectionally among equals rather than in one-way delegation. |
+| Prompt Engineering | 提示工程 | The craft of hand-tuning a single prompt to improve LLM output quality. The predecessor to Context Engineering. |
+| Context Engineering | 上下文工程 | Designing dynamic systems that provide the right information and tools, in the right format, at the right time, to give an LLM everything it needs. The evolution from "writing a good prompt" to "managing an entire context supply chain." |
+| Agentic Engineering | Agentic 工程 | The full engineering discipline of building software effectively with AI agent tools—spanning context management, tool selection, parallel orchestration, feedback loops, and quality verification. Context Engineering is its core sub-discipline. |
 | Fire-and-forget | Fire-and-forget | A messaging model where messages are sent without waiting for acknowledgment. Simplifies system design, but you cannot assume every message was processed. |

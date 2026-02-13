@@ -116,7 +116,7 @@ What happens when the window fills up? Earlier messages get truncated or compres
 
 Stuffing an entire codebase into context is tempting, and disastrous.
 
-Good context management means "retrieving the right few dozen key facts," not "dumping all text in at once." When irrelevant information dominates, the model's attention dilutes — it may ignore critical constraints, or "borrow" wrong patterns from unrelated code.
+Good context management means "retrieving the right few dozen key facts," not "dumping all text in at once." The goal is to **include only what the LLM actually needs to make its decision**—just enough, not one wasted sentence. When irrelevant information dominates, the model's attention dilutes — it may ignore critical constraints, or "borrow" wrong patterns from unrelated code.
 
 Hand an extremely smart stranger an entire filing cabinet and say "the relevant stuff is in there somewhere." They'll find some useful things, but they'll also be misled by the noise.
 

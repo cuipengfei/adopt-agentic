@@ -27,4 +27,7 @@
 | Human-in-the-loop | HITL                                | 在 Agent 自动执行流程中插入人类决策点——用于高风险、不可逆或验证失败的场景。                                  |
 | 认知债务          | Cognitive Debt                      | Agent 持续要求人类介入但人类跟不上时产生的理解差距。症状：无脑批准、跳过 diff 直接 accept、不看日志。        |
 | P2P Agent         | Peer-to-Peer Agents                 | 多个 Agent 平级协作，上下文在对等体之间双向流动而非单向委派。                                                |
+| 提示工程          | Prompt Engineering                  | 手工打磨单条 prompt 以提升 LLM 输出质量的技艺。Context Engineering 的前身。                                  |
+| 上下文工程        | Context Engineering                 | 设计动态系统，在正确的时间以正确的格式向 LLM 提供正确的信息和工具。从"写好一条 prompt"演进到"管理整个上下文供给链"。 |
+| Agentic 工程      | Agentic Engineering                 | 用 AI agent 工具高效构建软件的工程实践全集——涵盖上下文管理、工具选型、并行编排、反馈闭环、质量验证等全链路。上下文工程是其核心子领域。 |
 | Fire-and-forget   | Fire-and-forget                     | 消息发出后不等确认回执的通信模式。简化系统设计，但不能假设每条消息都被处理了。                               |

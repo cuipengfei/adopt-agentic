@@ -32,6 +32,8 @@ This is the most direct form of knowledge feeding:
 
 The rule layer's defining trait: **globally effective, enforced on every session, always present**. It's the foundation of the Agent's worldview.
 
+These rules are two kinds of distilled experience: **scars**—every "never" traces back to a real incident; and **crystals**—every "always" traces back to a proven pattern. New hires (and Agents) don't need to learn the hard way or reinvent the wheel, because the team's scars and crystals already remember.
+
 The cost is equally clear: it permanently occupies context window space. Cram in too many rules and you leave less room for actual work.
 
 ### 2. Capability Layer: Hiring a Tutor

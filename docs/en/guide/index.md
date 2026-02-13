@@ -14,6 +14,8 @@ All the complex mechanisms of agentic programming, from tool use to multi-agent 
 
 LLMs have no memory. What you give them is what they see. Every section of this guide dissects how context flows. Every capability here—tools, protocols, orchestration—is context engineering in disguise.
 
+The industry calls this **Context Engineering**—the evolution from "writing a good prompt" to "designing dynamic systems that manage an entire context supply chain." The broader discipline of building software with agent tools is emerging as **Agentic Engineering**—context engineering is its most essential sub-discipline, and the throughline of this guide.
+
 The next chapter, [Context — The First Principle](./context.md), cracks this open with two rounds of HTTP requests.
 
 ## Concept Map
