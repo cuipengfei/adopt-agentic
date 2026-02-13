@@ -1,6 +1,7 @@
 import { defineConfig } from "vitepress";
+import { withMermaid } from "vitepress-plugin-mermaid";
 
-export default defineConfig({
+export default withMermaid(defineConfig({
   base: "/adopt-agentic/",
   head: [
     [
@@ -105,4 +106,4 @@ export default defineConfig({
       message: "Released under the MIT License.",
     },
   },
-});
+}));

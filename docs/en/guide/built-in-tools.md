@@ -2,29 +2,23 @@
 
 > **Context Perspective**: Tool definitions are the LLM's guide to action, and tool return values are its way of perceiving the world. Together, they form critical context.
 
-## What Are Built-in Tools?
+The previous chapter covered how system instructions define the LLM's behavioral baseline. But identity alone isn't enough — the LLM needs the ability to **act**.
 
-If the LLM is the brain, built-in tools are its hands, feet, and senses.
+Built-in tools are that ability. They're functions pre-written by agent developers — reading files, executing commands, searching code, accessing the web — integrated directly into the agent, executed on your local machine.
 
-They are functions pre-written and integrated into the Agent by its developers, allowing the LLM to interact with your local environment. These are not capabilities inherent to the LLM; they are "superpowers" granted by the Agent, available for the LLM to call.
+Of these, `bash` (or `shell`) is the most versatile. In theory it can do anything — read files, install dependencies, run tests, check Git history, curl an API. So why have other tools at all? Because specialized tools are safer and more precise: `read_file` is more controllable than `cat`, `edit_file` is less error-prone than manually splicing file contents.
 
-Common built-in tools include:
-- **File Operations**: `read_file`, `write_file`, `edit_file`
-- **Command Execution**: `bash` or `shell`
-- **Code Search**: `grep` or more advanced LSP-based searches
-- **Web Access**: `web_search`, `scrape_url`
-
-The LLM cannot execute these operations directly. It can only generate a JSON object requesting the Agent to execute it on its behalf.
+The LLM can't run these functions itself. What it can do is generate a JSON request telling the agent "execute this operation for me." The agent executes it, feeds the result back. This loop is the core engine of agentic workflows.
 
 ## The Tool-Call Flow
 
-The core of an agentic workflow is the "reason-act" loop, which is realized through tool calls. Let's walk through how it works with a complete HTTP request/response flow.
+Let's trace this engine through a complete HTTP request/response flow.
 
-Imagine you ask the Agent: "Rename the `log` function in `logger.js` to `logEvent`."
+Imagine you ask the agent: "Rename the `log` function in `logger.js` to `logEvent`."
 
 **── Round 1: From Intent to Tool Call ──**
 
-The Agent packages your instruction, along with the system prompt (which contains definitions for all available tools), and sends it to the LLM.
+The agent packages your instruction along with the system prompt containing all available tool definitions, and sends it to the LLM.
 
 ```json
 // → REQUEST (agent → LLM API)
@@ -39,15 +33,16 @@ The Agent packages your instruction, along with the system prompt (which contain
 }
 ```
 
-After reasoning, the LLM determines it needs to read the file's content before making changes. So, instead of replying with a block of code, it returns a `tool_calls` array, requesting the Agent to execute the `read_file` tool.
+After reasoning, the LLM decides it needs to see the file contents first. Instead of outputting code directly, it returns a `tool_calls` request:
 
 ```json
 // ← RESPONSE (LLM API → agent, SSE stream)
 {
   "role": "assistant",
-  "content": "Okay, I'll read the contents of `logger.js` first.",
+  "content": "Okay, I'll read the contents of logger.js first.",
   "tool_calls": [
     {
+      "id": "call_abc123",
       "name": "read_file",
       "arguments": { "filePath": "src/logger.js" }
     }
@@ -55,21 +50,21 @@ After reasoning, the LLM determines it needs to read the file's content before m
 }
 ```
 
-**Important**: At this point, no files have been modified. The LLM has only proposed a **plan of action**.
+At this point, no files have been modified. The LLM has only proposed a **plan of action**.
 
 ---
 
 **Local Execution**
 
-Upon receiving the response, the Agent parses the `tool_calls` array. It finds a request to call a tool named `read_file`, so it executes this function on the **local filesystem**, reading the contents of `src/logger.js`.
+The agent receives the response, parses `tool_calls`, and executes `read_file` on the **local filesystem**, reading the contents of `src/logger.js`.
 
-This process happens entirely on your local machine and does not involve another call to the LLM API.
+This happens entirely on your machine — no additional LLM API call involved.
 
 ---
 
 **── Round 2: Resuming Reasoning with New Context ──**
 
-The Agent wraps the result of the tool execution (the file's content) into a `tool`-role message, appends it to the conversation history, and sends a new request to the LLM.
+The agent wraps the tool execution result into a `tool`-role message, appends it to the conversation history, and sends a new request. Notice the messages are longer than Round 1 — the context is growing.
 
 ```json
 // → REQUEST (agent → LLM API)
@@ -83,27 +78,28 @@ The Agent wraps the result of the tool execution (the file's content) into a `to
     {
       "role": "assistant",
       "tool_calls": [
-        { "name": "read_file", "arguments": { "filePath": "src/logger.js" } }
+        { "id": "call_abc123", "name": "read_file", "arguments": { "filePath": "src/logger.js" } }
       ]
     },
     {
       "role": "tool",
-      "tool_call_id": "call_abc123", // ID for association
+      "tool_call_id": "call_abc123",
       "content": "export function log(message) { console.log(message); }"
     }
   ]
 }
 ```
 
-Now, the LLM's context includes the actual content of the file. Based on this information, it can accurately generate the modification plan, requesting the `write_file` or `edit_file` tool to apply the changes.
+The LLM's context now includes the actual file content. It generates the modification plan:
 
 ```json
 // ← RESPONSE (LLM API → agent, SSE stream)
 {
   "role": "assistant",
-  "content": "File content read. I will now perform the rename operation.",
+  "content": "File content read. Performing the rename now.",
   "tool_calls": [
     {
+      "id": "call_def456",
       "name": "write_file",
       "arguments": {
         "filePath": "src/logger.js",
@@ -114,31 +110,35 @@ Now, the LLM's context includes the actual content of the file. Based on this in
 }
 ```
 
-The Agent once again executes `write_file` locally, completing the rename. A full "read-modify-write" cycle is complete.
+The agent executes `write_file` locally again. A complete "read-modify-write" cycle is done.
 
-## The Critical Role of Context
+## How Tools Shape Context
 
-Tools play a dual role in the context of agentic programming:
+After walking through this flow, you can see tools shape the LLM's context from two directions:
 
-1.  **Tool Definitions as Input Context**: In every request's `system` prompt or a similar field, the Agent tells the LLM what tools are available and what parameters each tool takes. This is the basis for the LLM's action planning. Without this "tool manifest," the LLM wouldn't know what it can do.
+1. **Tool definitions → static context**: Every request's `system` or `tools` field carries the full tool manifest. Your agent has 15 tools? Then every single request — regardless of what the user asked — sends all 15 tool names, descriptions, and parameter schemas to the LLM. That's what "static" means: it doesn't change based on conversation content, but it always occupies context window. The LLM relies on it to plan actions — without knowing what tools are available, it can't decide what to do next.
+2. **Tool return values → dynamic context**: Each tool execution result is appended to `messages`, becoming input for the next round of reasoning. `read_file` lets the LLM see the code; `bash` output tells it the current Git branch.
 
-2.  **Tool Return Values as Output Context**: The result of a tool's execution is added back to the `messages` list, becoming critical information for the next round of reasoning. The result of `read_file` lets the LLM see the code; the output of a `bash` command tells the LLM the current Git branch. The LLM relies on these return values to perceive the state of the external world and decide its next move.
+The LLM knows "what it can do" from tool definitions, and "what the world looks like" from return values.
 
 ## The Trust Boundary
 
-Built-in tools are powerful, but they also introduce risks because the Agent will **actually execute** the tool calls requested by the LLM.
+Built-in tools are powerful, but risky — the agent will **actually execute** whatever operations the LLM requests.
 
-If an LLM hallucinates a `bash` call with `rm -rf /` as arguments, an Agent without safety checks might blindly execute it.
+LLM hallucinates `bash rm -rf /`? An agent without safety checks will comply.
 
-Therefore, good Agent tools incorporate trust boundaries:
-- **Confirmation for Dangerous Operations**: Seeking user consent before executing high-risk commands like `rm` or `git push --force`.
-- **Scope Limitation**: Restricting tools to read and write files only within the current project directory to prevent accidental modification of system files.
-- **Previewing Changes**: Displaying a diff for user review before writing to a file.
+Good agent tools establish trust boundaries:
 
-As a user, you need to be aware of the extent of your Agent's tool permissions and consciously supervise its high-risk operations.
+- **Confirmation for dangerous ops**: Seeking user consent before executing `rm` or `git push --force`.
+- **Scope limitation**: Restricting file operations to the project directory — no touching system files.
+- **Change preview**: Displaying a diff for review before writing to a file.
 
-## Cross-Cutting Concerns
+You need to know the extent of your agent's permissions and consciously supervise high-risk operations.
 
-- **Context Flow**: Tool definitions exist as static context in every API call, continuously consuming part of the token window. Tool return values accumulate as dynamic context in the conversation history.
-- **Risk Alert**: A large tool return value (e.g., reading a huge file or log) can instantly exhaust the context window, causing critical early information to be truncated. Furthermore, automatic execution of tools like `bash` carries the risk of running destructive commands.
-- **Auditability**: Every tool call request (`tool_calls`) and its result (`tool` role message) is clearly logged in the conversation history. This provides an irrefutable evidence chain for tracing every action the Agent takes.
+## Three Things to Watch in Every Chapter
+
+- **Context flow**: Tool definitions are static context, present in every request; tool return values are dynamic context, appended after execution. Together they drive the LLM's "act-perceive" loop.
+- **Risk**: `read_file` on a 10MB log? Context window instantly blown, critical early information truncated. `bash` auto-executing `rm -rf`? An agent without confirmation will actually do it.
+- **Auditability**: Every `tool_calls` request and its corresponding `tool`-role message lives in the conversation history — a complete evidence chain of actions.
+
+Next chapter: MCP — when built-in tools aren't enough, how to let agents call external services. The execution path changes, but to the LLM, everything looks the same.

@@ -2,33 +2,46 @@
 
 > **Context Perspective**: The definitions and return values of MCP tools enter the context just like built-in tools. The LLM does not distinguish their origins.
 
-Built-in tools are powerful, but ultimately limited. What if you want your agent to connect to your project management tool, call a company-internal API, or integrate a brand-new service?
+The previous chapter's built-in tools all execute locally — reading files, running commands, the agent handles it directly. But what if you want the agent to search Jira tickets, query Slack messages, or call a company-internal API?
 
-Waiting for the agent's developer to add it? Impractical. Modifying the agent's source code yourself? Unrealistic.
+Wait for the agent developer to add it? Impractical. Modify the agent's source code yourself? Even less realistic.
 
-You need a standardized way for **external capabilities** to be discovered and used by the agent. This is where MCP (Model-Context Protocol) comes in.
+You need a standard interface that lets **any external capability** plug into the agent. That's MCP (Model Context Protocol).
 
 ## What is MCP?
 
-MCP is a protocol, not a specific implementation.
+One sentence: **the USB port of the agent world.**
 
-It defines a set of standards that allow anyone to develop tools for an agent without modifying the agent's own code.
+MCP is an open protocol. It defines a standard that allows anyone to develop tools for an agent without modifying the agent's own code. Just as a USB device doesn't need to understand a computer's internals, an MCP tool doesn't need to know the agent's implementation details.
 
-Think of it as the webhooks or plugin system of the agent world. Your application doesn't need custom code for every third-party service; as long as everyone follows a public convention (like HTTP POST + JSON), they can communicate.
+The agent dynamically discovers and loads these external tools at runtime. You just configure it — no code required.
 
-MCP is that convention.
+## Server and Client
 
-It allows an agent to dynamically discover and integrate third-party tools at runtime. These tools run on independent "MCP Servers," maintained by the tool developers themselves.
+These two terms trip people up. Let's clear up a common misconception: **an MCP Server is not necessarily a remote server.**
+
+- **MCP Client**: A component running inside the agent, responsible for discovering, connecting to, and calling tools on MCP Servers. You typically don't interact with it directly.
+- **MCP Server**: The party that provides tools. It can be a local process or a remote HTTP service.
+
+You'll encounter all kinds of MCP Servers. Some real examples: Context7 (documentation lookup), Tavily/Exa (search engines), DeepWiki (repository documentation), Firecrawl (web scraping), Grep.app (GitHub code search). Some run locally on your machine via stdio (like Context7, Firecrawl), others run as remote HTTP services (like Exa, DeepWiki, Tavily).
+
+### Two Transport Modes
+
+MCP supports two ways to connect to a Server:
+
+**stdio (local child process)**: The agent spawns a child process to run the MCP Server. Communication goes through stdin/stdout, and the agent manages the process's entire lifecycle — startup, communication, shutdown. When you write `command: "npx", args: ["-y", "@modelcontextprotocol/server-postgres"]` in your config, this is the mechanism behind it.
+
+**Streamable HTTP (remote service)**: The MCP Server runs as an independent HTTP service, and the agent connects via HTTP requests. Suited for scenarios requiring persistent uptime or shared access across multiple agents.
+
+For you, the difference is just configuration. For the LLM, it doesn't know and doesn't care.
 
 ## Functionally Equivalent, Different Origin
 
-To the LLM, it makes **absolutely no difference** whether a tool is built-in or accessed via MCP.
-
-In its eyes, they are all just tools.
+Here's the key: to the LLM, built-in tools and MCP tools are **indistinguishable**.
 
 **── Round 1 ──**
 
-Let's say we have a `search_jira` tool accessed via MCP. When a user asks a question, the agent places the definitions of **all available tools** (both the built-in `read_file` and the external `search_jira`) into the context and sends it to the LLM.
+Say we have a `search_jira` tool accessed via MCP. When the user asks a question, the agent places **all available tools** (built-in + MCP) into the context together:
 
 ```json
 // → REQUEST (agent → LLM API)
@@ -46,13 +59,11 @@ Let's say we have a `search_jira` tool accessed via MCP. When a user asks a ques
       "input_schema": { "...": "..." }
     }
   ],
-  "messages": [
-    { "role": "user", "content": "Look up tickets related to 'database performance'" }
-  ]
+  "messages": [{ "role": "user", "content": "Look up tickets related to 'database performance'" }]
 }
 ```
 
-The LLM sees two available tools and chooses the most appropriate one based on the user's intent.
+The LLM picks the most appropriate tool:
 
 ```json
 // ← RESPONSE (LLM API → agent, SSE stream)
@@ -60,57 +71,63 @@ The LLM sees two available tools and chooses the most appropriate one based on t
   "role": "assistant",
   "content": "Okay, searching Jira...",
   "tool_calls": [
-    { "name": "search_jira", "arguments": { "query": "database performance" } }
+    { "id": "call_xyz789", "name": "search_jira", "arguments": { "query": "database performance" } }
   ]
 }
 ```
 
-The LLM returns a `tool_calls` request, same as always.
+LLM's perspective: identical to calling `read_file` — just a `tool_calls` response.
 
-The difference lies in how the agent executes it:
-- For `read_file`, the agent executes it **locally**.
-- For `search_jira`, the agent makes a **network request** to the corresponding MCP Server to execute the tool.
+Agent's perspective: different execution path.
 
-```
-            ┌────────────────┐        ┌────────────────┐
-Agent       │ Executes       │        │ Sends request to │      MCP Server
- in your    │ 'read_file'    │        │ 'search_jira'    │ ──────► on the internet
- editor     │ locally        │        │ tool             │
-            └────────────────┘        └────────────────┘
+```mermaid
+flowchart LR
+  A[Agent] -->|Execute locally| B["read_file — Direct filesystem access"]
+  A -->|Forward request| C["MCP Server — Execute search_jira"]
 ```
 
-The MCP Server performs the search and returns the result to the agent. The agent then packages this result, along with the previous conversation history, into a new context to send to the LLM for the next step.
+**── Round 2 ──**
 
-For the LLM, the subsequent context is **indistinguishable** from a built-in tool's return value:
+After the MCP Server returns results, the agent wraps them into a `tool`-role message and appends to the conversation history. Same format as built-in tool results:
 
 ```json
 // → REQUEST (agent → LLM API)
 {
   "messages": [
-    // ... (previous messages)
+    // ... previous messages
     {
       "role": "tool",
-      "tool_use_id": "...",
-      "content": "[ { \"id\": \"PROJ-123\", \"title\": \"Optimize indexes\" }, { ... } ]"
+      "tool_call_id": "call_xyz789",
+      "content": "[{\"id\": \"PROJ-123\", \"title\": \"Optimize database indexes\"}, {\"id\": \"PROJ-456\", \"title\": \"Slow query investigation\"}]"
     }
   ]
 }
 ```
 
-The LLM only cares that it received Jira search results; it doesn't know or need to know whether these results came from the local filesystem or a server miles away.
+```json
+// ← RESPONSE (LLM API → agent, SSE stream)
+{
+  "role": "assistant",
+  "content": "Found two related tickets:\n1. PROJ-123 — Optimize database indexes\n2. PROJ-456 — Slow query investigation\n\nWant me to look into either of these in detail?"
+}
+```
 
-## Why It Matters: An Open Ecosystem
+The LLM only cares that it got search results. It doesn't know or need to know whether they came from the local machine or a remote server.
 
-MCP breaks the closed nature of agents.
+One-line summary: **LLM layer — fully equivalent. Agent execution layer — different paths.**
 
-Without MCP, an agent's capabilities are determined solely by its developers. You can only use the built-in tools they provide.
+## Why It Matters
 
-With MCP, any developer can create new capabilities for any agent compatible with the protocol. An MCP Server written for Jira could, in theory, be used by Claude Code, Cursor, or any other agent that supports MCP.
+MCP's value isn't "yet another protocol." Its value is **freeing you from depending on the agent developer**:
 
-This creates an open, interoperable ecosystem of tools.
+- **Don't wait for updates**: Want Jira integration? Install an MCP Server. No need to wait for the next agent release.
+- **Connect internal systems**: Your company's internal API will never get official support, but you can write (or find) an MCP Server for it.
+- **Reuse across agents**: An MCP Server can theoretically be used by any agent that supports the protocol — not locked to a specific tool.
 
-## Cross-Cutting Concerns
+## Three Things to Watch in Every Chapter
 
-- **Context Flow**: The definitions of MCP tools are injected into every request, consuming tokens in the context window. The tool's return value is injected after execution, becoming the basis for subsequent reasoning.
-- **Risk Advisory**: Trust is the biggest issue. A malicious MCP Server could return false information to pollute your context or log your sensitive requests. Agents need clear permission controls and user approval mechanisms to decide whether to trust and execute tools from external sources.
-- **Auditability**: Network requests between the agent and the MCP Server should be fully logged. This makes every external tool call traceable, providing a clear record of what was requested and what was returned.
+- **Context flow**: MCP tool definitions are injected into every request (static); return values are appended after execution (dynamic). They travel the same context pipeline as built-in tools — the LLM perceives no difference.
+- **Risk**: MCP's trust problem is sharper than built-in tools. A malicious MCP Server could return false data to pollute your context, or log your sensitive requests. Installing an MCP Server is like installing a browser extension — is the source trustworthy? Are the permissions reasonable?
+- **Auditability**: Every interaction between the agent and MCP Server should be logged — what was requested, what was returned, how long it took. When something goes wrong, this is your investigation trail.
+
+Next chapter: Slash Commands — how to package common operations into one-click shortcuts.
