@@ -2,7 +2,7 @@
 
 > **Context Perspective**: No matter which path you use to inject knowledge, it all ends up as information in the context—the difference is **when it enters, how much, and how long it stays**.
 
-The previous eight chapters dissected context carriers—System Instructions, Tools, MCP, Commands, Skills, CLI Tools. Each solves one problem: how to get information into the context.
+The previous nine chapters dissected context carriers—System Instructions, Tools, MCP, Commands, Skills, CLI Tools, Hooks & Plugins. Each solves one problem: how to get information into the context, or how to intercept and modify the context flow.
 
 This chapter flips the perspective: **you're on the supply side. You have project knowledge, team conventions, personal preferences—how do you systematically get them in?**
 

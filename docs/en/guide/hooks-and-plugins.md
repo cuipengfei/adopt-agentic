@@ -1,0 +1,155 @@
+# Hooks & Plugins — Behavior Interception and Extension
+
+> **Context perspective**: Hooks programmatically execute user logic at critical points in the context flow—intercepting operations, modifying context content, logging events. Plugins are third-party extension packages for the agent, expanding capabilities through programming interfaces far beyond just mounting hooks.
+
+Previous sections covered various ways to "put things into context": System Instructions inject rules, MCP injects tools, Skills inject knowledge, CLI Tools inject capabilities.
+
+But some needs can't be solved by "declaratively putting things in":
+
+- Before the agent executes `rm -rf`, you want to **automatically block it**.
+- After the agent finishes a task, you want a **desktop notification**.
+- During session compaction, you want to **rewrite the compaction instructions**, force-preserving specific context.
+- When building the system prompt, you want to **dynamically append rules** based on runtime state.
+- On every tool call, you want to **log** to an external system.
+
+These need a new mechanism: not declaratively placing content, but **programmatically intervening in the context flow**.
+
+## Hooks — Event-Driven Behavior Control
+
+An agent goes through a series of **lifecycle events** during execution—starting a session, user submitting a prompt, calling a tool, finishing a task. Hooks let you attach your own logic to these events.
+
+Same pattern as HTTP middleware: intercept → inspect → allow, deny, or modify.
+
+```
+User submits prompt
+    ↓
+Agent prepares to call tool
+    ↓ Fires "before tool call" event
+    ↓ Executes your hook logic
+    ↓ Hook returns: allow / block / modify parameters
+    ↓
+Agent continues or aborts based on hook decision
+    ↓
+Tool execution completes
+    ↓ Fires "after tool call" event
+    ↓ Executes your hook logic (logging, validation, result modification)
+    ↓
+Agent continues reasoning
+```
+
+### Lifecycle Events
+
+Different agent tools support different event sets and naming, but the core types are consistent:
+
+| Event Type | When | What You Can Do |
+| --- | --- | --- |
+| **Session start** | Session launches | Initialize environment, inject env vars |
+| **Prompt submit** | User submits prompt | Intercept or rewrite the prompt |
+| **Before tool call** | Tool about to execute | Block dangerous commands, auto-approve safe operations |
+| **After tool call** | Tool finished | Logging, result validation, modify return values |
+| **System prompt transform** | Building system prompt | Dynamically modify system prompt content |
+| **Session compaction** | Context about to be compacted | Inject compaction instructions, force-preserve specific info |
+| **Agent stop** | Task complete or paused | Notifications, statistics, cleanup |
+
+Note "system prompt transform" and "session compaction"—hooks in these categories **directly modify context content**. So hooks aren't just "side-channel interception"—they can also "put things into context."
+
+The difference between Skills and Hooks isn't about "who can modify context," but about:
+
+| | Skills | Hooks |
+| --- | --- | --- |
+| **Approach** | Declarative—write a document, content injected as-is | Programmatic—write code, dynamically decide based on logic |
+| **Flexibility** | Static text, unchanged after loading | Can read runtime state, apply conditional logic |
+| **Capability boundary** | Can only inject knowledge | Intercept, modify, log, register tools—anything code can do |
+
+### Event Processing Pattern
+
+Different agent tools implement hooks very differently—some use shell scripts with JSON communication, some use TypeScript async functions, some use declarative configuration. But the **conceptual pattern** is universal:
+
+```
+Event fires
+    → Event data passed in (session info, tool name, parameters, etc.)
+    → Your logic executes
+    → Return a decision (allow / block / modified data)
+```
+
+Core elements:
+
+1. **Event**: Which lifecycle point to hook into
+2. **Matching**: Filter conditions—only handle specific tools or operations (e.g., only intercept bash commands, ignore file reads)
+3. **Processing**: What logic to execute—can be a shell command, a code function, or even launching a sub-agent to make the judgment
+
+### Scope Hierarchy
+
+Where a hook is defined determines its reach:
+
+| Location | Scope | Typical Use |
+| --- | --- | --- |
+| User-level global config | All projects | Desktop notifications, token stats, global security rules |
+| Project config | Current project | Project-specific tool permission restrictions |
+| Plugin-bundled | When plugin is enabled | Plugin's built-in behavior enhancements |
+
+Scopes merge from high to low. Project-level hooks can override global behavior.
+
+### Two Faces of Hooks
+
+The most important thing to understand: the same mechanism can do two fundamentally different things.
+
+**Side-channel**—Agent and LLM completely unaware. The hook quietly executes alongside the event stream, modifying no context. Desktop notifications, log recording, token statistics—pure side effects.
+
+**Interventional**—Directly altering context content or agent behavior. The hook blocks a tool call, or modifies the system prompt to inject new rules, or rewrites tool input parameters. These changes are "seen" by the LLM (reflected in context), even though the LLM doesn't know the changes came from a hook.
+
+## Plugins — Third-Party Extension Packages
+
+If a hook is a single event handler, a plugin is a complete extension package.
+
+A plugin's capability far exceeds "a collection of hooks." A single plugin can simultaneously:
+
+- Mount multiple **Hooks** (lifecycle event handling)
+- Register new **Tools** (extend the agent's available toolset)
+- Provide **Slash Commands** (shortcut commands)
+- Inject **Skills** (domain knowledge)
+- Provide authentication flows, output styles, configuration modifications, etc.
+
+In essence, a plugin is a programmable extension point for the agent—what it can do depends on which interfaces the agent tool exposes.
+
+### Installation and Distribution
+
+Two mainstream models are evolving in parallel:
+
+**Marketplace model**: Browse and install pre-packaged plugins from centralized repositories. Official and community repos coexist, one-click install, auto-activate. Great for common scenarios—code review, frontend design, TDD workflows, etc.
+
+**Local file / package manager model**: Write code files directly into a conventional directory, or install via package managers like npm. Great for personal customization—your project has unique needs with no off-the-shelf plugin. Some frameworks also auto-scan all files in a `plugins/` directory—drop it in and it takes effect, no manual registration needed.
+
+The two models aren't mutually exclusive. You can run marketplace-installed general-purpose plugins alongside your own custom ones.
+
+### Ecosystem Status
+
+The plugin ecosystem is still early. Each agent tool's plugin interfaces, distribution mechanisms, and security models are iterating rapidly. But the direction is clear: **agent capabilities are no longer solely defined by developers—users and communities can extend them programmatically.**
+
+Same evolution path as browser extensions and editor plugins—first core functionality, then open extension interfaces, then ecosystem explosion.
+
+## Hooks + Plugins vs. Skills vs. MCP
+
+All three can extend an agent's capabilities. The difference is in **approach and capability boundary**:
+
+| | Skills | MCP | Hooks / Plugins |
+| --- | --- | --- | --- |
+| **What it does** | Injects knowledge | Extends tools | Programmatic extension (intercept + modify + register + …) |
+| **Implementation** | Declarative (write docs) | Protocol-based (implement server) | Programmatic (write code) |
+| **Trigger** | Manually loaded | LLM decides to call | Event-driven, automatic |
+| **LLM knows it exists?** | ✅ Content directly visible | ✅ Tool definitions visible | ❌ Mechanism itself invisible |
+| **Can modify context?** | ✅ Appends to system prompt | ✅ Tool return values enter context | ✅ Can modify system prompt, tool I/O |
+
+Note the last row: the **results** of hook modifications appear in context (the LLM sees the modified system prompt), but the hook's **own existence** is invisible to the LLM.
+
+**Skills** tell the LLM "how to behave." **MCP** gives the LLM "what it can do." **Hooks / Plugins** programmatically control the agent's behavioral boundaries—the LLM doesn't know there's code making decisions for it.
+
+All three can be combined. A single plugin that injects a Skill (Git convention knowledge) + mounts a Hook (auto-lint before commits) is perfectly normal.
+
+## Three Things to Watch For
+
+- **Context flow**: Hooks execute at **critical points** in the context flow—before and after tool calls, during system prompt construction, during session compaction. They can either work as side channels (not affecting context) or directly modify context content. Plugins bundle multiple context manipulation mechanisms. This is the most fine-grained context control available to users.
+- **Risk**: Hook and plugin code runs with full system privileges—a broken before-tool-call hook can block all tool calls, completely paralyzing the agent. This isn't prompt-level "fix the wording"—it's code-level "break it and it crashes." Plugin sources also need vetting—you're installing code that executes on every agent run.
+- **Auditability**: Hook execution logs are the most fine-grained observability data—every event, every interception, every decision timestamped. But you need to implement the logging logic yourself.
+
+Next up: "Knowledge Feeding"—a unified review of all the carriers we've covered, answering the one question: "I have a bunch of knowledge, how do I get the agent to know it?"

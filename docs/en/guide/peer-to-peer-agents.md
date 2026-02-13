@@ -123,4 +123,4 @@ This is the final concept chapter of the tutorial.
 
 Back to [The First Principle](./context.md): **the quality of context determines the quality of output.** From the first chapter to this one, we've seen context evolve from static rules (System Instructions) to dynamic tool calls, from a single Agent's linear accumulation to Sub Agent isolation and summarization, to P2P's web-like exchange. The carriers change, the flow patterns change, but this principle never does.
 
-Once you understand how context flows, you understand how Agents work. The rest is just using them.
+Once you understand how context flows, you understand how Agents work. The rest is just [putting it into practice](./in-practice.md).

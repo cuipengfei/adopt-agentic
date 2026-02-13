@@ -134,9 +134,27 @@
 
 > 行业视角：Willison(CLI优先)、Cline(Primitives/CLI哲学)、OpenCode(终端优先)、Aider(终端内结对)。详见 materials/industry-insights/
 
+### 节点 9 — Hooks & Plugins — 行为拦截与扩展（新）
+
+- 定义：在 Agent 的**生命周期事件**上挂载用户逻辑——拦截、修改、记录、扩展
+- 与前面节点的区别：前面的载体是"往上下文里放东西"；Hooks 是"在上下文流动过程中拦截和修改"
+- Hooks 核心概念：
+  - 生命周期事件：SessionStart、PreToolUse、PostToolUse、Stop、Notification 等
+  - 输入/输出协议：stdin JSON 输入、stdout JSON + exit code 输出
+  - 配置三层结构：事件 → 匹配器（正则过滤）→ 处理器（shell/prompt/agent）
+  - 作用域层级：用户全局 → 项目级 → 插件级
+- Plugins 核心概念：
+  - 打包的行为扩展模块——可以包含多个 hooks、自定义工具、skills、命令
+  - 安装与分发：marketplace（GitHub repos）/ npm 包 / 本地文件
+  - 生态正在演进：官方市场、社区市场、个人插件
+- 对比：Skills 告诉 LLM "该怎么做"，MCP 给 LLM "能做什么"，Hooks 在 LLM 不知情的情况下"控制边界"
+- 上下文视角：Hooks 不往上下文里"放"东西，而是在上下文流动的**节点**上拦截和修改——这是用户可用的最细粒度的上下文控制机制
+
+> 行业视角：Claude Code hooks/plugins 生态、OpenCode @opencode-ai/plugin 插件系统。详见本地配置参考。
+
 ### ━━ 串联与进阶 ━━
 
-### 节点 9 — 知识喂养（原节点 8，新）
+### 节点 10 — 知识喂养（原节点 9）
 
 - 定义：如何把**你的知识**（项目文档、内部规范、领域经验）系统性地注入 agent
 - 为什么需要统一视角：前面三个节点（System Instructions / MCP / Skills）分别讲了知识注入的不同机制，但用户面对的实际问题是一个——"我有一堆知识，怎么让 agent 知道这些"
@@ -147,7 +165,7 @@
 - 选择标准：知识的持久性（始终需要 vs 偶尔需要）、体量（几百字 vs 几万字）、结构化程度
 - 上下文视角：无论哪条路径，最终都是在往上下文里放信息——区别在于**什么时候放、放多少、放多久**
 
-### 节点 10 — 编排模式（原节点 9，新）
+### 节点 11 — 编排模式（原节点 10）
 
 - 定义：agent 有不同的**干活方式**（顺序执行、并行分支、计划-执行循环），理解这些模式才能有意识地引导它
 - 为什么使用者需要懂：你知道 agent 能并行跑子任务，就会把任务拆成可并行的块；你知道它会做计划再执行，就能在计划阶段介入纠偏
@@ -159,7 +177,7 @@
 - 上下文视角：不同编排模式决定了上下文如何在多步骤/多分支间**流动、分裂、汇合**
 - 与 Sub Agent 的关系：Sub Agent 是实现隔离的手段之一，编排模式是更高层的组织方式
 
-### 节点 11 — Sub Agent — 上下文隔离（原节点 10）
+### 节点 12 — Sub Agent — 上下文隔离（原节点 11）
 
 - 定义：从主 Agent 派生出的**独立上下文环境**，执行特定子任务后返回结果
 - 解决什么问题：主 Agent 上下文随着对话增长会被污染（无关信息越来越多），Sub Agent 提供了一种**上下文隔离**机制
@@ -169,7 +187,7 @@
 
 > 行业视角：Karpathy(planner/worker/critic)、Yegge(角色+事实库)、LangGraph(子图)、OMO(handoff)。详见 materials/industry-insights/
 
-### 节点 12 — Eval / 验证 / 可观测性（原节点 11）
+### 节点 13 — Eval / 验证 / 可观测性（原节点 12）
 
 - 定义：如何知道 agent 做对了？验证机制是让 agentic 工作流可信赖的关键
 - 为什么独立成节：agent 不是"用一次就扔"，需要持续验证其行为
@@ -182,7 +200,7 @@
 
 > 行业视角：Anthropic(evals)、Kent Beck(TDD)、Devin(可验证=表现好)、Willison(重放)。详见 materials/industry-insights/
 
-### 节点 13 — Human-in-the-loop（原节点 12，新）
+### 节点 14 — Human-in-the-loop（原节点 13）
 
 - 定义：你——使用 agent tool 的人——在 agentic 工作流中的角色：什么时候放手、什么时候介入、怎么纠偏
 - 为什么独立成节：前面所有节点讲的是 agent 的机制；这一节回到**人**——你才是最终决策者
@@ -193,7 +211,7 @@
 - **认知债务**（子项）：过度委托的代价——agent 把活干了，但你还懂不懂你的系统？团队对代码的理解会不会被稀释？如何保持对系统的掌控
 - 上下文视角：人决定上下文的最终走向——选择接受、修正或丢弃 agent 的产出
 
-### 节点 14 — Peer-to-Peer Agents（原节点 13，新）
+### 节点 15 — Peer-to-Peer Agents（原节点 14）
 
 - 定义：从层级委派（orchestrator → worker）到平级协作（agent ↔ agent）的质变——agent 之间可以直接通信、互相 challenge、共享发现
 - 为什么独立成节：这是编排模式的前沿演进，和 sub-agent 的单向委派形成鲜明对比
@@ -205,6 +223,21 @@
 - 上下文视角：上下文如何在平级 agent 之间双向流动——不再是单向注入，而是互相交换
 
 > 行业视角：详见 materials/industry-insights/global/multi-agent-peer-messaging-analysis.md
+
+### ━━ 实战 ━━
+
+### 节点 16 — In Practice — 从概念到操作（新）
+
+- 定义：前面所有节点都保持 agent-agnostic；这一节打破约束，用具体工具（Claude Code、OpenCode 等）演示可复制的操作
+- 为什么独立成段：读者学完概念后需要一个"怎么动手"的出口——不是完整操作手册，而是精选的高杠杆实操
+- 内容选择标准：只选"理解概念后，10 分钟内能动手、立刻见效"的操作
+- 涵盖主题（按前面节点组织）：
+  - System Instructions 实操：CLAUDE.md / AGENTS.md 的写法
+  - Hooks 实操：配置通知 hook、安全拦截 hook
+  - 知识喂养实操：项目文档的组织方式
+  - 给 Agent 下任务的正确姿势：需求先行、小步快跑
+- 不做什么：不覆盖所有节点，不做全面操作手册，不做工具对照表
+- 双语同步
 
 ## 贯穿全篇的主线
 
@@ -220,12 +253,14 @@
 | Slash Commands      | 按需注入的上下文                       |
 | Skills              | 动态注入的 System Instructions         |
 | CLI Tools           | 外部 CLI 工具输出直接成为上下文        |
+| Hooks & Plugins     | 在上下文流动节点上拦截和修改           |
 | 知识喂养            | 统一回顾：所有知识如何进入上下文       |
 | 编排模式            | 上下文如何在多步骤/多分支间流动        |
 | Sub Agent           | 创造全新上下文（隔离）                 |
 | Eval/验证           | 验证结果 = 反馈上下文                  |
 | Human-in-the-loop   | 人决定上下文的最终走向                 |
 | Peer-to-Peer Agents | 上下文如何在平级 agent 之间双向流动    |
+| In Practice         | 把上下文管理的概念落地到具体工具操作   |
 
 ## 待定事项
 

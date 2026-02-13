@@ -107,4 +107,4 @@ CLI tools are the **simplest, most universal, and most mature** way for an agent
 - **Risk**: CLI tools directly manipulate the OS; the risk of `rm -rf /` is real. An agent might incorrectly construct a destructive command. Some command outputs may contain sensitive information (environment variables, API keys, private keys).
 - **Auditability**: Every shell command the agent executes and its output should be logged — a complete audit trail, the foundation for debugging and security reviews.
 
-Next chapter: Knowledge Feeding — CLI tool output is ephemeral context. How do you distill it into knowledge the agent can use persistently?
+Next chapter: Hooks & Plugins — shifting from "putting things into context" to "intercepting and modifying the context flow."
