@@ -1,74 +1,64 @@
 # Slash Commands
 
-> **Context Perspective**: Commands are a user-side shortcut for context injection—sending a predefined prompt template into the context with a single action.
+> **Context Perspective**: Commands are a user-side shortcut for context injection — sending a predefined prompt template into the context with a single action.
 
-## Definition: What are Slash Commands
+The previous chapter covered how MCP gives agents external capabilities. Capabilities are in place — how do you trigger them efficiently?
 
-A phrase starting with `/`, like `/review` or `/commit`.
+Type `/review`, and the agent doesn't philosophize about code review — it immediately executes a predefined set of review actions. Type `/commit`, and it doesn't ask whether you want to commit — it reads the diff, generates a message, and commits.
 
-It's not a chat. It's a **preset instruction template**. When you type `/review`, the agent doesn't chitchat with you about the philosophy of reviewing; it immediately starts executing a predefined set of actions for code review.
+That's a Slash Command: **a shortcut starting with `/`, backed by a pre-written prompt template**. You trigger it, the agent expands the template and injects it into the request sent to the LLM. The LLM has no idea what you pressed — all it sees is a structured instruction.
 
-These actions are defined somewhere—either built into the agent or configured by you.
+## How a Command Expands
 
-## The Essence: Templated Context Injection
-
-The essence of a command is **packaging a pre-written, potentially complex prompt into a shortcut**.
-
-When you execute `/review`, here’s what might be happening behind the scenes:
-
-The agent reads the template associated with the `/review` command. The template content might be:
+When you execute `/review`, the agent reads the associated template:
 
 ```
-1. **Identify the changes**: Compare the current branch with the main branch to find all modified files.
-2. **Analyze the code**: For each changed file, check for code style violations, potential bugs, and areas for improvement. Specifically, look for inconsistent naming, complex logic that could be simplified, and missing error handling.
-3. **Summarize the findings**: Generate a brief report summarizing the key issues and suggestions for each file. Use a bulleted list.
-4. **Present the report**: Output the report into the current conversation.
+1. Compare the current branch with the main branch to find all modified files.
+2. For each changed file, check for code style violations, potential bugs, and areas for improvement.
+3. Generate a brief report summarizing key issues and suggestions for each file.
 ```
 
-The agent takes this text—along with the file changes it found—and stuffs it into the request sent to the LLM.
+The agent takes this text — along with the file changes it found — and injects it into the request:
 
 ```json
 // → REQUEST (agent → LLM API)
 {
   "system": "You are an experienced code reviewer...",
   "messages": [
-    // ... conversation history ...
     {
       "role": "user",
-      "content": "Please follow these steps to conduct a code review:\n1. **Identify the changes**: Compare the current branch with the main branch...\n2. **Analyze the code**: ...\n\nThe content of the changed file `index.js` is as follows:\n// ... file content ..."
+      "content": "Please follow these steps to conduct a code review:\n1. Compare the current branch with the main branch...\n2. Check for code style violations...\n\nThe content of the changed file `index.js` is as follows:\n// ... file content ..."
     }
   ]
 }
 ```
 
-The LLM doesn't know you typed `/review`. All it sees is a very specific, structured instruction. To the LLM, this is no different from a user manually typing out that entire block of text.
-
-A command is a **shortcut for context injection**.
+The LLM doesn't know you typed `/review`. All it sees is a very specific, structured instruction. To the LLM, this is no different from a user manually typing that entire block of text.
 
 ## What Can Be Embedded
 
-Commands are more than just plain text. A well-designed command system allows you to bundle various elements:
+Commands aren't just plain text. A well-designed command can bundle multiple elements:
 
--   **Plain Text Prompts**: The most basic instructions and questions.
--   **Shell Command Execution**: For example, a `/commit` command might include steps to execute `git status` and `git diff --staged`, injecting the results into the context.
--   **File Content Reading**: For example, `/test [filename]` could read the specified test file and the file under test, then ask the LLM to run a thought experiment.
--   **Combined Actions**: A `/publish` command could sequentially execute linting, testing, building, and version bumping.
+- **Plain text prompts**: Instructions and questions.
+- **Shell command execution**: `/commit` might first run `git status` and `git diff --staged`, injecting results into context.
+- **File reading**: `/test [filename]` reads the test file and source file, then asks the LLM to run a thought experiment.
+- **Combined actions**: `/publish` sequentially runs lint, test, build, and version bump.
 
 ## Difference from System Instructions
 
 | Feature | System Instructions | Slash Commands |
 | :--- | :--- | :--- |
-| **Presence** | **Always present**, throughout the entire session | **Triggered on demand**, a one-time injection |
-| **Scope** | Global, affecting every response from the agent | Local, only affecting the current task |
-| **Role** | The agent's "personality" and "code of conduct" | A specific "task list" for one job |
-| **Example** | "You are a Python expert. Your code must adhere to PEP8." | `/test` |
+| **Presence** | **Always present**, throughout the entire session | **Triggered on demand**, one-time injection |
+| **Scope** | Global, affecting every response | Task-level, locally scoped, not persistent |
+| **Role** | The agent's behavioral code | A specific task list for one job |
+| **Example** | "You are a Python expert. Code must adhere to PEP8." | `/test` |
 
-System instructions are the agent's background music, always playing. A command is a song you request; it plays once and then it's over.
+System instructions define how the agent *always* behaves. Commands define what it does *this time*. When the two conflict — say, system instructions demand "operate cautiously" while `/force-push` demands "overwrite forcefully" — the LLM receives contradictory signals and behavior becomes unpredictable.
 
-Confusing the two is like asking a cautious agent (set by system instructions) to suddenly execute an aggressive deployment script (triggered by a command). The agent will be confused, and the final result might not satisfy either directive.
+## Three Things to Watch in Every Chapter
 
-## Cross-Cutting Concerns
+- **Context flow**: User types `/command` → agent expands it into a prompt → injects into `messages` → LLM consumes and responds. Command-injected content is task-level — it doesn't persist across subsequent sessions.
+- **Risk**: Commands can conflict with system instructions. Also, commands containing dangerous operations (like `/deploy` or `/force-push`) should have confirmation gates — not every shortcut should be fire-and-forget.
+- **Auditability**: Agent logs should record which command triggered subsequent actions. When something goes wrong, tracing back to the source command definition is the key to troubleshooting.
 
--   **Context Flow**: User types `/command` → Agent expands it into a specific prompt → Injects it into the `messages` array → LLM consumes this prompt → Generates a response.
--   **Risk Advisory**: A poorly defined or overly complex command can conflict with existing context (including system instructions), causing the LLM to receive contradictory directives. For example, a system instruction to "operate cautiously" clashes with a `/force-push` command that demands "overwrite forcefully".
--   **Auditability**: The agent's logs should clearly record which command triggered a subsequent series of actions. When unexpected behavior occurs, tracing it back to the source command definition is key to troubleshooting.
+Next chapter: Skills — commands are one-time injections, Skills are persistent behavior configurations.

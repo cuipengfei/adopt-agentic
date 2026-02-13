@@ -1,41 +1,20 @@
 # Skills — Domain Knowledge Modules
 
-> **Context Perspective**: Skills are on-demand system instruction snippets that bring domain knowledge into the context modularly.
+> **Context Perspective**: Skills are on-demand system instruction snippets — bringing domain knowledge into the context modularly.
 
-## What Are Skills
+The previous chapter's commands are one-time injections — trigger once, gone. But some knowledge needs to **persist**: Git commit conventions, code style requirements, framework-specific best practices. You don't want to remind the agent manually every time.
 
-A Skill is a loadable **domain knowledge module**.
+Skills solve this. A Skill is a loadable instruction set. Once loaded, its content is appended to the agent's System Instructions and sent to the LLM in **every subsequent request**.
 
-It's a detailed instruction manual containing directives, workflows, and best practices for a specific domain. When an Agent loads a Skill, it acquires an "expert mode" for that domain.
+Commands are "what to do this time." Skills are "how to behave from now on."
 
-Imagine the Agent is a junior developer joining your team. By default, it knows how to code, but it doesn't know your team's Git commit conventions.
+## Behavior Before and After Loading
 
-When you have it load a `git-master` Skill, the rules within that Skill—like "commit messages must follow the conventional commit format" or "do not force push to the main branch"—are dynamically added to the Agent's System Prompt.
-
-From then on, when this Agent handles Git-related tasks, it will act like a seasoned veteran, strictly adhering to these standards.
-
-## Skills vs. Commands
-
-One is a one-time action; the other is a persistent behavior.
-
-| Feature | Slash Commands (`/ask`) | Skills (`/load git-master`) |
-| --- | --- | --- |
-| **Effect** | Triggers a one-off action | Loads a persistent set of behaviors |
-| **Essence** | A user-side shortcut for context **injection** | Dynamically modifies **System Instructions** |
-| **Lifecycle** | Execute immediately, fire-and-forget | Remains active after loading until unloaded |
-| **Example** | `/ask "What's wrong with this code?"` | `/load ui-ux-pro-max` |
-
-A Slash Command is like telling the Agent: "Go get that thing for me." It performs the action once, and the task is over.
-
-Loading a Skill is like telling the Agent: "From now on, you are a senior DBA. Memorize these design principles..." This changes the **way** it handles all subsequent related actions.
-
-## How Context Changes
-
-Loading a Skill is, in essence, dynamically modifying the Agent's System Instructions.
+The most intuitive way to understand: compare outputs for the same task, before and after loading a Skill.
 
 **── Before Loading ──**
 
-The Agent's System Instructions might be simple:
+The agent's System Instructions are simple:
 
 ```json
 // → REQUEST (partial)
@@ -44,41 +23,52 @@ The Agent's System Instructions might be simple:
 }
 ```
 
-If you ask it to create a git commit, it might use a very casual message, like "stuff."
+You say: "Commit these changes."
+
+Agent generates: `git commit -m "update files"`
 
 **── Loading the `git-master` Skill ──**
-
-After executing `/load git-master`, the Agent's System Instructions are expanded:
 
 ```json
 // → REQUEST (partial)
 {
-  "system": "You are an AI programming assistant.\n\n## git-master Skill\n- Commit messages must follow the conventional commit specification (e.g., fix:, feat:, docs:).\n- The commit body should explain 'why,' not 'what.'\n- Do not use `git commit -m`; an editor must be opened for detailed messages.\n- ..."
+  "system": "You are an AI programming assistant.\n\n## git-master Skill\n- Commit messages must follow the conventional commit spec (fix:, feat:, docs:, etc.)\n- The body explains 'why,' not 'what'\n- Never use --no-verify\n- ..."
 }
 ```
 
-This added instruction snippet is now part of the context and will be sent to the LLM in **every subsequent request**.
-
 **── After Loading ──**
 
-Now, if you ask it to create the same commit, its behavior will be completely different. It will generate a compliant commit message, such as `feat: add user authentication endpoint`, complete with a detailed explanation.
+Same request: "Commit these changes."
 
-The LLM hasn't "learned" anything new. It simply saw a richer context and acted accordingly.
+Agent generates: `feat(auth): add JWT token refresh endpoint`, with a detailed body explaining why the change is needed.
+
+The LLM hasn't "learned" anything new. It simply saw richer system instructions and acted accordingly. Loading a Skill = dynamically extending System Instructions.
+
+## Skills vs. Commands
+
+| Feature | Slash Commands | Skills |
+| --- | --- | --- |
+| **Essence** | User-side context **injection** | Dynamically modifies **System Instructions** |
+| **Granularity** | Task-level injection — "what to do this time" | Behavior-level configuration — "how to behave from now on" |
+| **Lifecycle** | Trigger once, fire-and-forget | Remains active after loading until unloaded |
+| **Example** | `/review` | Load `ui-ux-pro-max` |
+
+Different agent tools may use different syntax for loading Skills, but the underlying mechanism is the same: **read the Skill file → append to System Instructions → include in every subsequent request.**
 
 ## Ecosystem: Reusable Behavior Patterns
 
-The power of Skills lies in their shareability.
+The core value of Skills is shareability:
 
-Communities and teams can create, publish, and share Skills, forming an ecosystem of reusable knowledge packages.
+- **Individuals**: Encapsulate your workflows and best practices into a private Skill.
+- **Teams**: Create shared Skills for your project to ensure everyone (including agents) follows uniform standards.
+- **Communities**: Publish public Skills for specific tech stacks — React component design principles, Go error handling patterns, Terraform module structure.
 
-- **Individuals**: You can encapsulate your own workflows and best practices into a private Skill.
-- **Teams**: You can create shared Skills for your project to ensure all members (including AI Agents) adhere to uniform engineering standards.
-- **Communities**: High-quality public Skills can be created for specific tech stacks (like React, Go, or Terraform), allowing anyone to get an "expert-level" Agent for that domain with a single command.
+Agent capabilities are no longer limited to what the developer ships — they can be extended by the ecosystem.
 
-This allows an Agent's capabilities to be extended infinitely by the entire community ecosystem, not just its original developers.
+## Three Things to Watch in Every Chapter
 
-## Cross-Cutting Concerns
+- **Context flow**: Loading a Skill = its full content appended to System Instructions, continuously occupying context window until unloaded. It produces stable, reproducible domain-specific behavior patterns.
+- **Risk**: Too many Skills loaded will exhaust the context window. A subtler problem: different Skills' instructions may conflict — one demands detailed comments, another demands minimalism — and agent behavior becomes unpredictable.
+- **Auditability**: Agent logs should record when each Skill was loaded or unloaded. Agent behaving strangely? Check the currently loaded Skill list and their contents first.
 
-- **Context Flow**: Loading a Skill means its entire content is added to the System Instructions, continuously occupying the context window until unloaded. It produces a predictable, reproducible, and stable domain-specific behavior pattern.
-- **Risk Alert**: Loading too many Skills can quickly exhaust the context window. More dangerously, conflicting instructions from different Skills (e.g., one demanding detailed code comments, another demanding minimalist code) can lead to chaotic Agent behavior.
-- **Auditability**: The Agent's logs should clearly record when a Skill was loaded or unloaded. When an Agent behaves unexpectedly, checking the list of currently loaded Skills is the first step in troubleshooting.
+Next chapter: Agent-Native CLI Tools — Skills inject behavioral knowledge into the agent, CLI tools give it executable capabilities.
