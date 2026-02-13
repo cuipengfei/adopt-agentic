@@ -36,3 +36,6 @@ docs/.vitepress/dist
 
 # Finder (MacOS) folder config
 .DS_Store
+
+# Claude Code local settings (user-specific, not project config)
+.claude/settings.local.json
