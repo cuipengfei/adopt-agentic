@@ -18,6 +18,8 @@ When your mental model aligns with the Agent's, the quality of your instructions
 
 An agent's orchestration patterns are like a circuit board: series, parallel, or more complex combinations. We don't care how the underlying framework implements them, only the behavioral patterns they present to you.
 
+One industry consensus to internalize first: **start with the simplest loop**. If a single agent running sequentially can handle it, don't reach for parallelism. If one loop solves it, don't nest two. Complex orchestration isn't "more powerful" — it's "more failure points." Every added layer of abstraction doubles the difficulty of keeping context aligned. Start simple. Upgrade only when you've genuinely outgrown it.
+
 ### 1. Sequential Execution
 
 The simplest pattern: step by step.

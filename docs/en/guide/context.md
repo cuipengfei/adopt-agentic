@@ -120,9 +120,13 @@ Good context management means "retrieving the right few dozen key facts," not "d
 
 Hand an extremely smart stranger an entire filing cabinet and say "the relevant stuff is in there somewhere." They'll find some useful things, but they'll also be misled by the noise.
 
+Context management boils down to four actions: **Write** (generate useful information) → **Select** (pick only what's relevant) → **Compress** (distill to the minimum necessary) → **Isolate** (give different tasks different context slices). Every tool and mechanism in subsequent chapters is essentially helping you do these four things.
+
 ### Context Pollution
 
 In long conversations, context gradually gets "dirty." Early explorations, rejected approaches, wrong assumptions — no longer relevant, but still sitting in the message history, continuously influencing the LLM's judgment.
+
+Bad context is worse than no context. With no context, the LLM knows it doesn't know and will at least say "I need more information." With stale or wrong context, it treats noise as fact and reasons confidently from false premises — you don't get "I'm not sure," you get an answer that looks plausible but is quietly wrong.
 
 This explains a common phenomenon: the agent is fast and accurate early on, then starts making baffling mistakes later. The model didn't get dumber. The context got dirty.
 
