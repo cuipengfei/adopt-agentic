@@ -53,6 +53,8 @@ Different agent tools support different event sets and naming, but the core type
 
 Note "system prompt transform" and "session compaction"—hooks in these categories **directly modify context content**. So hooks aren't just "side-channel interception"—they can also "put things into context."
 
+The "session compaction" hook deserves special attention. When agents automatically compress early history in long conversations, your core constraints may get compressed away—the agent "forgets" rules in the second half, not because it's stupid, but because that rule is simply no longer in the context. A compaction hook lets you solve this at the mechanism level: specify which information must be preserved verbatim, and which can be summarized. Far more reliable than manually restating constraints every few turns.
+
 The difference between Skills and Hooks isn't about "who can modify context," but about:
 
 | | Skills | Hooks |

@@ -116,6 +116,8 @@ The LLM only cares that it got search results. It doesn't know or need to know w
 
 One-line summary: **LLM layer — fully equivalent. Agent execution layer — different paths.**
 
+But flexibility has a hidden cost. Each connected MCP Server injects all of its tool definitions into every request. Enable ten Servers at once, and dozens of tool definitions permanently occupy the context window—squeezing out space for your instructions, conversation history, and tool return values. In practice: create different MCP profiles for different task types—one set for coding, another for data work. The principle: off by default, on when needed.
+
 ## Why It Matters
 
 MCP's value isn't "yet another protocol." Its value is **freeing you from depending on the agent developer**:

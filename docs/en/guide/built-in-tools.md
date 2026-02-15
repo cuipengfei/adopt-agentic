@@ -121,6 +121,8 @@ After walking through this flow, you can see tools shape the LLM's context from 
 
 The LLM knows "what it can do" from tool definitions, and "what the world looks like" from return values.
 
+But tool return values are also the fastest source of context bloat. One unrestricted `ls -R` or reading a log file with tens of thousands of lines can blow through most of the context window in a single call. The smart move is to trim at the tool layer: pull only key fields from structured data, paginate long lists, read large files by line range. Instead of waiting for the context to overflow and then scrambling to compress, don't let the junk in to begin with.
+
 ## The Trust Boundary
 
 Built-in tools are powerful, but risky — the agent will **actually execute** whatever operations the LLM requests.

@@ -96,6 +96,10 @@ A counterintuitive finding: **don't rush to erase errors.** Failed attempts left
 
 **False completion**: The trickiest failure mode. The Agent says "Done!" but task-level verification shows failure. Usually because the verification step wasn’t enforced—the Agent skipped tests and declared victory. The fix: make verification mandatory in your instructions ("After editing, you must run `bun test`. All tests passing = done"), ensuring the result gets injected back into context.
 
+Rollback, rerouting, forced reruns—these recovery moves are all context subtraction: cutting the pollution of failed paths from conversation history.
+
+But there's a subtler subtraction you might not notice: in long conversations, agents automatically compress early history to prevent window overflow. The cost? Your original constraints may get compressed away. If an agent suddenly "forgets" initial rules late in a conversation, it's probably not stupidity—that rule simply isn't in the context anymore. In practice: periodically restate core constraints during long tasks. Or when it errs, send the original instruction alongside its mistake and let it compare.
+
 ## Three Things to Watch in Every Chapter
 
 - **Context flow**: Each verification layer produces signals (exit codes, test reports, metrics) that get injected back into context, becoming the basis for the Agent’s next decision. Verification isn’t a post-mortem—it’s real-time navigation.

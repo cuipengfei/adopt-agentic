@@ -45,6 +45,8 @@ It will simultaneously launch multiple independent execution branches (often imp
 
 Here, the context **splits** into multiple copies, evolves independently, and finally **merges**. This greatly improves efficiency but also introduces the risk of context fragmentation.
 
+This is also the most natural form of context subtraction. Each branch explores independently; detours and noise stay in the branch. When merging back to the main line, carry only conclusions and evidence—not the process junk. You already do this with Git: experiment freely on a feature branch, but only clean, reviewed code gets merged into main. Agent branching works the same way.
+
 ### 3. Plan-and-Execute
 
 When faced with complex, high-risk, or unclear paths, an agent will first generate a plan of action, sometimes requesting your approval.

@@ -130,6 +130,10 @@ Bad context is worse than no context. With no context, the LLM knows it doesn't 
 
 This explains a common phenomenon: the agent is fast and accurate early on, then starts making baffling mistakes later. The model didn't get dumber. The context got dirty.
 
+What do you do when it's dirty? You have four cleanup moves. Roll back to the last clean checkpoint and restart. Branch into a fresh conversation carrying only conclusions, not detours. Throttle at the source—only feed the agent the files it needs for the current step, never "just in case." And when a conversation runs too long, compress key decisions into a handoff summary and continue in a new session. Addition decides what the agent sees. Subtraction decides what doesn't drown it.
+
+One more actionable principle: put your most important constraints at the beginning and end of the conversation. Models pay the least attention to the middle—researchers call this "lost-in-the-middle." Your core rules buried at message 50 will probably be ignored.
+
 ## State & Memory
 
 Why does the agent "forget" things?

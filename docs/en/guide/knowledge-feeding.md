@@ -75,6 +75,8 @@ Think of it this way: optimizing your project structure for an Agent also optimi
 
 A mature agentic workflow is always a combination of all three. The rule layer sets the baseline, the capability layer fills in skills, the project layer provides facts.
 
+But all three layers go stale. Rule layer rules contradict each other—"all functions must have JSDoc" set six months ago may have been silently abandoned, yet it's still in the rules file, and the agent dutifully follows it every time. Capability layer Skills clash with new requirements—last month's code style Skill may fight this project's conventions. Project layer docs rot—the README says "use REST API" while the project has fully switched to GraphQL. Addition decides what to feed. Subtraction decides when to clean. The cost of not cleaning isn't "wasted space"—it's the agent making decisions based on wrong information.
+
 ## Three Things to Watch in Every Chapter
 
 - **Context flow**: Three paths, three injection timings. The rule layer claims space at session start; the capability layer appends when a task triggers it; the project layer enters on-demand as the Agent reads files. Knowledge freshness and context cost are always in tension.
