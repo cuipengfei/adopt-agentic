@@ -71,6 +71,28 @@ Want it to run a specific check before every commit? Put it in the system instru
 
 These user-level instructions are typically appended to the agent's base instructions or, using specific syntax, can override default behaviors. The half-hour you spend polishing a few dozen lines of instructions can be more effective than days spent working around the agent's defaults.
 
+## How to write effective instructions
+
+Instructions aren't for "controlling" the Agent. They're for helping it join your team. Two practical tips:
+
+### 1. Don't think of a pink elephant
+
+Don't tell the Agent "don't delete files." Like humans, LLMs focus on the prohibited action when they see a negative constraint.
+
+- ❌ "Do not use the delete_file tool unless requested."
+- ✅ "Only use the delete_file tool when the user explicitly requests 'delete'."
+- ✅✅ Write it as a check: "Before executing delete_file, verify the user's request contains the keyword 'delete'; otherwise, reject."
+
+Show it the path, don't fence off every pitfall. That's positive invariants.
+
+### 2. Onboard it, don't lint it
+
+`AGENTS.md` only has code styles ("use tabs, not spaces")? You're treating it like a linter. Treat it like a new hire. Don't just give it rules; tell it **"how we do things here."**
+
+When fixing a bug, is the flow "reproduce → test → commit" or "check logs → guess blindly"? Write it down. Do you want a submissive executor or a senior engineer who challenges bad decisions? Say so: "When you think my request will break the architecture, refuse me and propose an alternative."
+
+Instructions are a protocol for aligning expectations.
+
 ## Prompts are Maintainable Assets
 
 Don't treat your system instructions as a one-off note. They are a **living document, an asset that needs to be maintained just like code**.

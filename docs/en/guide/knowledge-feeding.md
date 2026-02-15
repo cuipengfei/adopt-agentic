@@ -65,6 +65,24 @@ The project layer's defining trait: **no extra context window cost** (informatio
 
 Think of it this way: optimizing your project structure for an Agent also optimizes it for human teammates. A codebase that an Agent can't navigate is one that new human team members probably can't either.
 
+## JIT knowledge
+
+Don't stuff the Encyclopedia Britannica into the System Prompt. Context window is VRAM, not a hard drive.
+
+Common anti-pattern: putting the entire API documentation, DB schema, and all business logic into `AGENTS.md`. Correct approach: put only the **index** in `AGENTS.md`. "For DB schema, see `docs/db-schema.md`."
+
+The Agent reads that schema file only when it actually needs to write SQL. Let it fetch knowledge. Don't push.
+
+## Reference vs. instruction
+
+Two types of knowledge. Don't mix them.
+
+Reference (`llms.txt`, API Docs, Schema) is static, lookup-based. Put it in the project layer; let the Agent read it on demand.
+
+Instruction (`AGENTS.md`, Skills) is imperative. Put it in the rule layer; force the Agent to obey.
+
+Don't put 5000 lines of API definitions in `AGENTS.md`, that's forcing it to memorize a dictionary. And don't put a safety rule like "never use eval" in a random doc file, the Agent might never read it.
+
 ## How to Choose
 
 | Your knowledge is... | Use... | Because... |

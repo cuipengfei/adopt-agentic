@@ -123,17 +123,31 @@ The LLM knows "what it can do" from tool definitions, and "what the world looks 
 
 But tool return values are also the fastest source of context bloat. One unrestricted `ls -R` or reading a log file with tens of thousands of lines can blow through most of the context window in a single call. The smart move is to trim at the tool layer: pull only key fields from structured data, paginate long lists, read large files by line range. Instead of waiting for the context to overflow and then scrambling to compress, don't let the junk in to begin with.
 
-## The Trust Boundary
+## Don't scold it for running around
 
-Built-in tools are powerful, but risky — the agent will **actually execute** whatever operations the LLM requests.
+Beginners see the Agent run `ls` and `grep` three times and get impatient: "Why don't you just fix the code?"
 
-LLM hallucinates `bash rm -rf /`? An agent without safety checks will comply.
+**The Agent is blind.** It can't see your IDE or the file tree. The only way it "sees" the world is through tool return values.
 
-Good agent tools establish trust boundaries:
+- `ls` is its eyes, confirming where files are.
+- `grep` is its scanner, locating what needs fixing.
+- `read_file` is its microscope, examining code details.
 
-- **Confirmation for dangerous ops**: Seeking user consent before executing `rm` or `git push --force`.
-- **Scope limitation**: Restricting file operations to the project directory — no touching system files.
-- **Change preview**: Displaying a diff for review before writing to a file.
+These "redundant" operations build navigational context. Without them, it's coding blind. Give it time to explore.
+
+## Trust boundary levels
+
+The agent will **actually execute** whatever the LLM requests. Good tools split trust into two levels:
+
+### Read tools (let it run)
+
+`ls`, `read_file`, `grep`. Let it run freely. Don't interrupt observation. Needs to read 10 files before acting? Let it.
+
+### Write/execute tools (intervene)
+
+`write_file`, `bash` (mutating). This is your intervention point.
+
+Watch one thing: did it read before writing? An Agent that calls `write_file` without ever running `read_file`? Reject it, even if the fix looks right. That's hallucination getting lucky.
 
 You need to know the extent of your agent's permissions and consciously supervise high-risk operations.
 

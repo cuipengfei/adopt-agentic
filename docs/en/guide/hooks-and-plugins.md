@@ -37,6 +37,17 @@ Tool execution completes
 Agent continues reasoning
 ```
 
+## The gatekeeper pattern
+
+The Agent is a genius that might go crazy at any moment. You need a calm gatekeeper to intercept it before it does something irreversible.
+
+Three gates:
+- Read-only (`ls`, `read_file`) → let it look.
+- Low-risk (`npm install`) → silent check.
+- High-risk (`rm`, `git push`) → popup confirmation.
+
+The core value of Hooks: a programmable firewall between the Agent and the world.
+
 ### Lifecycle Events
 
 Different agent tools support different event sets and naming, but the core types are consistent:

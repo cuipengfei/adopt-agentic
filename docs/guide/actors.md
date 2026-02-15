@@ -124,7 +124,16 @@ Agentic：**接收 → 推理 → 行动 → 观察 → 再推理**。
 > ✅ `"把 login 提取到 src/login.js，保持 auth.js 的 export 签名不变"`
 > 一刀切，干净。
 
-不确定 agent 理解对了？让它复述你的意图，确认一致再动手。
+### 复述协议
+
+航空管制的铁律：塔台发指令，飞行员复述，塔台确认，才能执行。
+
+Agent 协作同理。任务稍复杂，别直接让它动手：
+> "Create a plan to refactor the auth module. Do not write code yet. Explain your plan step-by-step."
+
+复述里漏了关键约束？现在纠正一句话的事。等它改完 20 个文件才发现？半小时起步。
+
+复杂度 > 1 的任务，先复述再动手。
 
 大任务拆小块——跑完一个验证一个，远比跑完 20 步再回滚便宜。不确定方向？先让 agent 做最小可运行版本，验证了再展开。
 

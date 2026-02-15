@@ -14,6 +14,20 @@ Why should you care? Because it directly affects how you give instructions:
 
 When your mental model aligns with the Agent's, the quality of your instructions changes completely.
 
+## Conductor unity
+
+Biggest taboo: **fighting for the wheel.** Tell the driver the destination, then don't grab the steering wheel while it's turning.
+
+The Agent is editing a file and you insert a command to modify the same file? Context desyncs from disk. Conflict. Either wait for it to stop (task done) or take over completely (kill task). Don't micromanage while it's driving.
+
+## Parallel span
+
+Human brain juggles 1-2 balls. Agent capacity depends on the orchestrator.
+
+Sequential is 1 ball, stable but slow. Parallel is 10 balls, fast but hard to catch them all.
+
+Rule of thumb: maximize parallelism for read tasks (search, research). Be conservative for write tasks (editing code). Reads never conflict. Writes do.
+
 ## Common Patterns
 
 An agent's orchestration patterns are like a circuit board: series, parallel, or more complex combinations. We don't care how the underlying framework implements them, only the behavioral patterns they present to you.

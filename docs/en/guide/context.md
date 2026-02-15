@@ -120,6 +120,14 @@ Good context management means "retrieving the right few dozen key facts," not "d
 
 Hand an extremely smart stranger an entire filing cabinet and say "the relevant stuff is in there somewhere." They'll find some useful things, but they'll also be misled by the noise.
 
+"Just enough" isn't a fixed bar. It depends on what you're asking the agent to do.
+
+Understanding project structure, mapping module dependencies? Large context is fine. These tasks tolerate fuzziness; a wide view helps see the big picture. Modifying a specific function, fixing a precise bug? Feed only the files it needs. The more context you give for precision tasks, the more likely it'll "see things but use them wrong," copying the wrong variable name, missing a constraint, mixing in patterns from unrelated files.
+
+Precision edits have a collapse zone: more information goes in, accuracy drops.
+
+Two modes. Open up for understanding. Tighten for editing.
+
 Context management boils down to four actions: **Write** (generate useful information) → **Select** (pick only what's relevant) → **Compress** (distill to the minimum necessary) → **Isolate** (give different tasks different context slices). Every tool and mechanism in subsequent chapters is essentially helping you do these four things.
 
 ### Context Pollution
@@ -130,7 +138,15 @@ Bad context is worse than no context. With no context, the LLM knows it doesn't 
 
 This explains a common phenomenon: the agent is fast and accurate early on, then starts making baffling mistakes later. The model didn't get dumber. The context got dirty.
 
-What do you do when it's dirty? You have four cleanup moves. Roll back to the last clean checkpoint and restart. Branch into a fresh conversation carrying only conclusions, not detours. Throttle at the source—only feed the agent the files it needs for the current step, never "just in case." And when a conversation runs too long, compress key decisions into a handoff summary and continue in a new session. Addition decides what the agent sees. Subtraction decides what doesn't drown it.
+A sneakier form of pollution: early wrong turns don't just take up space, they **keep exerting force**. A bad judgment in round 5 becomes an implicit premise in round 15. You say "don't do X" and it briefly course-corrects, but five rounds later it drifts back. One correction can't outweigh dozens of hints.
+
+What do you do when it's dirty?
+
+Roll back to the last clean checkpoint. Throttle at the source, only feed the agent the files it needs for the current step, never "just in case."
+
+The most effective move: start a new session. But don't copy-paste chat history. Distill what's worth keeping: confirmed facts, finalized decisions, acceptance criteria. Compress that into a clean input and carry only that forward. Leave the detours in the old session.
+
+Addition decides what the agent sees. Subtraction decides what doesn't drown it.
 
 One more actionable principle: put your most important constraints at the beginning and end of the conversation. Models pay the least attention to the middle—researchers call this "lost-in-the-middle." Your core rules buried at message 50 will probably be ignored.
 
@@ -160,6 +176,8 @@ A session that's gone through hundreds of tool calls has almost certainly suffer
 ### Session Handoff
 
 Before ending a session, write key decisions, intermediate outputs, and next steps into persistent context — your project rules file, a handoff document, or anywhere the agent will read on next startup.
+
+Pay special attention: **what's easiest to lose isn't "what changed," git tracks that, it's "why you changed it."** The reasoning behind choosing A over B, the reason a constraint exists, the trade-off behind an odd-looking design. The next session can see the diff but not the decision logic behind it.
 
 This isn't relying on "memory." It's **explicit context transfer**: converting information worth keeping from the current session into initial context for the next one.
 

@@ -124,7 +124,16 @@ Vague vs precise:
 > ✅ `"Extract login to src/login.js, keep auth.js export signatures unchanged"`
 > One clean cut.
 
-Not sure the agent understood? Have it restate your intent. Confirm alignment before it moves.
+### The readback protocol
+
+Air traffic control rule: tower issues instruction, pilot reads it back, tower confirms, then execution. Agent collaboration works the same way.
+
+Task is complex? Don't let it act immediately:
+> "Create a plan to refactor the auth module. Do not write code yet. Explain your plan step-by-step."
+
+Readback misses a key constraint? Correcting it now takes one sentence. Wait until it has modified 20 files? Half an hour.
+
+Any task with complexity > 1: readback first.
 
 Break large tasks into small chunks — verify one before starting the next. Far cheaper than running 20 steps then rolling back. Unsure about direction? Have the agent build a minimal working version first. Verify, then expand.
 

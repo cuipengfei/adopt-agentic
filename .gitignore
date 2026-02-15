@@ -39,3 +39,6 @@ docs/.vitepress/dist
 
 # Claude Code local settings (user-specific, not project config)
 .claude/settings.local.json
+
+# POMASA research workspace
+.sisyphus/research/

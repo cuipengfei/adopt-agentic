@@ -82,7 +82,22 @@ This is observability—continuous monitoring of the Agent’s behavioral patter
 - **Success signal**: Completion rate rising, average steps declining, token cost reasonable
 - **Triggered action**: On anomaly—downgrade strategy, pause task, or escalate to human
 
-Some Agent tools have basic observability built in (token counts, execution time). For deeper analysis, platforms like LangSmith or LangFuse exist—but for most users, watching token consumption and execution rounds is sufficient.
+Structure verification as a pyramid. Lower levels automate; the top requires humans.
+
+### Level 1: Syntax and execution
+Agent checks automatically. Does it run? Do commands error out?
+
+The trap: **no error ≠ success.** `rm` deleting the wrong file throws no error. A script with flawed logic still runs.
+
+### Level 2: Logic and semantics
+Tests check. Is the functionality correct? Are edge cases handled?
+
+Watch one thing: did the Agent fix the **root cause** or just the **symptom**? Some Agents delete a test case or increase a timeout to make tests pass.
+
+### Level 3: Intent and value
+Human checks. Is this actually what I wanted?
+
+This layer can't be automated. An Agent perfectly implementing a feature you don't need is still a failure.
 
 ## Error Recovery
 
