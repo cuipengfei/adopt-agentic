@@ -181,6 +181,21 @@ Pay special attention: **what's easiest to lose isn't "what changed," git tracks
 
 This isn't relying on "memory." It's **explicit context transfer**: converting information worth keeping from the current session into initial context for the next one.
 
+### Long-Term Memory
+
+Session Handoff solves "this session to the next." But what about memory that stretches further?
+
+Some Agent tools offer automatic cross-session memory—they accumulate key discoveries, preferences, and decisions across multiple sessions, retrieving relevant parts and injecting them into context on the next startup. Sounds like real memory.
+
+But it isn't. It's just **automated persistent context**—writing and retrieval are automatic, but the storage medium is still files or a database, and injection timing is still at session start. The essence hasn't changed; the degree of automation has.
+
+Two mental models are enough:
+
+- **In-session memory** (session state) is short-term. It disappears when the conversation ends. Managed manually by you or automatically by the Agent.
+- **Cross-session memory** (persistent context) is long-term. It relies on the filesystem or dedicated storage. Things you actively write (project rules, handoff files) or the Agent automatically accumulates (memory features) both fall in this category.
+
+The risk lives in "automatic accumulation": the Agent remembers a decision that was later overturned. Three months later, a new session gets a suggestion that looks reasonable but is actually outdated—based on stale memory. Stale memory is as dangerous as stale documentation—arguably more so, because you might not even know that memory entry still exists.
+
 ## What's Next: Context Carriers in Subsequent Chapters
 
 Context is the first principle. But "how to get information into context" has many different approaches, each suited to different scenarios.

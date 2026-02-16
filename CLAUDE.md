@@ -8,6 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **VitePress** 1.6.x — 静态站点生成器（基于 Vite，不是 Bun.serve）
 - **Bun** — 仅用于包管理和脚本运行
+- **Mermaid** — 用于站内图表渲染（通过 `vitepress-plugin-mermaid` 集成）
 - 无 linter/formatter 配置。无后端。无数据库。
 
 ## 项目结构
@@ -19,7 +20,7 @@ docs/                       # VitePress 内容根目录
 ├── guide/                  # 中文教程（概念节点 + 术语表）
 │   ├── index.md ~ sub-agents.md  # 各概念节点页面
 │   └── glossary.md         # 术语表
-├── en/                     # 英文版（i18n 子目录，Phase 2 翻译）
+├── en/                     # 英文版（i18n 子目录，已同步完成）
 │   ├── index.md            # 英文首页
 │   └── guide/              # 英文教程占位页
 └── public/logo.svg         # 静态资源
@@ -35,9 +36,13 @@ materials/                  # 行业洞见与研究素材（不发布到站点�
 .sisyphus/                  # Agent 工作区（选择性 git track）
 ├── plans/                  # 设计计划（git tracked）
 │   └── phase1-content-structure.md  # 骨架唯一真相来源
+│       └── phase2-content-depth.md     # Phase 2 内容补深计划（已完成）
 ├── drafts/                 # 设计草稿（git tracked，.claude/ 除外）
 │   ├── draft-ideas.md      # 用户私有构想（禁止 agent 修改）
 │   └── ...
+├── research/               # POMASA 研究项目（git tracked，notepads 除外）
+│   ├── adopt-agentic-gap-analysis/   # 内容覆盖度分析（已完成）
+│   └── agent-user-mental-models/     # 用户心智模型研究（已完成）
 ├── notepads/               # Agent 临时工作记录（gitignored）
 └── boulder.json            # 运行时状态（gitignored）
 ```
@@ -74,6 +79,10 @@ sidebar: {
 - 首页使用 `layout: home`，配合 `hero` 和 `features` 字段
 - 教程页面使用默认布局（基本页面不需要 frontmatter）
 - VitePress 支持 `title`、`description`、`outline`、`editLink` 等
+
+### Mermaid 图表
+
+`config.ts` 已用 `withMermaid()` 包装。在 markdown 中直接使用 ```` ```mermaid ```` 代码块即可渲染图表。
 
 ### 静态资源
 
@@ -153,7 +162,7 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
 | 对使用者有直接价值的知识  | 成本/性能预算                |
 | Agent agnostic 的机制解释 | 特定工具操作手册             |
 
-轻提即可不展开的：工具信任边界/安全、prompt 作为可维护资产。
+已深入覆盖（不再只是"轻提"）：工具信任边界/安全（节点 4/5/9）、prompt 作为可维护资产（节点 3）。
 
 ### 骨架主线
 
@@ -167,7 +176,7 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
 
 ### 骨架状态
 
-**已锁定**。15 个概念节点 + 术语表。完整序列：
+**已锁定**。16 个概念节点 + In Practice + 术语表。完整序列：
 
 ```
 ━━ 基础概念 ━━
@@ -181,14 +190,32 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
  6  Slash Commands
  7  Skills
  8  Agent-Native CLI Tools
+ 9  Hooks & Plugins                      [+ 守门人模式]
 ━━ 串联与进阶 ━━
- 9  知识喂养
-10  编排模式
-11  Sub Agent — 上下文隔离
-12  Eval / 验证 / 可观测性               [+ 可靠性]
-13  Human-in-the-loop                    [+ 认知债务]
-14  Peer-to-Peer Agents                  ← frontier
+10  知识喂养
+11  编排模式
+12  Sub Agent — 上下文隔离
+13  Eval / 验证 / 可观测性               [+ 可靠性]
+14  Human-in-the-loop                    [+ 认知债务]
+15  Peer-to-Peer Agents                  ← frontier
+━━ 附录 ━━
+    In Practice — 从概念到操作            [打破 agent-agnostic，用具体工具演示]
+    术语表
 ```
+
+### 内容填充状态
+
+**Phase 1 + Phase 2 均已完成**。所有 16 个概念节点 + In Practice + 术语表均已填充实质内容，中英双语同步。
+
+Phase 2 对 9 个节点做了内容补深，填补了 POMASA Gap Analysis 发现的 3 个 P1 盲区（并行会话治理、长时 Loop 控制、团队级配置治理）、1 个 P2 观察项（长期记忆心智模型），融入了 6 个"它山之石"洞察（Vibe→CE 叙事、Command/Skill/Sub-agent 职责边界、权限梯度索引、Conductor 比喻、反模式清单、决策框架元素）。涉及节点覆盖了 STONE-006"概念→决策框架"的写法升级。
+
+| 内容量区间 | 节点 |
+| ---------- | ---- |
+| 重量级（>400W） | context、hooks-and-plugins、sub-agents、in-practice |
+| 中量级（250-400W） | actors、built-in-tools、mcp、cli-tools、knowledge-feeding、eval、human-in-the-loop、peer-to-peer-agents、glossary、orchestration |
+| 轻量级（<250W） | index、system-instructions、commands、skills |
+
+写作特征：HTTP 请求/响应模式贯穿核心节点，具体例子先行，每节末尾有"上下文流动 / 风险 / 可审计性"三件事收尾。Phase 2 新增了决策框架元素（"何时 X / 何时 Y"对比表格）贯穿高改动量节点。
 
 ### 内容决策（已确认，不可违反）
 
@@ -199,10 +226,11 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
 | 双语策略                         | **同步更新**。中英文每个节点同时填充，不接受英文滞后                  |
 | 站点页面引用 materials/          | **禁止**。站点页面不引用 materials/ 内部路径                          |
 | AGENTS.md                        | **不创建**。所有项目知识保持在 CLAUDE.md 中                           |
+| In Practice 打破 agent-agnostic       | **唯一例外**。该节用具体工具演示高杠杆操作，主内容产品名禁令不适用于此页 |
 
 ### 内容填充时可借鉴的竞品素材
 
-以下来自竞品调研，Phase 2 填充时融入，不改骨架：
+以下来自竞品调研，已在 Phase 1 和 Phase 2 中融入，不改骨架：
 
 | 借鉴点                                    | 融入位置    | 力度     | 状态   |
 | ----------------------------------------- | ----------- | -------- | ------ |
@@ -215,6 +243,31 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
 | "只放决策需要的东西"（信噪比）            | 节点 1      | 正常融入 | ✅ 已入 |
 | scar tissue & crystals 比喻               | 节点 3 + 9  | 正常融入 | ✅ 已入 |
 | "别急着擦掉错误"洞察                     | 节点 12     | 正常融入 | ✅ 已入 |
+| "Vibe → CE" 范式迁移叙事钩子           | 节点 0        | 正常融入 | ✅ 已入 |
+| Command / Skill / Sub-agent 职责边界   | 节点 7        | 正常融入 | ✅ 已入 |
+| 权限心智模型统一交叉索引               | 节点 9        | 提一嘴   | ✅ 已入 |
+| Conductor 模式比喻（人分发/验收）       | 节点 11       | 提一嘴   | ✅ 已入 |
+| 反模式清单化（社区吐槽→显式清单）       | 节点 13       | 正常融入 | ✅ 已入 |
+| "概念→决策框架" 升级方向               | 节点 0/2/3/10/11/13 | 方向性 | ✅ 已入（Phase 2 涉及的 9 个节点） |
+
+### 社区覆盖度研究结论（POMASA Gap Analysis）
+
+基于 62 条社区来源（blogs/reddit/hackernews/social/github）归纳的 17 个话题，与骨架覆盖率 **94.1%**。骨架设计合理，盲区在"缺深度"而非"缺概念"。
+
+完整报告：`.sisyphus/research/adopt-agentic-gap-analysis/workspace/04.report/gap-analysis-report.md`
+审视附录：`.sisyphus/research/adopt-agentic-gap-analysis/workspace/04.report/review-addendum.md`
+
+**P1 盲区（3 个，已补深）**：
+
+| GAP | 问题 | 处理方式 | 状态 |
+| --- | ---- | -------- | ---- |
+| GAP-001 并行 Session 治理 | 有并行概念，缺多会话协同方法 | 扩展节点 11（编排模式） | ✅ 已补深 |
+| GAP-002 长时 Loop 治理 | 有 loop 概念，缺 checkpoint/stop/恢复体系 | 扩展节点 2 + 13 | ✅ 已补深 |
+| GAP-003 团队级配置治理 | 有"prompt 是资产"，缺团队共建/审查/回收 | 扩展节点 3 + 10 | ✅ 已补深 |
+
+**P2 观察（1 个）**：GAP-004 长期持久记忆 — 已在节点 1 轻量补充最小心智模型（会话内 vs 跨会话、自动积累风险）。
+
+**全局升级方向**：STONE-006"概念→决策框架"已在 Phase 2 涉及的 9 个节点中应用（何时并行/何时串行、何时继续/何时重启、何时回滚/何时修正等对比表格）。剩余高热度节点（built-in-tools、mcp、sub-agents）可在后续 Phase 补充。
 
 ### 文件约定
 
@@ -224,6 +277,7 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
 | `materials/`                      | 行业洞见研究素材（不发布） | agent 可读可写      |
 | `.sisyphus/plans/`                | 设计计划（git tracked）    | agent 工作区        |
 | `.sisyphus/drafts/`               | 设计草稿（git tracked）    | agent 工作区        |
+| `.sisyphus/research/`               | POMASA 研究项目（git tracked，notepads 除外） | agent 工作区        |
 | `.sisyphus/drafts/draft-ideas.md` | 用户私有构想               | **禁止 agent 修改** |
 | `.sisyphus/notepads/`             | 临时工作记录（gitignored） | agent 临时用        |
 | `.sisyphus/boulder.json`          | 运行时状态（gitignored）   | 自动生成            |

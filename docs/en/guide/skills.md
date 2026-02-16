@@ -55,6 +55,27 @@ The LLM hasn't "learned" anything new. It simply saw richer system instructions 
 
 Different agent tools may use different syntax for loading Skills, but the underlying mechanism is the same: **read the Skill file → append to System Instructions → include in every subsequent request.**
 
+## Commands, Skills, and Sub Agents — Responsibility Boundaries
+
+Commands and Skills aren't the only ways you influence agent behavior. Add [Sub Agents](./sub-agents.md) to the picture, and the three cover different granularities of behavior control:
+
+| | Commands | Skills | Sub Agent |
+| --- | --- | --- | --- |
+| **Essence** | One-shot prompt injection | Persistent system instruction extension | Isolated context environment |
+| **Granularity** | Task-level — "what to do this time" | Behavior-level — "how to behave from now on" | Sub-task-level — "hand this to a specialist" |
+| **Lifecycle** | Fire and forget | Active until manually unloaded | Destroyed after task completion |
+| **Context impact** | Appended to current conversation | Appended to System Instructions | Creates a fresh, independent context |
+| **Typical use** | `/review`, `/commit` | Loading Git conventions, code style | Complex sub-tasks needing a clean environment |
+
+### When to Use Which
+
+| Scenario | Recommendation | Rationale |
+|----------|---------------|-----------|
+| Repetitive single-step operations | Command | One-click trigger, fire and forget |
+| Persistently needed standards or knowledge | Skill | Load once, active in every subsequent turn |
+| Sub-task requiring clean context | Sub Agent | Avoids noise from the main conversation |
+| Not sure which to use | Start with a Command; upgrade to Skill if you keep repeating it | Start simple, escalate as needed |
+
 ## Ecosystem: Reusable Behavior Patterns
 
 The core value of Skills is shareability:

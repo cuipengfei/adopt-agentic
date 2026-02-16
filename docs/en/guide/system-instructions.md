@@ -105,6 +105,27 @@ Some call project-level instruction files "organizational scar tissue"—every p
 
 A well-crafted set of system instructions is a part of your project's institutional knowledge.
 
+### Team-Level Prompt Governance
+
+One person maintaining an instruction file? Just iterate. A team maintaining the same file? That requires governance.
+
+**Version control is the floor.** Put instruction files in Git. Every change gets a commit record. Six months later when you wonder "who added this rule and why"—git blame tells you. Instruction files outside Git are untraceable.
+
+**Changes need review.** Modifying one line of instructions can alter the Agent's global behavior. One person adds "always use tabs," another person's project is all spaces—the conflict only surfaces in the next session. Run instruction file changes through PR review, just like code. The review focus isn't syntax; it's "who does this rule affect?"
+
+**When the project changes, instructions must follow.** Tech stack migrated (REST → GraphQL)? Architecture restructured (monolith → microservices)? Dependencies upgraded (switched package managers)? Related rules in instruction files need synchronized updates. This isn't "we'll get to it"—it's "the next Agent session will make decisions based on stale rules."
+
+### What Goes in Instructions / What Stays Runtime
+
+| Characteristic | Put in System Instructions | Leave for Runtime Injection |
+|----------------|--------------------------|---------------------------|
+| Needed every session | ✅ | |
+| Only needed for specific tasks | | ✅ (use Skills or project files) |
+| Under 10 lines | ✅ | |
+| Over 100 lines | | ✅ (put in files, let Agent read on demand) |
+| Low change frequency (monthly/quarterly) | ✅ | |
+| High change frequency (daily/weekly) | | ✅ (frequently changing system prompts invite errors) |
+
 ## Three Things to Watch in Every Chapter
 
 - **Context flow**: System instructions are the "static layer" of context — present unchanged in every request, providing a stable behavioral baseline for all dynamic context that follows (user inputs, tool results).

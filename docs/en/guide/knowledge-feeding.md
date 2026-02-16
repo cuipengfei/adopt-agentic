@@ -95,6 +95,26 @@ A mature agentic workflow is always a combination of all three. The rule layer s
 
 But all three layers go stale. Rule layer rules contradict each other—"all functions must have JSDoc" set six months ago may have been silently abandoned, yet it's still in the rules file, and the agent dutifully follows it every time. Capability layer Skills clash with new requirements—last month's code style Skill may fight this project's conventions. Project layer docs rot—the README says "use REST API" while the project has fully switched to GraphQL. Addition decides what to feed. Subtraction decides when to clean. The cost of not cleaning isn't "wasted space"—it's the agent making decisions based on wrong information.
 
+## Team Knowledge Governance
+
+One person using an Agent? How to feed knowledge is a personal problem. A team using Agents? It's a collaboration problem.
+
+### Co-creation
+
+Multiple people maintain the same project rules file, the same Skills, the same documentation structure. Who adds rules? Who modifies Skills? Will additions conflict with someone else's setup?
+
+Put instruction files and Skill files into the code repository. Run changes through PR review. This isn't bureaucracy—it's making sure one person's change doesn't silently break another's workflow. The review focus: "Does this new rule contradict existing ones?" "Which task scenarios does this Skill change affect?"
+
+### Knowledge Debt
+
+Rules get added. They never get deleted.
+
+Six months later, the instruction file has ballooned to hundreds of lines. A third are outdated. A few contradict each other. When the Agent receives contradictory instructions, it doesn't throw an error—it picks one, and which one depends on attention allocation randomness.
+
+Knowledge debt is like technical debt: painless to accumulate, excruciating to repay.
+
+Schedule periodic audits: every so often, the team reviews the instruction file and active Skills. For each rule, one question—"Is this still valid?" Invalid? Delete. Contradictory? Merge. Outdated? Update. The cost of not auditing isn't "wasted tokens"—it's the Agent silently executing rules you've already abandoned.
+
 ## Three Things to Watch in Every Chapter
 
 - **Context flow**: Three paths, three injection timings. The rule layer claims space at session start; the capability layer appends when a task triggers it; the project layer enters on-demand as the Agent reads files. Knowledge freshness and context cost are always in tension.

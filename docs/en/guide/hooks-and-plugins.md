@@ -159,6 +159,14 @@ Note the last row: the **results** of hook modifications appear in context (the 
 
 All three can be combined. A single plugin that injects a Skill (Git convention knowledge) + mounts a Hook (auto-lint before commits) is perfectly normal.
 
+### The Trust and Permission Gradient
+
+If you care about security boundaries, there's a permission gradient running across several chapters worth noting:
+
+[Built-in Tools](./built-in-tools.md) (preset by agent developers, clearest permission boundaries) → [MCP](./mcp.md) (third-party servers, permissions constrained by protocol but users should vet the source) → Hooks / Plugins (full programmatic access, can do anything code can do).
+
+The more power, the more scrutiny required. Built-in tools you mostly don't worry about. MCP servers deserve a glance at their declared permissions. Hooks and plugins need line-by-line review—because they are code.
+
 ## Three Things to Watch For
 
 - **Context flow**: Hooks execute at **critical points** in the context flow—before and after tool calls, during system prompt construction, during session compaction. They can either work as side channels (not affecting context) or directly modify context content. Plugins bundle multiple context manipulation mechanisms. This is the most fine-grained context control available to users.

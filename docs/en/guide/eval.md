@@ -115,6 +115,59 @@ Rollback, rerouting, forced reruns—these recovery moves are all context subtra
 
 But there's a subtler subtraction you might not notice: in long conversations, agents automatically compress early history to prevent window overflow. The cost? Your original constraints may get compressed away. If an agent suddenly "forgets" initial rules late in a conversation, it's probably not stupidity—that rule simply isn't in the context anymore. In practice: periodically restate core constraints during long tasks. Or when it errs, send the original instruction alongside its mistake and let it compare.
 
+### Recovery Strategy: Rollback, Fix, or Start Over
+
+The Agent messed up. What's the next move? Not every error warrants the same response.
+
+| Situation | Recommendation | Rationale |
+|-----------|---------------|-----------|
+| Small scope, clear error | Fix in place | Fastest; context is still warm |
+| Large scope, right direction but wrong details | Partial rollback + fix | Keep the correct parts, undo only what's broken |
+| The entire direction was wrong | Start over (new session) | Continued patching only makes it worse |
+
+Which path to choose depends on one judgment: **what layer is the error on?** A tool call had the wrong parameter? One-line fix. The entire approach was misguided? A hundred-line fix won't save it—start fresh, and feed the failed attempt as "negative experience" into the new session.
+
+### The Verification Loop
+
+Verification isn't "run the tests when you're done." It's a cycle: execute → verify → feedback → correct → verify again.
+
+The key to closing the loop is **feedback injection**. The Agent runs tests; the results must return to the context—pass means proceed, fail means identify the problem. If verification results don't get injected back, the Agent is walking blind.
+
+A complete verification loop:
+1. Agent completes a modification
+2. Verification triggers automatically (tests, build, lint)
+3. Results inject back into context
+4. Agent decides based on results: pass → continue, fail → fix
+5. After fixing, return to step 2
+
+Your job is to ensure step 3 never breaks. Tests ran but results weren't fed back? That's the same as not testing at all.
+
+## Common Anti-Patterns
+
+### False Completion
+
+**Symptom**: The Agent announces "Done!" but you find the feature wasn't implemented, tests weren't run, or they ran but failed.
+
+**Consequence**: You assume the task is complete and build subsequent work on that assumption. When the issue surfaces, downstream tasks need rework too.
+
+**Fix**: Make verification a mandatory step in your instructions—"After editing, you must run `bun test`. All tests passing = done." The key is getting verification results into the context rather than letting the Agent "judge" completion on its own. External signals (exit codes) are far more reliable than the Agent's self-assessment.
+
+### Stuck Loop
+
+**Symptom**: The Agent keeps trying the same fix repeatedly, failing each time, but never switches approach. You see the same error appearing three or four times in the conversation.
+
+**Consequence**: Burns tokens and time, ultimately still fails. Worse, conversation history gets polluted with identical failure records, filling the context window with useless content.
+
+**Fix**: Set a retry threshold—"If the same approach fails twice, try a different strategy." Or more directly: when you spot a stuck loop, intervene and tell the Agent to stop trying, then give it a new direction. Some Agents will self-identify loops and report "I seem to be stuck"—this is actually good behavior, far better than silently hitting the wall.
+
+### The Speed Trap
+
+**Symptom**: The Agent generates code blazingly fast, but quality is declining—sloppy variable names, unhandled edge cases, style inconsistent with the project.
+
+**Consequence**: Looks efficient short-term; doubles maintenance costs long-term. The time you spend reviewing and patching may exceed what manual coding would have taken.
+
+**Fix**: Verification density must keep up with generation speed. Agent modified code? Immediately run tests, lint, type checking. For things automated verification can't catch (naming, design intent, architectural consistency), do manual reviews at key checkpoints. Not every time—but spot-check every few tasks.
+
 ## Three Things to Watch in Every Chapter
 
 - **Context flow**: Each verification layer produces signals (exit codes, test reports, metrics) that get injected back into context, becoming the basis for the Agent’s next decision. Verification isn’t a post-mortem—it’s real-time navigation.

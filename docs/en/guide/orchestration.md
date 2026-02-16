@@ -109,6 +109,55 @@ This makes the Agent more robust under uncertainty. It doesn't stubbornly follow
 
 The context here spirals upward, with each loop carrying the "lessons" from the previous one.
 
+## Parallel Session Governance
+
+Parallel branches are easy to understand. **Governance** is the hard part.
+
+One person runs three sessions modifying the same project simultaneously—this isn't a parallel branch pattern; it's **parallel sessions**. Each session has its own context, blind to what the others are doing. Without coordination, collisions are inevitable.
+
+### Task Partitioning
+
+Parallelism requires **clean cuts**.
+
+Each session owns an independent area—different files, different modules, different responsibilities. If two sessions both need to modify the same file, don't parallelize.
+
+Rule of thumb: partition by file boundaries. If one task's file set has zero overlap with another's, parallelize with confidence. Overlap? Go sequential, or extract the overlapping part into its own task.
+
+### State Synchronization
+
+Three sessions have been running for half an hour each. How do you know their progress?
+
+The filesystem is the natural shared bus. Each session's output—modified files, generated code—lands on disk directly. Other sessions don't need notifications; they just read the latest file state when needed.
+
+But context doesn't sync. Session A discovers a key constraint ("this API is deprecated"), and Sessions B and C have no idea. You need to relay that discovery manually—mention it in B/C's next message, or write it to a project knowledge file where they'll pick it up.
+
+### Conflict Convergence
+
+Two sessions both modified the same function signature, but differently. Git will tell you there's a conflict. It won't tell you which approach is correct.
+
+Convergence strategies:
+
+- **First-come-first-served**: Whoever commits first wins; the other rebases on the new state. Blunt but sufficient for most cases.
+- **Human arbitration**: Review both approaches, pick one or merge them. Best when changes are substantial and both have merit.
+- **Prevention over cure**: If partitioning was clean, conflicts shouldn't happen. Frequent conflicts mean the partitioning itself is flawed.
+
+### Unified Acceptance
+
+All branches are done. How do you confirm the integrated whole is correct?
+
+Tests passing individually ≠ passing after integration. Three sessions each modified different modules, each passing their own tests—merge them together and dependency relationships might blow up.
+
+Acceptance must happen post-merge: full build, full test suite, full lint. It's not enough for each branch to pass on its own—you need one final run after all changes land in the same codebase.
+
+### When to Parallelize / When to Serialize
+
+| Scenario | Recommendation | Rationale |
+|----------|---------------|-----------|
+| No file overlap between tasks | Parallelize | Total time ≈ slowest branch |
+| Sequential dependency between tasks | Serialize | Previous output feeds next input |
+| Uncertain whether dependencies exist | Serialize first, parallelize after proving safety | Easier to debug sequentially |
+| Large, uncertain scope of changes | Serialize + verify each | Reduces merge conflict risk |
+
 ## Relationship with Sub Agents
 
 A Sub Agent is a **means** to implement certain orchestration patterns (especially parallel branches), but it is not an orchestration pattern itself.
@@ -117,6 +166,8 @@ A Sub Agent is a **means** to implement certain orchestration patterns (especial
 - **Sub Agent** is a lower-level **execution unit** (who does the work).
 
 You can use Sub Agents to implement sequential execution (one Sub Agent passes its result to the next), or you can implement sequential execution without them (the main agent does it step by step).
+
+Think of an orchestra conductor: the conductor doesn't play any instrument, but controls tempo, assigns sections, and coordinates all the parts. When you use parallel sessions + Sub Agents to handle complex tasks, you're playing the conductor—dispatching work, tracking progress, accepting deliverables. You're not writing the code, but the overall direction is yours to command.
 
 ## Three Things to Watch in Every Chapter
 
