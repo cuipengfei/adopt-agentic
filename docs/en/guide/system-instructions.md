@@ -1,6 +1,6 @@
 # System Instructions
 
-> **Context View**: System instructions are the "constitution" injected into every API request—setting the agent's identity, rules, and goals. They are the first and highest-priority context the LLM receives.
+> **Context View**: System instructions are the "behavioral baseline" injected into every API request—setting the agent's identity, rules, and goals. They are the first and highest-priority context the LLM receives.
 
 ## How It Works
 
@@ -44,11 +44,11 @@ Before you type anything, they're already there.
 
 ## What It Contains
 
-- **Identity**: `"You are a senior frontend engineer"`
-- **Capabilities**: `"You can read/write files, execute terminal commands, search the codebase"`
-- **Rules**: `"All code must include JSDoc comments"`
-- **Goal**: `"Help the user build a fully functional web application"`
-- **Output Format**: `"Present code changes in diff format"`
+- **Identity**: What role the LLM plays
+- **Capabilities**: What operations the LLM can perform
+- **Rules**: Constraints and standards it must follow
+- **Goal**: What it's working toward
+- **Output Format**: How results should be presented
 
 These turn a general-purpose LLM into your specialized tool.
 
@@ -56,12 +56,12 @@ These turn a general-purpose LLM into your specialized tool.
 
 System instructions come from two sources:
 
-1.  **The Agent's Developers**: They write the bulk of the base instructions, defining the agent's core capabilities and behavioral patterns. This is the part you cannot change.
-2.  **You (The User)**: Most agentic tools provide an entry point for custom instructions, such as a `CLAUDE.md` file, an `AGENTS.md`, or a custom instructions field in the settings.
+1.  **The Agent's Developers**: They write the bulk of the base instructions, defining the agent's core capabilities and behavioral patterns. You mostly cannot change this part.
+2.  **You (The User)**: Most agentic tools provide an entry point for custom instructions, such as a `CLAUDE.md` file, an `AGENTS.md`, or a configuration option within the tool.
 
-## Key Insight: User Customization is the Strongest Lever
+## Key Insight: User Customization is Your Most Effective Handle
 
-User-defined system instructions are the **strongest lever** you have to influence an agent's behavior.
+User-defined system instructions are the **most effective handle** you have to influence an agent's behavior.
 
 You don't need to modify the agent's core code or understand its internals. Write your rules and expectations in plain language, and you globally alter the agent's behavior.
 
@@ -69,13 +69,13 @@ Want it to follow your team's unique coding style? Put it in the system instruct
 Want it to avoid touching a sensitive module? Put it in the system instructions.
 Want it to run a specific check before every commit? Put it in the system instructions.
 
-These user-level instructions are typically appended to the agent's base instructions or, using specific syntax, can override default behaviors. The half-hour you spend polishing a few dozen lines of instructions can be more effective than days spent working around the agent's defaults.
+These user-level instructions are typically appended to the agent's base instructions or, using specific syntax, can override default behaviors. A well-crafted set of instructions offers an exceptional return on investment—far more effective than spending days working around the agent's defaults.
 
-## How to write effective instructions
+## Two Approaches to Writing Good Instructions
 
-Instructions aren't for "controlling" the Agent. They're for helping it join your team. Two practical tips:
+Instructions aren't for "controlling" the Agent. They're for helping it join your team.
 
-### 1. Don't think of a pink elephant
+### Approach 1: Show the Path, Don't Fence the Pitfalls
 
 Don't tell the Agent "don't delete files." Like humans, LLMs focus on the prohibited action when they see a negative constraint.
 
@@ -85,7 +85,7 @@ Don't tell the Agent "don't delete files." Like humans, LLMs focus on the prohib
 
 Show it the path, don't fence off every pitfall. That's positive invariants.
 
-### 2. Onboard it, don't lint it
+### Approach 2: Onboard It, Don't Lint It
 
 `AGENTS.md` only has code styles ("use tabs, not spaces")? You're treating it like a linter. Treat it like a new hire. Don't just give it rules; tell it **"how we do things here."**
 
@@ -93,11 +93,13 @@ When fixing a bug, is the flow "reproduce → test → commit" or "check logs �
 
 Instructions are a protocol for aligning expectations.
 
-## Prompts are Maintainable Assets
+## Instructions are Maintainable Assets
 
 Don't treat your system instructions as a one-off note. They are a **living document, an asset that needs to be maintained just like code**.
 
-Some call project-level instruction files "organizational scar tissue"—every prohibition traces back to a real incident. But instruction files aren't only scars. The proven patterns that survived repeated validation are in there too. **Scars tell the Agent what not to do; crystals tell it how things should be done.** Together, they form the team's complete institutional wisdom.
+Some call project-level instruction files "organizational scar tissue"—every rule traces back to a real incident. But instruction files aren't only scar tissue. The proven patterns that survived repeated validation are in there too. **Scar tissue tells the Agent what paths don't work; proven practices tell it how things should be done.** Together, they form the team's complete institutional wisdom.
+
+> "Show the path, don't fence the pitfalls" is about **how you write instructions**—using positive descriptions instead of negations. "Scar tissue" is about **where instruction content comes from**—recording real mistakes the team has made and crystallizing experience into rules. These don't conflict: the content comes from lessons learned, the writing style stays positive.
 
 -   **Version it**: Use Git to manage your instruction files and track every change.
 -   **Review it**: Have colleagues review your instructions just as they would review code.
@@ -105,15 +107,15 @@ Some call project-level instruction files "organizational scar tissue"—every p
 
 A well-crafted set of system instructions is a part of your project's institutional knowledge.
 
-### Team-Level Prompt Governance
+### Team-Level Instruction Governance
 
 One person maintaining an instruction file? Just iterate. A team maintaining the same file? That requires governance.
 
-**Version control is the floor.** Put instruction files in Git. Every change gets a commit record. Six months later when you wonder "who added this rule and why"—git blame tells you. Instruction files outside Git are untraceable.
+**Instruction files belong in Git.** Every change gets a commit record. Six months later when you wonder "who added this rule and why"—`git blame` tells you. Instruction files outside version control are untraceable when something goes wrong.
 
 **Changes need review.** Modifying one line of instructions can alter the Agent's global behavior. One person adds "always use tabs," another person's project is all spaces—the conflict only surfaces in the next session. Run instruction file changes through PR review, just like code. The review focus isn't syntax; it's "who does this rule affect?"
 
-**When the project changes, instructions must follow.** Tech stack migrated (REST → GraphQL)? Architecture restructured (monolith → microservices)? Dependencies upgraded (switched package managers)? Related rules in instruction files need synchronized updates. This isn't "we'll get to it"—it's "the next Agent session will make decisions based on stale rules."
+**When the project changes, instructions must follow.** Tech stack upgraded? Architecture restructured? Dependencies switched? Related rules in instruction files need synchronized updates. This isn't "we'll get to it"—it's "the next Agent session will make decisions based on stale rules."
 
 ### What Goes in Instructions / What Stays Runtime
 
