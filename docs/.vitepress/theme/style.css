@@ -1,0 +1,153 @@
+:root {
+  --aa-slide-radius: 24px;
+  --aa-slide-gap: clamp(20px, 4vh, 44px);
+  --aa-slide-padding: clamp(24px, 4vw, 56px);
+}
+
+.VPDoc .vp-doc:not([data-aa-slide-deck='ready']) {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.VPDoc .vp-doc[data-aa-slide-deck='ready'] {
+  opacity: 1;
+}
+
+.VPDoc .vp-doc > .aa-slide-deck {
+  display: grid;
+  gap: var(--aa-slide-gap);
+  margin-block: 20px 8px;
+}
+
+.VPDoc .vp-doc > .aa-slide-deck > .aa-slide {
+  position: relative;
+  /* P1 - Visual Balance: Remove aggressive min-height, use content height + padding */
+  min-height: 200px;
+  border-radius: var(--aa-slide-radius);
+  border: 1px solid color-mix(in srgb, var(--vp-c-divider) 88%, transparent);
+  padding: var(--aa-slide-padding);
+  box-shadow:
+    0 24px 56px -42px color-mix(in srgb, var(--vp-c-brand-1) 35%, transparent),
+    0 12px 32px -20px color-mix(in srgb, var(--vp-c-text-1) 14%, transparent);
+  background:
+    radial-gradient(circle at top left, color-mix(in srgb, var(--vp-c-brand-1) 12%, transparent) 0%, transparent 48%),
+    linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--vp-c-bg-soft) 92%, white 8%) 0%,
+      var(--vp-c-bg-soft) 56%,
+      color-mix(in srgb, var(--vp-c-bg-soft) 80%, var(--vp-c-brand-1) 20%) 100%
+    );
+  scroll-margin-top: calc(var(--vp-nav-height) + 28px);
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
+}
+
+/* Enhancement - Hover Micro-interaction */
+@media (hover: hover) {
+  .VPDoc .vp-doc > .aa-slide-deck > .aa-slide:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 32px 64px -36px color-mix(in srgb, var(--vp-c-brand-1) 45%, transparent),
+      0 16px 40px -20px color-mix(in srgb, var(--vp-c-text-1) 18%, transparent);
+    z-index: 10;
+    border-color: var(--vp-c-brand-1);
+  }
+}
+
+.dark .VPDoc .vp-doc > .aa-slide-deck > .aa-slide {
+  border-color: color-mix(in srgb, var(--vp-c-divider) 80%, var(--vp-c-brand-1) 20%);
+  /* P1 - Dark Mode: Use pure black shadows to avoid dirty look */
+  box-shadow:
+    0 24px 48px -12px rgba(0, 0, 0, 0.6),
+    0 0 0 1px var(--vp-c-divider);
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--vp-c-brand-1) 24%, transparent) 0%, transparent 45%),
+    linear-gradient(
+      155deg,
+      color-mix(in srgb, var(--vp-c-bg-soft) 90%, black 10%) 0%,
+      color-mix(in srgb, var(--vp-c-bg-soft) 84%, black 16%) 56%,
+      color-mix(in srgb, var(--vp-c-bg-soft) 78%, var(--vp-c-brand-1) 22%) 100%
+    );
+}
+
+.VPDoc .vp-doc > .aa-slide-deck > .aa-slide:nth-child(even) {
+  background:
+    radial-gradient(circle at bottom right, color-mix(in srgb, var(--vp-c-brand-1) 10%, transparent) 0%, transparent 52%),
+    linear-gradient(
+      170deg,
+      color-mix(in srgb, var(--vp-c-bg-soft) 92%, white 8%) 0%,
+      var(--vp-c-bg-soft) 58%,
+      color-mix(in srgb, var(--vp-c-bg-soft) 84%, var(--vp-c-brand-1) 16%) 100%
+    );
+}
+
+.VPDoc .vp-doc > .aa-slide-deck > .aa-slide--intro {
+  /* min-height: clamp(500px, 82vh, 820px); */
+  min-height: auto;
+}
+
+.VPDoc .vp-doc > .aa-slide-deck > .aa-slide > :first-child {
+  margin-top: 0 !important;
+}
+
+.VPDoc .vp-doc > .aa-slide-deck > .aa-slide h2 {
+  display: inline-flex;
+  align-items: flex-start; /* P1 - H2 Alignment: Fix multi-line alignment */
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--vp-c-brand-1) 28%, transparent);
+  background: color-mix(in srgb, var(--vp-c-brand-1) 10%, var(--vp-c-bg));
+}
+
+.VPDoc .vp-doc > .aa-slide-deck > .aa-slide h2::before {
+  content: '';
+  width: 0.46rem;
+  height: 0.46rem;
+  margin-top: 0.4rem; /* Visual alignment for top-aligned circle */
+  border-radius: 999px;
+  background: var(--vp-c-brand-1);
+  box-shadow: 0 0 0 0.18rem color-mix(in srgb, var(--vp-c-brand-1) 24%, transparent);
+  flex-shrink: 0;
+}
+
+.VPDoc .vp-doc > .aa-slide-deck > .aa-slide pre {
+  border-radius: 14px;
+}
+
+/* P1 - Mobile View: Full-width fallback for screens <= 640px */
+@media (max-width: 640px) {
+  .VPDoc .vp-doc > .aa-slide-deck {
+    display: block; /* Disable grid */
+    margin-inline: -24px; /* Offset parent padding */
+  }
+
+  .VPDoc .vp-doc > .aa-slide-deck > .aa-slide {
+    min-height: auto;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-top: 1px solid var(--vp-c-divider);
+    border-bottom: none;
+    box-shadow: none !important;
+    padding: 24px;
+    margin-bottom: 0;
+    background: transparent !important; /* Remove card bg on mobile */
+  }
+  
+  .VPDoc .vp-doc > .aa-slide-deck > .aa-slide:first-child {
+      border-top: none;
+  }
+}
+
+@media (max-width: 960px) {
+  .VPDoc .vp-doc > .aa-slide-deck > .aa-slide {
+    min-height: auto;
+    /* padding: clamp(20px, 4vw, 28px);  -- Handled by 640px rule or default variable */
+  }
+
+  .VPDoc .vp-doc > .aa-slide-deck > .aa-slide--intro {
+    min-height: auto;
+  }
+}
