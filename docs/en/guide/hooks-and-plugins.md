@@ -39,7 +39,7 @@ Agent continues reasoning
 
 ## The gatekeeper pattern
 
-An agent is a brilliant intern who might go off the rails at any moment.
+An agent is a hard-working intern who might go off track at any moment.
 You need a calm doorman to stop it before it does something stupid, like deleting the production database.
 
 - **Read-only** (`ls`, `cat`): Let it look.

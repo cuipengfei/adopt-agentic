@@ -56,4 +56,4 @@ LLM 没有记忆。你给它什么，它就看到什么。本教程的每一节�
 
 ### 实战
 
-- [**In Practice**](./in-practice.md)：打破 agent-agnostic 约束，用具体工具演示可复制的高杠杆操作。
+- [**In Practice**](./in-practice.md)：打破 agent-agnostic 约束，用具体工具演示可复制的高回报操作。

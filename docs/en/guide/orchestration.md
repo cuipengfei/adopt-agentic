@@ -125,7 +125,7 @@ Rule of thumb: partition by file boundaries. If one task's file set has zero ove
 
 ### State Synchronization
 
-Three sessions have been running for half an hour each. How do you know their progress?
+Three sessions have been running for a while. How do you know their progress?
 
 The filesystem is the natural shared bus. Each session's output—modified files, generated code—lands on disk directly. Other sessions don't need notifications; they just read the latest file state when needed.
 

@@ -32,7 +32,7 @@ This is the most direct form of knowledge feeding:
 
 The rule layer's defining trait: **globally effective, enforced on every session, always present**. It's the foundation of the Agent's worldview.
 
-These rules are two kinds of distilled experience: **scars**—every "never" traces back to a real incident; and **crystals**—every "always" traces back to a proven pattern. New hires (and Agents) don't need to learn the hard way or reinvent the wheel, because the team's scars and crystals already remember.
+These rules are two kinds of distilled experience: **hard-learned lessons**—every "never" traces back to a real incident; and **proven practices**—every "always" traces back to a pattern that's been validated again and again. New hires (and Agents) don't need to learn the hard way or reinvent the wheel, because those lessons and practices already remember for them.
 
 The cost is equally clear: it permanently occupies context window space. Cram in too many rules and you leave less room for actual work.
 
@@ -93,7 +93,15 @@ Putting 5,000 lines of API definitions in `AGENTS.md` is like making a developer
 
 A mature agentic workflow is always a combination of all three. The rule layer sets the baseline, the capability layer fills in skills, the project layer provides facts.
 
-But all three layers go stale. Rule layer rules contradict each other—"all functions must have JSDoc" set six months ago may have been silently abandoned, yet it's still in the rules file, and the agent dutifully follows it every time. Capability layer Skills clash with new requirements—last month's code style Skill may fight this project's conventions. Project layer docs rot—the README says "use REST API" while the project has fully switched to GraphQL. Addition decides what to feed. Subtraction decides when to clean. The cost of not cleaning isn't "wasted space"—it's the agent making decisions based on wrong information.
+But all three layers go stale.
+
+Rule layer rules contradict each other—"all functions must have JSDoc" set some time ago may have been silently abandoned, yet it's still in the rules file, and the agent dutifully follows it every time.
+
+Capability layer Skills clash with new requirements—a previously loaded code style Skill may fight the current project's conventions.
+
+Project layer docs rot—the README describes an outdated technical approach while the project has long since moved on, but nobody updated the docs.
+
+Addition decides what to feed. Subtraction decides when to clean. The cost of not cleaning isn't "wasted space"—it's the agent making decisions based on wrong information.
 
 ## Team Knowledge Debt
 
@@ -101,7 +109,7 @@ One person's prompt is a habit. A team's prompt is a system.
 
 **Rule Debt**
 -   Rules are only ever added, never removed.
--   A rule from six months ago and a rule from last week might contradict each other.
+-   A rule added a while back and a rule from last week might contradict each other.
 -   The Agent won't complain about conflicting instructions. It will just pick one. The outcome is a coin flip.
 
 **Audits**

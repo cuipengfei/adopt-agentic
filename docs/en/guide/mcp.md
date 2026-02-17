@@ -123,7 +123,7 @@ But flexibility has a hidden cost. Each connected MCP Server injects all of its 
 MCP's value isn't "yet another protocol." Its value is **freeing you from depending on the agent developer**:
 
 - **Don't wait for updates**: Want Jira integration? Install an MCP Server. No need to wait for the next agent release.
-- **Connect internal systems**: Your company's internal API will never get official support, but you can write (or find) an MCP Server for it.
+- **Connect internal systems**: Your company's internal API will most likely never get official agent support, but you can write (or find) an MCP Server for it.
 - **Reuse across agents**: An MCP Server can theoretically be used by any agent that supports the protocol — not locked to a specific tool.
 
 ## Three Things to Watch in Every Chapter

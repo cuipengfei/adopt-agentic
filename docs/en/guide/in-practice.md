@@ -4,13 +4,13 @@
 
 You've read through the complete concept chain of context management: from first principles to carriers to orchestration to verification. Now the question is: **how do you actually do it?**
 
-This section isn't a comprehensive operations manual—that's the job of each tool's own documentation. Here we only pick **high-leverage operations**: things you can do within 10 minutes of understanding the concept, with immediate payoff.
+This section isn't a comprehensive operations manual—that's the job of each tool's own documentation. Here we only pick **high-payoff operations**: things you can quickly do after understanding the concepts, with immediate results.
 
 ## Write Your System Instructions Well
 
 > Related concepts: [System Instructions](/en/guide/system-instructions), [Knowledge Feeding](/en/guide/knowledge-feeding)
 
-System Instructions are the strongest lever you can pull—no code, no plugins, one file changes the agent's entire behavior.
+System Instructions are the most effective handle you have—no code, no plugins, one file changes the agent's entire behavior.
 
 ### Where to Put Them
 

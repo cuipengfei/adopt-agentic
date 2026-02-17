@@ -52,4 +52,4 @@ This guide follows the flow of context in three parts: The Basics, Context Carri
 
 ### Hands-On
 
-*   [**In Practice**](./in-practice.md): Breaking the agent-agnostic constraint—concrete tools, copyable high-leverage operations.
+*   [**In Practice**](./in-practice.md): Breaking the agent-agnostic constraint—concrete tools, copyable high-payoff operations.

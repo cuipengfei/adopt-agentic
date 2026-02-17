@@ -127,7 +127,7 @@ But tool return values are also the fastest source of context bloat. One unrestr
 
 When you see the agent run `ls` and `grep` for the third time, you might get impatient. "Why don't you just fix the code?"
 
-**The agent is blind.** It can't see your IDE or your file tree. Tool return values are the only way it "sees" the world.
+**The agent can't see your screen.** It doesn't know what's open in your IDE or what your file tree looks like. Tool return values are the only way it "sees" the world.
 
 - `ls` is its eyes, confirming where files are.
 - `grep` is its scanner, locating what needs fixing.

@@ -132,7 +132,7 @@ Agentic：**接收 → 推理 → 行动 → 观察 → 再推理**。
 
 > "Create a plan to refactor the auth module. Do not write code yet. Explain your plan step-by-step."
 
-它的计划漏了关键约束？现在纠正，一句话的事。等它改完 20 个文件再救火？成本是半小时起步。
+它的计划漏了关键约束？现在纠正，一句话的事。等它改完一堆文件再救火？返工成本远不是一句话能解决的。
 
 但凡任务不能一句话说清，就先让它复述。
 

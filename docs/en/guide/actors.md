@@ -131,7 +131,7 @@ It’s the air traffic control rule: tower issues an instruction, the pilot read
 For any complex task, don't let the agent act immediately.
 > "Create a plan to refactor the auth module. Don't write code yet. Explain your plan step-by-step."
 
-If the readback misses a key constraint, correcting it costs one sentence. If you wait until it has modified 20 files, it costs half an hour.
+If the readback misses a key constraint, correcting it costs one sentence. If you wait until it has modified a pile of files, the rework cost is orders of magnitude higher.
 
 Any task with more than trivial complexity needs a readback first.
 

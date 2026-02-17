@@ -122,7 +122,7 @@ graph LR
 
 Stuffing an entire codebase into context is tempting, and disastrous.
 
-Good context management means "retrieving the right few dozen key facts," not "dumping all text in at once." The goal is to **include only what the LLM actually needs to make its decision**—just enough, not one wasted sentence. When irrelevant information dominates, the model's attention dilutes — it may ignore critical constraints, or "borrow" wrong patterns from unrelated code.
+Good context management means "retrieving the right few dozen key facts," not "dumping all text in at once." The goal is to **include only what the LLM actually needs to make its decision**—just enough, not one wasted sentence.
 
 Hand an extremely smart stranger an entire filing cabinet and say "the relevant stuff is in there somewhere." They'll find some useful things, but they'll also be misled by the noise.
 
@@ -130,11 +130,7 @@ Hand an extremely smart stranger an entire filing cabinet and say "the relevant 
 
 Understanding project structure or mapping module dependencies? Large context is fine. These tasks tolerate fuzziness; a wide view helps see the big picture.
 
-Modifying a specific function or fixing a precise bug? Feed it only the files it needs.
-
-Too much context and it starts "seeing things but using them wrong," copying the wrong variable name, missing a constraint, or mixing in patterns from unrelated files.
-
-Here's a counterintuitive pattern: for precision edits, more information actually means less accuracy. The LLM's attention gets diluted by sheer volume, and it starts "borrowing" patterns from irrelevant files.
+Modifying a specific function or fixing a precise bug? Feed it only the files it needs. For precision edits, more information actually means less accuracy—the LLM's attention gets diluted by sheer volume, and it starts "borrowing" patterns from irrelevant files, copying the wrong variable name, or missing a constraint.
 
 So working with agents actually has two distinct modes:
 

@@ -97,7 +97,7 @@ Mitigation:
 - **Write core modules yourself**, or pair-program with the Agent
 - **Regularly draw architecture diagrams**—the Agent can generate them, but you must understand and confirm them
 
-An Agent amplifies your capabilities. But if you don’t maintain your own understanding, what it amplifies is your ignorance.
+An Agent helps you do more. But if your understanding of the codebase falls behind, you won’t be able to catch problems in its output.
 
 ## Three Things to Watch in Every Chapter
 
