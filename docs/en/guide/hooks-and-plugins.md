@@ -39,14 +39,14 @@ Agent continues reasoning
 
 ## The gatekeeper pattern
 
-The Agent is a genius that might go crazy at any moment. You need a calm gatekeeper to intercept it before it does something irreversible.
+An agent is a brilliant intern who might go off the rails at any moment.
+You need a calm doorman to stop it before it does something stupid, like deleting the production database.
 
-Three gates:
-- Read-only (`ls`, `read_file`) → let it look.
-- Low-risk (`npm install`) → silent check.
-- High-risk (`rm`, `git push`) → popup confirmation.
+- **Read-only** (`ls`, `cat`): Let it look.
+- **Low-risk write** (`npm install`): Probably fine, but it’s better to check things silently, like making sure `package-lock.json` is unchanged before running `npm install`.
+- **High-risk write** (`rm -rf`, `git push --force`): Must be stopped. A popup should ask, "Are you sure?"
 
-The core value of Hooks: a programmable firewall between the Agent and the world.
+This is the core value of a hook: a programmable firewall between the agent and the real world.
 
 ### Lifecycle Events
 
@@ -161,11 +161,13 @@ All three can be combined. A single plugin that injects a Skill (Git convention 
 
 ### The Trust and Permission Gradient
 
-If you care about security boundaries, there's a permission gradient running across several chapters worth noting:
+If you care about security, you'll notice a theme running through several nodes: a gradient of permissions.
 
-[Built-in Tools](./built-in-tools.md) (preset by agent developers, clearest permission boundaries) → [MCP](./mcp.md) (third-party servers, permissions constrained by protocol but users should vet the source) → Hooks / Plugins (full programmatic access, can do anything code can do).
+[Built-in tools](./built-in-tools.md) are safest; the agent's developer has your back.
+[MCP](./mcp.md) is next. Its permissions are bound by a protocol, but you have to trust the provider.
+Hooks and plugins have the most power and the most risk. They are just code. They can do anything.
 
-The more power, the more scrutiny required. Built-in tools you mostly don't worry about. MCP servers deserve a glance at their declared permissions. Hooks and plugins need line-by-line review—because they are code.
+With great power comes great responsibility to review. You can use built-in tools without a thought. You should glance at an MCP's declared permissions. You must review hooks and plugins line-by-line, just like any other code.
 
 ## Three Things to Watch For
 

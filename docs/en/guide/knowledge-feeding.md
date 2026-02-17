@@ -65,23 +65,23 @@ The project layer's defining trait: **no extra context window cost** (informatio
 
 Think of it this way: optimizing your project structure for an Agent also optimizes it for human teammates. A codebase that an Agent can't navigate is one that new human team members probably can't either.
 
-## JIT knowledge
+## On-Demand Knowledge: Treat Agents Like People
 
-Don't stuff the Encyclopedia Britannica into the System Prompt. Context window is VRAM, not a hard drive.
+Agents, like people, can't remember everything. Hand them an encyclopedia, and they'll just skip it.
 
-Common anti-pattern: putting the entire API documentation, DB schema, and all business logic into `AGENTS.md`. Correct approach: put only the **index** in `AGENTS.md`. "For DB schema, see `docs/db-schema.md`."
+Don't stuff your entire API documentation or database schema into `AGENTS.md`. Instead, provide an index. "For the DB schema, see `docs/db-schema.md`."
 
-The Agent reads that schema file only when it actually needs to write SQL. Let it fetch knowledge. Don't push.
+The Agent will look up that schema file when it actually needs to write SQL. Let it pull knowledge, don't push it.
 
-## Reference vs. instruction
+## The Dictionary and the Grammar
 
-Two types of knowledge. Don't mix them.
+Two kinds of knowledge, two different uses.
 
-Reference (`llms.txt`, API Docs, Schema) is static, lookup-based. Put it in the project layer; let the Agent read it on demand.
+The dictionary (`llms.txt`, API docs, schema) is for looking things up, not for memorizing. It's facts. It's static. Put it in your project, and let the Agent read it when it needs to.
 
-Instruction (`AGENTS.md`, Skills) is imperative. Put it in the rule layer; force the Agent to obey.
+The grammar (`AGENTS.md`, Skills) is for obeying, not for reading. It's rules. It's instructions. Put it in the Agent's core prompt, where it's enforced.
 
-Don't put 5000 lines of API definitions in `AGENTS.md`, that's forcing it to memorize a dictionary. And don't put a safety rule like "never use eval" in a random doc file, the Agent might never read it.
+Putting 5,000 lines of API definitions in `AGENTS.md` is like making a developer memorize a dictionary. Putting a critical rule like "never use eval" in some forgotten document is like hanging the "no drunk driving" sign in the bar's bathroom. Both are useless.
 
 ## How to Choose
 
@@ -95,25 +95,19 @@ A mature agentic workflow is always a combination of all three. The rule layer s
 
 But all three layers go stale. Rule layer rules contradict each other—"all functions must have JSDoc" set six months ago may have been silently abandoned, yet it's still in the rules file, and the agent dutifully follows it every time. Capability layer Skills clash with new requirements—last month's code style Skill may fight this project's conventions. Project layer docs rot—the README says "use REST API" while the project has fully switched to GraphQL. Addition decides what to feed. Subtraction decides when to clean. The cost of not cleaning isn't "wasted space"—it's the agent making decisions based on wrong information.
 
-## Team Knowledge Governance
+## Team Knowledge Debt
 
-One person using an Agent? How to feed knowledge is a personal problem. A team using Agents? It's a collaboration problem.
+One person's prompt is a habit. A team's prompt is a system.
 
-### Co-creation
+**Rule Debt**
+-   Rules are only ever added, never removed.
+-   A rule from six months ago and a rule from last week might contradict each other.
+-   The Agent won't complain about conflicting instructions. It will just pick one. The outcome is a coin flip.
 
-Multiple people maintain the same project rules file, the same Skills, the same documentation structure. Who adds rules? Who modifies Skills? Will additions conflict with someone else's setup?
-
-Put instruction files and Skill files into the code repository. Run changes through PR review. This isn't bureaucracy—it's making sure one person's change doesn't silently break another's workflow. The review focus: "Does this new rule contradict existing ones?" "Which task scenarios does this Skill change affect?"
-
-### Knowledge Debt
-
-Rules get added. They never get deleted.
-
-Six months later, the instruction file has ballooned to hundreds of lines. A third are outdated. A few contradict each other. When the Agent receives contradictory instructions, it doesn't throw an error—it picks one, and which one depends on attention allocation randomness.
-
-Knowledge debt is like technical debt: painless to accumulate, excruciating to repay.
-
-Schedule periodic audits: every so often, the team reviews the instruction file and active Skills. For each rule, one question—"Is this still valid?" Invalid? Delete. Contradictory? Merge. Outdated? Update. The cost of not auditing isn't "wasted tokens"—it's the Agent silently executing rules you've already abandoned.
+**Audits**
+-   Treat instruction files and Skills like code. Review them. Use pull requests.
+-   Hold regular meetings to go over the rules. "Is this still relevant?" If not, delete it.
+-   Knowledge, like code, accumulates debt. It's easy to take on, and painful to pay back. If you don't audit, you're letting the Agent operate on a set of rules you yourself have forgotten.
 
 ## Three Things to Watch in Every Chapter
 

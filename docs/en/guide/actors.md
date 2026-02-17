@@ -126,14 +126,14 @@ Vague vs precise:
 
 ### The readback protocol
 
-Air traffic control rule: tower issues instruction, pilot reads it back, tower confirms, then execution. Agent collaboration works the same way.
+It’s the air traffic control rule: tower issues an instruction, the pilot reads it back, and the tower confirms. Only then does the pilot act. Agent collaboration works the same way.
 
-Task is complex? Don't let it act immediately:
-> "Create a plan to refactor the auth module. Do not write code yet. Explain your plan step-by-step."
+For any complex task, don't let the agent act immediately.
+> "Create a plan to refactor the auth module. Don't write code yet. Explain your plan step-by-step."
 
-Readback misses a key constraint? Correcting it now takes one sentence. Wait until it has modified 20 files? Half an hour.
+If the readback misses a key constraint, correcting it costs one sentence. If you wait until it has modified 20 files, it costs half an hour.
 
-Any task with complexity > 1: readback first.
+Any task with more than trivial complexity needs a readback first.
 
 Break large tasks into small chunks — verify one before starting the next. Far cheaper than running 20 steps then rolling back. Unsure about direction? Have the agent build a minimal working version first. Verify, then expand.
 
@@ -141,38 +141,38 @@ Different products, different mechanisms. But you provide intent, Agent orchestr
 
 ## Controlling Long-Running Loops
 
-Short tasks? Just watch. Long tasks—tens of minutes, hundreds of tool calls—you can't watch, and you shouldn't have to.
+You can watch short tasks. But for long tasks—spanning tens of minutes and hundreds of tool calls—you can't, and you shouldn't have to.
 
-But hands-off doesn't mean uncontrolled. A long-running Agent loop needs three things: knowing how far it's come, knowing when to stop, and knowing when to start over.
+Hands-off doesn't mean uncontrolled. A long-running agent loop needs to know three things: how far it's come, when to stop, and when to start over.
 
 ### Checkpoints
 
-The worst thing about a long task is crashing halfway and starting from scratch.
+The worst part of a long task is crashing halfway and starting from scratch.
 
-A checkpoint is a progress save. Good Agents automatically save state at key points—committing after modifying a set of files, recording progress after completing a subtask. You can also request this explicitly: "Commit after completing each module."
+A checkpoint saves your progress. Good agents automatically save state at key points, like committing after file modifications or logging progress on a subtask. You can also ask for it: "Commit after completing each module."
 
-Checkpoints fundamentally **break a continuous long task into recoverable segments**. Crash? Resume from the latest checkpoint instead of starting from zero.
+Checkpoints break a long task into recoverable chunks. If it crashes, you resume from the last checkpoint, not from zero.
 
 ### Stop Conditions
 
 Agents don't know when to stop. You have to tell them.
 
-The clearest stop conditions are external signals: all tests pass, build succeeds, every item on the TODO list checked off. Vague stop conditions—"optimize until you think it's good enough"—trap Agents in infinite loops, endlessly tweaking and never satisfied.
+Clear stop conditions are external signals: all tests pass, the build succeeds, every item on a to-do list is checked off. Vague conditions like "optimize until it's good enough" can trap an agent in an infinite loop of tweaking.
 
-In practice: give the Agent a checkable TODO list or explicit acceptance criteria. It checks off items as it completes them. All checked? Stop. Far more reliable than "let me know when you're done."
+In practice, give the agent a checklist or clear acceptance criteria. It checks off items as it works. When everything is checked, it stops. That's more reliable than asking it to "let me know when you're done."
 
-### When to Continue / When to Restart
+### When to Continue, When to Restart
 
-Long sessions aren't better just because they're long. Context windows are finite; the longer the conversation, the higher the probability that early information gets compressed or dropped.
+Longer sessions are not always better. Context windows are finite. The longer the conversation, the more likely that early details get compressed or dropped entirely.
 
 | Signal | Recommendation |
-|--------|---------------|
+|---|---|
 | Task is coherent, context window has room | Continue current session |
-| Agent starts "forgetting" earlier constraints | Restart with key context carried over |
-| Task topic shifts (frontend → backend) | Start a new session |
-| Repeatedly making the same mistake | Restart with a fresh approach |
+| Agent "forgets" earlier constraints | Restart, carrying over key context |
+| Task topic shifts (e.g., frontend to backend) | Start a new session |
+| Agent repeats the same mistake | Restart with a fresh approach |
 
-Restarting isn't failure. Restarting is **context subtraction**—cutting away accumulated noise and setting off again with clean context. Sometimes a fresh session is ten times more productive than a polluted long one.
+Restarting isn't failure. It's **context subtraction**. You're cutting away noise to continue with a clean slate. A fresh session is often ten times more productive than a polluted one.
 
 ## Three Things to Watch in Every Chapter
 

@@ -22,17 +22,17 @@ What’s isolated is the conversation history, not the project rules.
 
 One more thing that’s easy to miss: **the Sub Agent’s initial prompt is constructed by the main Agent, not written by you directly.** You give the main Agent a big task. The main Agent analyzes it, decides "this sub-task needs isolated handling," and constructs an initial prompt for the Sub Agent. You influence the Sub Agent’s quality indirectly through clear instructions to the main Agent—the more precise your input, the better the prompt it constructs.
 
-## The handoff note
+## The Handoff Note
 
-Most common mistake when delegating to a Sub Agent: dumping the entire chat history.
+The most common mistake when delegating to a Sub Agent is dumping the entire chat history.
 
-Write a handoff note instead. Three things only:
+Write a handoff note instead. It needs just three things:
 
-1. Goal: specific. "Fix the login bug in the auth module."
-2. Constraints: "Do not touch the DB schema. Do not add new dependencies."
-3. Key context: "Relevant files are A and B. Error logs are in C."
+1.  **Goal:** Be specific. "Fix the login bug in the auth module."
+2.  **Constraints:** State the boundaries. "Do not touch the DB schema. Do not add new dependencies."
+3.  **Key Context:** Provide only what's necessary. "Relevant files are A and B. Error logs are in C."
 
-Drop everything else. Context dumping is laziness. The Sub Agent will get lost in the noise.
+Dumping context is lazy. The Sub Agent will get lost in the noise.
 
 ## How It Works
 

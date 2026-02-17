@@ -125,29 +125,29 @@ But tool return values are also the fastest source of context bloat. One unrestr
 
 ## Don't scold it for running around
 
-Beginners see the Agent run `ls` and `grep` three times and get impatient: "Why don't you just fix the code?"
+When you see the agent run `ls` and `grep` for the third time, you might get impatient. "Why don't you just fix the code?"
 
-**The Agent is blind.** It can't see your IDE or the file tree. The only way it "sees" the world is through tool return values.
+**The agent is blind.** It can't see your IDE or your file tree. Tool return values are the only way it "sees" the world.
 
 - `ls` is its eyes, confirming where files are.
 - `grep` is its scanner, locating what needs fixing.
 - `read_file` is its microscope, examining code details.
 
-These "redundant" operations build navigational context. Without them, it's coding blind. Give it time to explore.
+These "redundant" operations build navigational context. Without them, the agent is coding blind. Let it explore.
 
-## Trust boundary levels
+## Trust Boundary Levels
 
 The agent will **actually execute** whatever the LLM requests. Good tools split trust into two levels:
 
-### Read tools (let it run)
+### Read Tools (Let it run)
 
-`ls`, `read_file`, `grep`. Let it run freely. Don't interrupt observation. Needs to read 10 files before acting? Let it.
+`ls`, `read_file`, `grep`. Let these run freely. Don't interrupt its observation. If it needs to read 10 files before acting, let it.
 
-### Write/execute tools (intervene)
+### Write/Execute Tools (Intervene)
 
-`write_file`, `bash` (mutating). This is your intervention point.
+`write_file`, `bash` (for mutating operations). This is your intervention point.
 
-Watch one thing: did it read before writing? An Agent that calls `write_file` without ever running `read_file`? Reject it, even if the fix looks right. That's hallucination getting lucky.
+Watch one thing: did it read before writing? An agent that calls `write_file` without ever running `read_file` should be stopped, even if the fix looks right. That's a hallucination that got lucky.
 
 You need to know the extent of your agent's permissions and consciously supervise high-risk operations.
 

@@ -122,11 +122,12 @@ Hand an extremely smart stranger an entire filing cabinet and say "the relevant 
 
 "Just enough" isn't a fixed bar. It depends on what you're asking the agent to do.
 
-Understanding project structure, mapping module dependencies? Large context is fine. These tasks tolerate fuzziness; a wide view helps see the big picture. Modifying a specific function, fixing a precise bug? Feed only the files it needs. The more context you give for precision tasks, the more likely it'll "see things but use them wrong," copying the wrong variable name, missing a constraint, mixing in patterns from unrelated files.
+Understanding project structure or mapping module dependencies? Large context is fine. These tasks tolerate fuzziness; a wide view helps see the big picture.
+Modifying a specific function or fixing a precise bug? Feed it only the files it needs. For precision tasks, more context makes it more likely to "see things but use them wrong," copying the wrong variable name, missing a constraint, or mixing in patterns from unrelated files.
 
-Precision edits have a collapse zone: more information goes in, accuracy drops.
+Precision edits have a collapse zone: as information goes up, accuracy drops.
 
-Two modes. Open up for understanding. Tighten for editing.
+Use two modes. Open up for understanding. Tighten for editing.
 
 Context management boils down to four actions: **Write** (generate useful information) → **Select** (pick only what's relevant) → **Compress** (distill to the minimum necessary) → **Isolate** (give different tasks different context slices). Every tool and mechanism in subsequent chapters is essentially helping you do these four things.
 
@@ -138,13 +139,13 @@ Bad context is worse than no context. With no context, the LLM knows it doesn't 
 
 This explains a common phenomenon: the agent is fast and accurate early on, then starts making baffling mistakes later. The model didn't get dumber. The context got dirty.
 
-A sneakier form of pollution: early wrong turns don't just take up space, they **keep exerting force**. A bad judgment in round 5 becomes an implicit premise in round 15. You say "don't do X" and it briefly course-corrects, but five rounds later it drifts back. One correction can't outweigh dozens of hints.
+A sneakier pollution: early wrong turns don't just take up space, they **keep exerting force**. A bad judgment in round 5 becomes an implicit premise in round 15. You say "don't do X," and it briefly course-corrects, but five rounds later it drifts back. One correction can't outweigh dozens of hints.
 
 What do you do when it's dirty?
 
-Roll back to the last clean checkpoint. Throttle at the source, only feed the agent the files it needs for the current step, never "just in case."
+Roll back to the last clean checkpoint. Throttle at the source—only feed the agent the files it needs for the current step, never "just in case."
 
-The most effective move: start a new session. But don't copy-paste chat history. Distill what's worth keeping: confirmed facts, finalized decisions, acceptance criteria. Compress that into a clean input and carry only that forward. Leave the detours in the old session.
+The most effective move is starting a new session. But don't copy-paste the chat history. Distill what's worth keeping: confirmed facts, finalized decisions, acceptance criteria. Compress that into a clean input and carry only that forward. Leave the detours in the old session.
 
 Addition decides what the agent sees. Subtraction decides what doesn't drown it.
 
@@ -177,7 +178,7 @@ A session that's gone through hundreds of tool calls has almost certainly suffer
 
 Before ending a session, write key decisions, intermediate outputs, and next steps into persistent context — your project rules file, a handoff document, or anywhere the agent will read on next startup.
 
-Pay special attention: **what's easiest to lose isn't "what changed," git tracks that, it's "why you changed it."** The reasoning behind choosing A over B, the reason a constraint exists, the trade-off behind an odd-looking design. The next session can see the diff but not the decision logic behind it.
+Pay special attention: **what's easiest to lose isn't "what changed" (git tracks that), it's "why you changed it."** The reasoning behind choosing A over B, the reason a constraint exists, the trade-off behind an odd-looking design. The next session can see the diff, but not the decision logic behind it.
 
 This isn't relying on "memory." It's **explicit context transfer**: converting information worth keeping from the current session into initial context for the next one.
 
@@ -185,16 +186,16 @@ This isn't relying on "memory." It's **explicit context transfer**: converting i
 
 Session Handoff solves "this session to the next." But what about memory that stretches further?
 
-Some Agent tools offer automatic cross-session memory—they accumulate key discoveries, preferences, and decisions across multiple sessions, retrieving relevant parts and injecting them into context on the next startup. Sounds like real memory.
+Some Agent tools offer automatic cross-session memory. They accumulate key discoveries, preferences, and decisions across multiple sessions, retrieving relevant parts and injecting them into context on the next startup. This sounds like real memory.
 
-But it isn't. It's just **automated persistent context**—writing and retrieval are automatic, but the storage medium is still files or a database, and injection timing is still at session start. The essence hasn't changed; the degree of automation has.
+But it isn't. It's just **automated persistent context**. Writing and retrieval are automatic, but the storage medium is still files or a database, and the injection timing is still at session start. The essence hasn't changed; the degree of automation has.
 
 Two mental models are enough:
 
-- **In-session memory** (session state) is short-term. It disappears when the conversation ends. Managed manually by you or automatically by the Agent.
-- **Cross-session memory** (persistent context) is long-term. It relies on the filesystem or dedicated storage. Things you actively write (project rules, handoff files) or the Agent automatically accumulates (memory features) both fall in this category.
+- **In-session memory** (session state) is short-term. It disappears when the conversation ends. Managed by you or automatically by the Agent.
+- **Cross-session memory** (persistent context) is long-term. It relies on the filesystem or dedicated storage. Things you write (project rules, handoff files) or the Agent automatically accumulates (memory features) both fall into this category.
 
-The risk lives in "automatic accumulation": the Agent remembers a decision that was later overturned. Three months later, a new session gets a suggestion that looks reasonable but is actually outdated—based on stale memory. Stale memory is as dangerous as stale documentation—arguably more so, because you might not even know that memory entry still exists.
+The risk is in "automatic accumulation." The Agent remembers a decision that was later overturned. Three months later, a new session gets a suggestion that looks reasonable but is actually based on stale memory. Stale memory is as dangerous as stale documentation. Arguably more so, because you might not even know that memory entry still exists.
 
 ## What's Next: Context Carriers in Subsequent Chapters
 

@@ -14,15 +14,15 @@ The reality: Agents make mistakes, get stuck, and need your confirmation before 
 
 But here’s an important insight: **if you find yourself constantly fixing the Agent’s half-finished work, that’s not "collaboration"—that’s the Agent (or your instructions) failing.** Healthy Human-in-the-Loop means your interventions decrease over time, not increase. Each intervention should be a signal: either improve the Agent’s configuration (better System Instructions, clearer prompts) or accept the current capability boundary.
 
-## Paving the rails
+## Paving the Rails
 
-Feeling exhausted? Probably because you treat the Agent as full self-driving while keeping your hands on the wheel every second.
+If you feel exhausted, it's probably because you treat the agent like a self-driving car but keep your hands on the wheel.
 
-A more relaxed mode: **pave the rails, then run the train.**
+A more relaxed mode exists: **pave the rails, then run the train.**
 
-You pave the rails: project skeleton, test cases, API interfaces. Structural, high-context work. The Agent runs the train: filling in blanks, implementing functions, passing tests. Laborious, low-context work.
+You do the structural, high-context work: project skeletons, test cases, API interfaces. The agent does the laborious, low-context work: filling in blanks, implementing functions, passing tests.
 
-Rails limit how far it can go off track. Test cases are the guardrails.
+The rails limit how far the train can go off track. Your test cases are the guardrails.
 
 ## Your Three Positions in the Flow
 
