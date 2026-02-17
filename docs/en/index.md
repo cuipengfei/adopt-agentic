@@ -4,7 +4,7 @@ layout: home
 hero:
   name: Adopt Agentic
   text: Everything is Context
-  tagline: A practical guide for enterprise developers adopting agentic AI workflows
+  tagline: A practical guide for developers adopting agentic AI workflows
   actions:
     - theme: brand
       text: Get Started
@@ -14,16 +14,20 @@ hero:
       link: /en/guide/glossary
 
 features:
-  - icon: 🧠
+  - icon:
+      src: /icons/context.svg
     title: Context — The First Principle
     details: Understand the LLM context mechanism and the first principle of agentic workflows.
-  - icon: 🔧
+  - icon:
+      src: /icons/tools.svg
     title: Tools & Capability Extension
     details: From built-in tools to MCP — how agents acquire external capabilities.
-  - icon: 🎯
+  - icon:
+      src: /icons/instructions.svg
     title: Instructions & Knowledge
     details: System Instructions, Slash Commands & Skills — three context injection mechanisms.
-  - icon: 🔍
+  - icon:
+      src: /icons/verify.svg
     title: Verification & Multi-Agent
-    details: Eval observability and Sub Agent context isolation — enterprise-critical practices.
+    details: Eval observability and Sub Agent context isolation — advanced agentic practices.
 ---

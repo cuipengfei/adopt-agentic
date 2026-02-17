@@ -12,7 +12,7 @@ Why should you care? Because it directly affects how you give instructions:
 - If you know an Agent plans before executing, you can intervene at the planning stage. A single sentence can correct the entire subsequent workflow, rather than waiting for it to go off the rails and then redoing everything.
 - If you know it validates in a loop, you'll give it a clear "done" signal so it exits.
 
-When your mental model aligns with the Agent's, the quality of your instructions changes completely.
+When your understanding aligns with how the Agent actually works, the quality of your instructions changes completely.
 
 ## Conductor unity
 

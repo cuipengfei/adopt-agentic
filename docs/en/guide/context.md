@@ -6,13 +6,15 @@
 
 Everything you give the LLM is context.
 
-There's no hidden knowledge base. No "it should know this." Every piece of information the LLM sees when processing your request — system prompt, conversation history, tool definitions, tool results — all of it together, that's context. Nothing more.
+Every piece of information the LLM sees when processing your request — system prompt, conversation history, tool definitions, tool results — all of it together, that's context.
 
 Let's make this concrete: look at what happens under the hood.
 
-### Requests and Responses: The Physical Shape of Context
+### Requests and Responses: What Context Actually Looks Like
 
-Communication between an agent and an LLM is HTTPS requests. Not one request that does everything — it's **multiple round trips**, each a complete request → response cycle.
+Communication between an agent and an LLM is HTTPS requests.
+
+Not one request that does everything — it's **multiple round trips**, each a complete request → response cycle.
 
 **── Round 1 ──**
 
@@ -70,7 +72,7 @@ The agent **appends** the previous LLM response and the tool result to the `mess
 }
 ```
 
-See it? Round 2's request **re-sends everything from Round 1** — the user message, the LLM's previous reply, the tool result — all of it.
+See it? Round 2's request **re-sends everything from Round 1** — the user message, the LLM's previous reply, the tool result.
 
 **This is the essence of context accumulation: each round, the `messages` array grows, then gets re-sent in full.**
 
@@ -80,19 +82,17 @@ Anthropic's Messages API, OpenAI's Chat Completions API, Google's Gemini API —
 
 ## Why It's the First Principle
 
-Three words: **no memory**.
+**No memory.**
 
-An LLM is not your coworker — it doesn't remember yesterday's design discussion. Even within the same conversation, it hasn't "remembered" what you said. It simply **re-reads the entire message list from scratch** each time, then reasons.
+An LLM is not your coworker — it doesn't remember yesterday's design discussion. Even within the same conversation, it hasn't "remembered" what you said.
+
+It simply **re-reads the entire message list from scratch** each time, then reasons.
 
 This means every agent tool — regardless of vendor — does one core job:
 
 > **Put the right information into context at the right time.**
 
-Your project rules file got loaded? It takes effect. Didn't get loaded? Might as well not exist.
-
-Your codebase got indexed? The LLM can reference it. Didn't get indexed? It guesses, and guesses wrong.
-
-A tool returned the precise database schema? The next operation matches perfectly. Returned garbage? Garbage in, garbage out.
+Bottom line — your project rules file might be beautifully written, but if the agent didn't load it into context, it might as well not exist. Code that wasn't indexed gets guessed at. The quality of tool output directly determines the quality of the next step — garbage in, garbage out.
 
 **Most of the frustrating problems you encounter** — generated code ignoring conventions, edits to wrong files, forgotten agreements — **are context problems at their root.** The model isn't stupid. It just didn't see what it needed to see.
 
@@ -112,6 +112,12 @@ Every LLM has a context window limit. 128K, 200K tokens — sounds like a lot, b
 
 What happens when the window fills up? Earlier messages get truncated or compressed. The agent **literally forgets** what you discussed at the start — you think it still knows, but those messages are no longer in the `messages` array.
 
+```mermaid
+graph LR
+    A["🟢 Round 1<br/>system + user message<br/>~10% of window"] --> B["🟡 Round 10<br/>system + 10 turns of history + tool results<br/>~60% of window"]
+    B --> C["🔴 Round 30<br/>early messages truncated ❌<br/>100% of window"]
+```
+
 ### Noise Drowns Signal
 
 Stuffing an entire codebase into context is tempting, and disastrous.
@@ -123,13 +129,28 @@ Hand an extremely smart stranger an entire filing cabinet and say "the relevant 
 "Just enough" isn't a fixed bar. It depends on what you're asking the agent to do.
 
 Understanding project structure or mapping module dependencies? Large context is fine. These tasks tolerate fuzziness; a wide view helps see the big picture.
-Modifying a specific function or fixing a precise bug? Feed it only the files it needs. For precision tasks, more context makes it more likely to "see things but use them wrong," copying the wrong variable name, missing a constraint, or mixing in patterns from unrelated files.
 
-Precision edits have a collapse zone: as information goes up, accuracy drops.
+Modifying a specific function or fixing a precise bug? Feed it only the files it needs.
 
-Use two modes. Open up for understanding. Tighten for editing.
+Too much context and it starts "seeing things but using them wrong," copying the wrong variable name, missing a constraint, or mixing in patterns from unrelated files.
 
-Context management boils down to four actions: **Write** (generate useful information) → **Select** (pick only what's relevant) → **Compress** (distill to the minimum necessary) → **Isolate** (give different tasks different context slices). Every tool and mechanism in subsequent chapters is essentially helping you do these four things.
+Here's a counterintuitive pattern: for precision edits, more information actually means less accuracy. The LLM's attention gets diluted by sheer volume, and it starts "borrowing" patterns from irrelevant files.
+
+So working with agents actually has two distinct modes:
+
+- **Understanding mode**: mapping architecture, tracing dependencies — open up the context, a wide view reveals the big picture.
+- **Editing mode**: changing a specific function, fixing a precise bug — tighten the context, only give it the files it needs.
+
+Switch between them based on the task at hand.
+
+Context management boils down to four actions:
+
+- **Write** — generate useful information
+- **Select** — pick only what's relevant
+- **Compress** — distill to the minimum necessary
+- **Isolate** — give different tasks different context slices
+
+Every tool and mechanism in subsequent chapters is essentially helping you do these four things.
 
 ### Context Pollution
 
@@ -139,7 +160,13 @@ Bad context is worse than no context. With no context, the LLM knows it doesn't 
 
 This explains a common phenomenon: the agent is fast and accurate early on, then starts making baffling mistakes later. The model didn't get dumber. The context got dirty.
 
-A sneakier pollution: early wrong turns don't just take up space, they **keep exerting force**. A bad judgment in round 5 becomes an implicit premise in round 15. You say "don't do X," and it briefly course-corrects, but five rounds later it drifts back. One correction can't outweigh dozens of hints.
+A sneakier pollution: early wrong turns don't just take up space, they **keep pulling subsequent reasoning off course**.
+
+A concrete scenario: in round 5, the LLM incorrectly decides to "manage state with global variables." Rounds 6 through 14, you keep working based on that decision — the code it generates, the refactors it suggests, the advice it gives all build on the "use globals" premise. In round 15, you spot the problem and say "don't use global variables, switch to dependency injection."
+
+It briefly complies. But a few rounds later, it drifts back to globals.
+
+Why? Look at what's in the `messages` array: your correction is just that one message in round 15. But rounds 5 through 14 — ten messages — while none of them explicitly repeat "use globals," their code, discussions, and decisions all **implicitly assume** that premise. When the LLM reads the message list from the top, ten messages pulling in one direction vs. one explicit correction pulling the other way — the inertia of the former far outweighs the latter.
 
 What do you do when it's dirty?
 
@@ -166,6 +193,8 @@ Your project rules file takes effect in every new conversation. Coding conventio
 | Maintained by | Agent automatically | You lead, tools assist |
 | Typical contents | Chat history, tool results | Project standards, architecture decisions, coding conventions |
 
+For example: you ask the agent to read `package.json` during a conversation — that's session state, gone when the conversation ends. You write a `CLAUDE.md` in your project root specifying "all functions must have JSDoc comments" — that's persistent context, loaded by the agent at the start of every new conversation.
+
 ### Context Has a Shelf Life
 
 Context is like milk — nutritious when fresh, spoiled when stale.
@@ -178,9 +207,11 @@ A session that's gone through hundreds of tool calls has almost certainly suffer
 
 Before ending a session, write key decisions, intermediate outputs, and next steps into persistent context — your project rules file, a handoff document, or anywhere the agent will read on next startup.
 
-Pay special attention: **what's easiest to lose isn't "what changed" (git tracks that), it's "why you changed it."** The reasoning behind choosing A over B, the reason a constraint exists, the trade-off behind an odd-looking design. The next session can see the diff, but not the decision logic behind it.
+What's easiest to lose? Not "what changed" — git tracks that. What's easiest to lose is **"why you changed it."**
 
-This isn't relying on "memory." It's **explicit context transfer**: converting information worth keeping from the current session into initial context for the next one.
+For example: you chose approach X over approach Y because Y had a race condition under high concurrency. That decision logic won't appear in the diff. The next session's agent can see what the code looks like, but not why it looks that way — so it might suggest switching back to approach Y.
+
+So the core of handoff isn't "remembering." It's **explicit transfer**: writing the decision logic and context worth keeping into the initial input for the next session.
 
 ### Long-Term Memory
 
@@ -190,12 +221,12 @@ Some Agent tools offer automatic cross-session memory. They accumulate key disco
 
 But it isn't. It's just **automated persistent context**. Writing and retrieval are automatic, but the storage medium is still files or a database, and the injection timing is still at session start. The essence hasn't changed; the degree of automation has.
 
-Two mental models are enough:
+Two things to remember:
 
-- **In-session memory** (session state) is short-term. It disappears when the conversation ends. Managed by you or automatically by the Agent.
-- **Cross-session memory** (persistent context) is long-term. It relies on the filesystem or dedicated storage. Things you write (project rules, handoff files) or the Agent automatically accumulates (memory features) both fall into this category.
+- **In-session** (session state) is short-term. It disappears when the conversation ends. Managed by you or automatically by the Agent.
+- **Cross-session** (persistent context) is long-term. It relies on the filesystem or dedicated storage. Things you write (project rules, handoff files) or the Agent automatically accumulates (memory features) both fall into this category.
 
-The risk is in "automatic accumulation." The Agent remembers a decision that was later overturned. Three months later, a new session gets a suggestion that looks reasonable but is actually based on stale memory. Stale memory is as dangerous as stale documentation. Arguably more so, because you might not even know that memory entry still exists.
+The second type sounds convenient, but there's a catch: you don't always see what gets auto-accumulated. The Agent remembers a decision that was later overturned. Three months later, a new session gets a suggestion that looks reasonable but is actually based on stale memory. Stale memory is as dangerous as stale documentation. Arguably more so, because you might not even know that memory entry still exists.
 
 ## What's Next: Context Carriers in Subsequent Chapters
 
@@ -219,6 +250,29 @@ Every subsequent chapter covers a different context carrier:
 | Peer-to-Peer Agents | Context flows bidirectionally between peer agents |
 
 One thread runs through it all: **how context flows.**
+
+```mermaid
+mindmap
+  root((Context Flow))
+    Static Injection
+      System Instructions
+      Knowledge Feeding
+    On-Demand
+      Slash Commands
+      Skills
+    Tool Interaction
+      Built-in Tools
+      MCP
+      CLI Tools
+    Architecture
+      Orchestration
+      Sub Agents
+      Peer-to-Peer
+    Governance
+      Eval / Verification
+      Human-in-the-Loop
+      Hooks & Plugins
+```
 
 ## Three Things to Watch in Every Chapter
 

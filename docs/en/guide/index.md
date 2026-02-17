@@ -1,4 +1,4 @@
-# Mental Models for Agentic Programming
+# How to Think About Agentic Programming
 
 This guide doesn't teach you how to **build** AI agents.
 
@@ -18,7 +18,7 @@ The industry calls this **Context Engineering**—the evolution from "writing a 
 
 Many developers start with **vibe coding**—tossing a few sentences at the agent and seeing if it works. Fine for simple tasks. But as complexity grows, the randomness shows: the same description works today but fails tomorrow, one project runs clean while another is riddled with bugs. The problem usually isn't the agent's capability—it's that the context you're feeding it is uncontrolled.
 
-Going from vibe coding to context engineering isn't a technology upgrade. It's a mental model shift—from "let's see if this works" to "design the context so it has to work." This guide is the map for that shift.
+Going from vibe coding to context engineering isn't a technology upgrade. It's a shift in how you think—from "let's see if this works" to "design the context so it has to work." This guide is the map for that shift.
 
 The next chapter, [Context — The First Principle](./context.md), cracks this open with two rounds of HTTP requests.
 
