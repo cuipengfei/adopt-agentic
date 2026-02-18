@@ -48,6 +48,8 @@ Agent 是个干活很快，但随时可能跑偏的实习生。
 
 这就是 Hook 的核心价值：在 Agent 和真实世界之间，加一道可编程的防火墙。
 
+![The Gatekeeper Pattern: Agent intent flows through a Hook checkpoint that decides to Block, Modify, or Allow before reaching the real world](/illustrations/hooks-and-plugins.svg)
+
 ### 生命周期事件
 
 不同 Agent 工具支持的事件集合和命名各异，但核心类型一致：

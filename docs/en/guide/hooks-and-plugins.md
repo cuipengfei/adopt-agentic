@@ -48,6 +48,8 @@ You need a calm doorman to stop it before it does something stupid, like deletin
 
 This is the core value of a hook: a programmable firewall between the agent and the real world.
 
+![The Gatekeeper Pattern: Agent intent flows through a Hook checkpoint that decides to Block, Modify, or Allow before reaching the real world](/illustrations/hooks-and-plugins.svg)
+
 ### Lifecycle Events
 
 Different agent tools support different event sets and naming, but the core types are consistent:

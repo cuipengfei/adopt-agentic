@@ -20,6 +20,8 @@ Agent 的能力上限 = 它拥有的高质量上下文。LLM 自带的通用知�
 | **能力层** | Skills | 任务需要时，按需加载 | system prompt（动态追加） | 任务级 | 特定领域工作流、最佳实践 |
 | **项目层** | 代码库 + 文档结构 | Agent 读取文件时 | user/assistant messages | 按需 | 项目结构、README、注释、llms.txt |
 
+![Three knowledge feeding paths: Rule Layer (always-on), Capability Layer (on-demand injection), and Project Layer (just-in-time file reads) flow into the Agent's Context Window](/illustrations/knowledge-feeding.svg)
+
 ### 1. 规则层：给 Agent 立规矩
 
 通过项目级指令文件（如 `CLAUDE.md`、`AGENTS.md` 等，不同工具使用不同文件名），你写下的规则在每次会话开始时自动注入 system prompt。
