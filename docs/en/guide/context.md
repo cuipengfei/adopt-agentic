@@ -150,6 +150,8 @@ Context management boils down to four actions:
 
 Every tool and mechanism in subsequent chapters helps you do these four things.
 
+![Context management distilled: raw project data flows through Select, Write, Compress, and Isolate modules before entering the finite Context Window](/illustrations/context.svg)
+
 ### Context Pollution
 
 In long conversations, context gradually gets "dirty." Early explorations, rejected approaches, wrong assumptions — no longer relevant, but still sitting in the message history, continuously influencing the LLM's judgment.

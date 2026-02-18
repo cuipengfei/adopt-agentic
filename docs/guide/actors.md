@@ -16,6 +16,8 @@ Agent 不是 AI。Agent 是胶水代码。
 
 你以为是 AI 搞砸了你的代码？多半是 Agent 把错误的上下文喂了进去，LLM 基于垃圾做了忠实推理。
 
+![The Triangle: User provides intent, Agent orchestrates context and executes tools, LLM reasons — the collaboration loop in action](/illustrations/actors.svg)
+
 ## 协作循环
 
 看一轮交互。

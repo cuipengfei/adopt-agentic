@@ -152,6 +152,8 @@ graph LR
 
 后续各节讲的工具和机制，都在帮你做这四件事。
 
+![Context management distilled: raw project data flows through Select, Write, Compress, and Isolate modules before entering the finite Context Window](/illustrations/context.svg)
+
 ### 上下文污染
 
 长对话中，上下文逐渐"变脏"。早期探索的方案、被否决的尝试、错误的假设——不再相关，但仍留在消息历史中，持续影响 LLM 判断。
