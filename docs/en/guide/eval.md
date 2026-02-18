@@ -47,7 +47,9 @@ A successful command ≠ a completed task.
 - **Success signal**: Real-world external standards (tests pass, build succeeds, API reachable)
 - **On failure**: Failure signal injected into context; Agent enters a correction loop (the iterative pattern from the previous chapter)
 
-The key point: **task-level pass/fail must also be injected back into context.** If the Agent runs tests but can’t see the results, it can’t judge whether the task is truly done.
+The key point: **task-level pass/fail must also be injected back into context.**
+
+If the Agent runs tests but can’t see the results, it can’t judge whether the task is truly done.
 
 ```json
 // Agent ran the tests; result injected into messages
@@ -103,7 +105,9 @@ This layer can't be automated. An Agent perfectly implementing a feature you don
 
 Agents make mistakes. What matters is whether they can pick themselves back up.
 
-A counterintuitive finding: **don't rush to erase errors.** Failed attempts left in context actually help the LLM avoid repeating the same mistake—it implicitly learns "that path doesn't work" from the failure record. Blindly pruning conversation history can backfire because you're wiping out valuable negative experience alongside the noise. This doesn't mean never clean up—context windows are finite. The key is distinguishing "stale noise" from "failure records that still inform."
+A counterintuitive finding: **don't rush to erase errors.** Failed attempts left in context actually help the LLM avoid repeating the same mistake—it implicitly learns "that path doesn't work" from the failure record. Blindly pruning conversation history can backfire because you're wiping out valuable negative experience alongside the noise.
+
+This doesn't mean never clean up—context windows are finite. The key is distinguishing "stale noise" from "failure records that still inform."
 
 **Rollback**: When task-level verification fails, return to the last known good state. Say a code refactor breaks the tests—the Agent uses `git checkout` to undo the changes and tries a different approach. The key is establishing a rollback point before making changes. Good Agents check that git status is clean before starting major edits.
 
@@ -111,7 +115,19 @@ A counterintuitive finding: **don't rush to erase errors.** Failed attempts left
 
 **False completion**: The trickiest failure mode. The Agent says "Done!" but task-level verification shows failure. Usually because the verification step wasn’t enforced—the Agent skipped tests and declared victory. The fix: make verification mandatory in your instructions ("After editing, you must run `bun test`. All tests passing = done"), ensuring the result gets injected back into context.
 
-Rollback, rerouting, forced reruns—these recovery moves are all context subtraction: cutting the pollution of failed paths from conversation history.
+```mermaid
+flowchart TD
+    A["Agent makes a mistake"] --> B{Can it identify the error?}
+    B -->|Yes| C{Error type}
+    B -->|"No → false completion"| D["Mandatory verification exposes true state"]
+    C -->|Wrong direction| E["Rollback to clean checkpoint"]
+    C -->|Stuck in loop| F["Detect dead loop, switch approach"]
+    D --> G["Context subtraction: cut pollution from failed paths"]
+    E --> G
+    F --> G
+```
+
+Rollback, rerouting, forced reruns—these recovery moves all boil down to context subtraction: cutting the pollution of failed paths from conversation history.
 
 But there's a subtler subtraction you might not notice: in long conversations, agents automatically compress early history to prevent window overflow. The cost? Your original constraints may get compressed away. If an agent suddenly "forgets" initial rules late in a conversation, it's probably not stupidity—that rule simply isn't in the context anymore. In practice: periodically restate core constraints during long tasks. Or when it errs, send the original instruction alongside its mistake and let it compare.
 
@@ -140,7 +156,7 @@ A complete verification loop:
 4. Agent decides based on results: pass → continue, fail → fix
 5. After fixing, return to step 2
 
-Your job is to ensure step 3 never breaks. Tests ran but results weren't fed back? That's the same as not testing at all.
+Your job is to keep step 3 intact. Tests ran but results weren't fed back? That's the same as not testing at all.
 
 ## Common Anti-Patterns
 

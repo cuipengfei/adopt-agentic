@@ -109,7 +109,7 @@ Reality is messier than these two clean rounds. A sends a proposal, but B is bus
 
 Frankly, P2P Agent collaboration is a recognized frontier, but the ecosystem is far from mature. Products that support true peer messaging are extremely few; most frameworks (like AutoGen, MetaGPT) are aimed at "people who build agents," not "people who use agentic tools."
 
-For you, understanding how P2P works has one practical payoff: when you encounter a problem that truly needs multiple perspectives, you can **manually role-play multiple viewpoints** in your conversation with the Agent—"If you were a backend engineer, how would you evaluate this API design?"—which is essentially simulating P2P collaboration.
+For you, understanding how P2P works has one practical payoff: when you encounter a problem that truly needs multiple perspectives, you can **manually role-play multiple viewpoints** in your conversation with the Agent—"If you were a backend engineer, how would you evaluate this API design?"—which is effectively simulating P2P collaboration.
 
 ## Three Things to Watch in Every Chapter
 

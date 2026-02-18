@@ -48,12 +48,12 @@ Commands aren't just plain text. A well-designed command can bundle multiple ele
 
 | Feature | System Instructions | Slash Commands |
 | :--- | :--- | :--- |
-| **Presence** | **Always present**, throughout the entire session | **Triggered on demand**, one-time injection |
+| **Presence** | **Present by default**, throughout the entire session | **Triggered on demand**, one-time injection |
 | **Scope** | Global, affecting every response | Task-level, locally scoped, not persistent |
 | **Role** | The agent's behavioral code | A specific task list for one job |
 | **Example** | "You are a Python expert. Code must adhere to PEP8." | `/test` |
 
-System instructions define how the agent *always* behaves. Commands define what it does *this time*. When the two conflict — say, system instructions demand "operate cautiously" while `/force-push` demands "overwrite forcefully" — the LLM receives contradictory signals and behavior becomes unpredictable.
+System instructions define how the agent behaves *by default*. Commands define what it does *this time*. When the two conflict — say, system instructions demand "operate cautiously" while `/force-push` demands "overwrite forcefully" — the LLM receives contradictory signals and behavior becomes unpredictable.
 
 ## Three Things to Watch in Every Chapter
 

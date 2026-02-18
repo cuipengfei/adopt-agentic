@@ -26,7 +26,7 @@ Human brain juggles 1-2 balls. Agent capacity depends on the orchestrator.
 
 Sequential is 1 ball, stable but slow. Parallel is 10 balls, fast but hard to catch them all.
 
-Rule of thumb: maximize parallelism for read tasks (search, research). Be conservative for write tasks (editing code). Reads never conflict. Writes do.
+Rule of thumb: maximize parallelism for read tasks (search, research). Be conservative for write tasks (editing code). Reads rarely conflict. Writes often do.
 
 ## Common Patterns
 
@@ -113,7 +113,7 @@ The context here spirals upward, with each loop carrying the "lessons" from the 
 
 Parallel branches are easy to understand. **Governance** is the hard part.
 
-One person runs three sessions modifying the same project simultaneously—this isn't a parallel branch pattern; it's **parallel sessions**. Each session has its own context, blind to what the others are doing. Without coordination, collisions are inevitable.
+One person runs three sessions modifying the same project simultaneously—this isn't a parallel branch pattern; it's **parallel sessions**. Each session has its own context, blind to what the others are doing. Without coordination, collisions become highly likely.
 
 ### Task Partitioning
 
@@ -139,7 +139,7 @@ Convergence strategies:
 
 - **First-come-first-served**: Whoever commits first wins; the other rebases on the new state. Blunt but sufficient for most cases.
 - **Human arbitration**: Review both approaches, pick one or merge them. Best when changes are substantial and both have merit.
-- **Prevention over cure**: If partitioning was clean, conflicts shouldn't happen. Frequent conflicts mean the partitioning itself is flawed.
+- **Prevention over cure**: If partitioning was clean, conflicts should be rare. Frequent conflicts mean the partitioning itself is flawed.
 
 ### Unified Acceptance
 

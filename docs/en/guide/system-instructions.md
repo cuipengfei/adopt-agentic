@@ -69,6 +69,20 @@ Want it to follow your team's unique coding style? Put it in the system instruct
 Want it to avoid touching a sensitive module? Put it in the system instructions.
 Want it to run a specific check before every commit? Put it in the system instructions.
 
+For example, your instruction file might look like this:
+
+```markdown
+## Code Style
+- All functions must have JSDoc comments
+- Variables use camelCase, constants use UPPER_SNAKE_CASE
+
+## Safety Boundaries
+- Do not read or write .env and credentials/ directories
+
+## Workflow
+- After modifying code, you must run tests. All passing = done.
+```
+
 These user-level instructions are typically appended to the agent's base instructions or, using specific syntax, can override default behaviors. A well-crafted set of instructions offers an exceptional return on investment—far more effective than spending days working around the agent's defaults.
 
 ## Two Approaches to Writing Good Instructions
@@ -97,9 +111,9 @@ Instructions are a protocol for aligning expectations.
 
 Don't treat your system instructions as a one-off note. They are a **living document, an asset that needs to be maintained just like code**.
 
-Some call project-level instruction files "organizational scar tissue"—every rule traces back to a real incident. But instruction files aren't only scar tissue. The proven patterns that survived repeated validation are in there too. **Scar tissue tells the Agent what paths don't work; proven practices tell it how things should be done.** Together, they form the team's complete institutional wisdom.
+Some describe project-level instruction files as an "institutional lessons log"—every rule traces back to a real incident. But instruction files aren't just postmortems. Proven patterns that survived repeated validation belong there too. **Lessons learned tell the Agent what paths fail; proven practices tell it how the team prefers to work.** Together, they form the team's institutional wisdom.
 
-> "Show the path, don't fence the pitfalls" is about **how you write instructions**—using positive descriptions instead of negations. "Scar tissue" is about **where instruction content comes from**—recording real mistakes the team has made and crystallizing experience into rules. These don't conflict: the content comes from lessons learned, the writing style stays positive.
+> "Show the path, don't fence the pitfalls" is about **how you write instructions**—using positive descriptions instead of negations. "Lessons learned" is about **where instruction content comes from**—recording real mistakes the team has made and crystallizing experience into rules. These don't conflict: the content comes from lessons learned, the writing style stays positive.
 
 -   **Version it**: Use Git to manage your instruction files and track every change.
 -   **Review it**: Have colleagues review your instructions just as they would review code.
@@ -111,7 +125,7 @@ A well-crafted set of system instructions is a part of your project's institutio
 
 One person maintaining an instruction file? Just iterate. A team maintaining the same file? That requires governance.
 
-**Instruction files belong in Git.** Every change gets a commit record. Six months later when you wonder "who added this rule and why"—`git blame` tells you. Instruction files outside version control are untraceable when something goes wrong.
+**Instruction files belong in Git.** Every change gets a commit record. Later on, when you wonder "who added this rule and why"—`git blame` tells you. Instruction files outside version control are untraceable when something goes wrong.
 
 **Changes need review.** Modifying one line of instructions can alter the Agent's global behavior. One person adds "always use tabs," another person's project is all spaces—the conflict only surfaces in the next session. Run instruction file changes through PR review, just like code. The review focus isn't syntax; it's "who does this rule affect?"
 

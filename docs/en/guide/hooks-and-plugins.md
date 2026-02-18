@@ -105,7 +105,7 @@ Scopes merge from high to low. Project-level hooks can override global behavior.
 
 ### Two Faces of Hooks
 
-The most important thing to understand: the same mechanism can do two fundamentally different things.
+The most important thing to understand: the same mechanism can do two very different things.
 
 **Side-channel**—Agent and LLM completely unaware. The hook quietly executes alongside the event stream, modifying no context. Desktop notifications, log recording, token statistics—pure side effects.
 
@@ -123,7 +123,7 @@ A plugin's capability far exceeds "a collection of hooks." A single plugin can s
 - Inject **Skills** (domain knowledge)
 - Provide authentication flows, output styles, configuration modifications, etc.
 
-In essence, a plugin is a programmable extension point for the agent—what it can do depends on which interfaces the agent tool exposes.
+A plugin is a programmable extension point for the agent—what it can do depends on which interfaces the agent tool exposes.
 
 ### Installation and Distribution
 
@@ -172,7 +172,7 @@ With great power comes great responsibility to review. You can use built-in tool
 ## Three Things to Watch For
 
 - **Context flow**: Hooks execute at **critical points** in the context flow—before and after tool calls, during system prompt construction, during session compaction. They can either work as side channels (not affecting context) or directly modify context content. Plugins bundle multiple context manipulation mechanisms. This is the most fine-grained context control available to users.
-- **Risk**: Hook and plugin code runs with full system privileges—a broken before-tool-call hook can block all tool calls, completely paralyzing the agent. This isn't prompt-level "fix the wording"—it's code-level "break it and it crashes." Plugin sources also need vetting—you're installing code that executes on every agent run.
+- **Risk**: Hook and plugin code runs with **extensive** system privileges—a broken before-tool-call hook can block all tool calls, completely paralyzing the agent. This isn't prompt-level "fix the wording"—it's code-level "break it and it crashes." Plugin sources also need vetting—you're installing code that executes on every agent run.
 - **Auditability**: Hook execution logs are the most fine-grained observability data—every event, every interception, every decision timestamped. But you need to implement the logging logic yourself.
 
 Next up: "Knowledge Feeding"—a unified review of all the carriers we've covered, answering the one question: "I have a bunch of knowledge, how do I get the agent to know it?"

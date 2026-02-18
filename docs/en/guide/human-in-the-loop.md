@@ -47,7 +47,7 @@ flowchart LR
 
 3. **Output: Accept the result.** The Agent says "done." You confirm whether it actually is. For low-risk tasks, you can skip this; for high-risk ones, it’s the final gate.
 
-The essence at every position is the same: **your decision → context changes → Agent behavior changes.**
+The pattern at every position is the same: **your decision → context changes → Agent behavior changes.**
 
 ## Letting Go vs. Stepping In
 
@@ -71,11 +71,11 @@ Some Agent tools automatically pause before these operations and show a diff. If
 
 When the Agent goes off track, you have three paths:
 
-**Interrupt immediately.** The Agent misunderstood your intent from the start, or is executing something clearly wrong. The earlier you interrupt, the lower the sunk cost.
-
-**Let it finish, then revise.** The overall direction is right, but details are off. Let it complete, then correct based on the output. This preserves most of the Agent’s work.
-
-**Abandon the session and start fresh.** The context is severely polluted; the Agent is stuck in an unrecoverable mess. Starting a new, clean session with clearer instructions is more efficient than struggling in the mud. This isn’t waste—it’s cutting your losses.
+| Strategy | When to use | Rationale |
+| :--- | :--- | :--- |
+| **Interrupt immediately** | Agent misunderstood your intent from the start, or is executing something clearly wrong | The earlier you interrupt, the lower the sunk cost |
+| **Let it finish, then revise** | Overall direction is right, but details are off | Preserves most of the Agent’s work; you only fix details |
+| **Abandon and start fresh** | Context is severely polluted; Agent is stuck in an unrecoverable mess | Clean session + clear instructions > struggling in the mud |
 
 How to choose? Ask yourself: is the expected return of continuing greater than the cost of starting over?
 

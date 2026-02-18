@@ -86,7 +86,9 @@ The core value of Skills is shareability:
 
 Agent capabilities are no longer limited to what the developer ships — they can be extended by the ecosystem.
 
-But every loaded Skill keeps occupying context. Before loading, ask: does this task actually need it? "Just in case" is voluntarily injecting noise. After loading, watch for instruction conflicts—one Skill demands detailed comments, another demands minimalism, and the agent doesn't know who to listen to. When the task ends, deactivate what's no longer needed to free space for the next job. Loading is easy; deactivating is the discipline. Skip it, and your context just gets noisier.
+But every loaded Skill keeps occupying context. Before loading, ask: does this task actually need it? "Just in case" is voluntarily injecting noise.
+
+After loading, watch for instruction conflicts. When the task ends, deactivate what's no longer needed to free space for the next job. Loading is easy; deactivating is the discipline. Skip it, and your context just gets noisier.
 
 ## Three Things to Watch in Every Chapter
 

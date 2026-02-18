@@ -124,7 +124,7 @@ Stuffing an entire codebase into context is tempting, and disastrous.
 
 Good context management means "retrieving the right few dozen key facts," not "dumping all text in at once." The goal is to **include only what the LLM actually needs to make its decision**—just enough, not one wasted sentence.
 
-Hand an extremely smart stranger an entire filing cabinet and say "the relevant stuff is in there somewhere." They'll find some useful things, but they'll also be misled by the noise.
+Hand an extremely smart stranger an entire filing cabinet and say "the relevant stuff is in there somewhere." They'll find some useful things, but they'll likely be misled by the noise too.
 
 "Just enough" isn't a fixed bar. It depends on what you're asking the agent to do.
 
@@ -134,8 +134,10 @@ Modifying a specific function or fixing a precise bug? Feed it only the files it
 
 So working with agents actually has two distinct modes:
 
-- **Understanding mode**: mapping architecture, tracing dependencies — open up the context, a wide view reveals the big picture.
-- **Editing mode**: changing a specific function, fixing a precise bug — tighten the context, only give it the files it needs.
+| Mode | Task Type | Context Strategy |
+| :--- | :--- | :--- |
+| **Understanding mode** | Mapping architecture, tracing dependencies | Open up — a wide view reveals the big picture |
+| **Editing mode** | Changing a specific function, fixing a precise bug | Tighten — only give it the files it needs |
 
 Switch between them based on the task at hand.
 
@@ -146,7 +148,7 @@ Context management boils down to four actions:
 - **Compress** — distill to the minimum necessary
 - **Isolate** — give different tasks different context slices
 
-Every tool and mechanism in subsequent chapters is essentially helping you do these four things.
+Every tool and mechanism in subsequent chapters helps you do these four things.
 
 ### Context Pollution
 
@@ -164,6 +166,17 @@ It briefly complies. But a few rounds later, it drifts back to globals.
 
 Why? Look at what's in the `messages` array: your correction is just that one message in round 15. But rounds 5 through 14 — ten messages — while none of them explicitly repeat "use globals," their code, discussions, and decisions all **implicitly assume** that premise. When the LLM reads the message list from the top, ten messages pulling in one direction vs. one explicit correction pulling the other way — the inertia of the former far outweighs the latter.
 
+```
+// What's actually in the messages array
+[
+  msg 1-4:   Normal discussion
+  msg 5:     ❌ LLM decides "use global variables"
+  msg 6-14:  Code, refactors, advice built on that decision  ← 9 msgs implying the same premise
+  msg 15:    ✅ You say "switch to dependency injection"      ← just this 1 msg
+]
+// 9 msgs of implicit direction vs. 1 explicit correction → inertia wins
+```
+
 What do you do when it's dirty?
 
 Roll back to the last clean checkpoint. Throttle at the source—only feed the agent the files it needs for the current step, never "just in case."
@@ -172,7 +185,9 @@ The most effective move is starting a new session. But don't copy-paste the chat
 
 Addition decides what the agent sees. Subtraction decides what doesn't drown it.
 
-One more actionable principle: put your most important constraints at the beginning and end of the conversation. Models pay the least attention to the middle—researchers call this "lost-in-the-middle." Your core rules buried at message 50 will probably be ignored.
+One more actionable principle: put your most important constraints at the beginning and end of the conversation.
+
+Models pay the least attention to the middle—researchers call this "lost-in-the-middle." Your core rules buried at message 50 will probably be ignored.
 
 ## State & Memory
 
@@ -180,7 +195,7 @@ Why does the agent "forget" things?
 
 Because it has no memory at all. What it has is **session state** — the accumulated message list in the current conversation.
 
-Your project rules file takes effect in every new conversation. Coding conventions are always respected. That's not memory. That's **persistent context** — the agent proactively reads these files at the start of each new session, re-injecting them into the `messages` array. Looks like memory. It's a fresh reload every time.
+Your project rules file takes effect in every new conversation. Coding conventions get re-applied each time. That's not memory. That's **persistent context** — the agent proactively reads these files at the start of each new session, re-injecting them into the `messages` array. Looks like memory. It's a fresh reload every time.
 
 | | Session State | Persistent Context |
 |---|---|---|
@@ -193,7 +208,7 @@ For example: you ask the agent to read `package.json` during a conversation — 
 
 ### Context Has a Shelf Life
 
-Context is like milk — nutritious when fresh, spoiled when stale.
+Context has a shelf life — leave it too long and it spoils.
 
 A session that's gone through hundreds of tool calls has almost certainly suffered context degradation. Early key information has been pushed to the edge of the window or truncated entirely, stale intermediate state has piled up in the middle, and later reasoning is built on a foundation of noise.
 
@@ -209,6 +224,13 @@ For example: you chose approach X over approach Y because Y had a race condition
 
 So the core of handoff isn't "remembering." It's **explicit transfer**: writing the decision logic and context worth keeping into the initial input for the next session.
 
+```mermaid
+flowchart LR
+    A["Session N"] -->|Write| B["Persistent Context
+    handoff file"]
+    B -->|Auto-load| C["Session N+1"]
+```
+
 ### Long-Term Memory
 
 Session Handoff solves "this session to the next." But what about memory that stretches further?
@@ -222,7 +244,7 @@ Two things to remember:
 - **In-session** (session state) is short-term. It disappears when the conversation ends. Managed by you or automatically by the Agent.
 - **Cross-session** (persistent context) is long-term. It relies on the filesystem or dedicated storage. Things you write (project rules, handoff files) or the Agent automatically accumulates (memory features) both fall into this category.
 
-The second type sounds convenient, but there's a catch: you don't always see what gets auto-accumulated. The Agent remembers a decision that was later overturned. Three months later, a new session gets a suggestion that looks reasonable but is actually based on stale memory. Stale memory is as dangerous as stale documentation. Arguably more so, because you might not even know that memory entry still exists.
+The second type sounds convenient, but there's a catch: you don't always see what gets auto-accumulated. The Agent remembers a decision that was later overturned. Much later, a new session gets a suggestion that looks reasonable but is actually based on stale memory. Stale memory is as dangerous as stale documentation. Arguably more so, because you might not even know that memory entry still exists.
 
 ## What's Next: Context Carriers in Subsequent Chapters
 
@@ -232,7 +254,7 @@ Every subsequent chapter covers a different context carrier:
 
 | Carrier | Role in Context |
 |---|---|
-| System Instructions | The first context the LLM receives, always present |
+| System Instructions | The first context the LLM receives, present by default |
 | Built-in Tools | Tool definitions + return values = context |
 | MCP | External capability extensions, also entering context |
 | Slash Commands | On-demand context injection |

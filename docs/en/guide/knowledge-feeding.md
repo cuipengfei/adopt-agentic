@@ -30,7 +30,7 @@ This is the most direct form of knowledge feeding:
 - Code style conventions (indentation, naming, commit message format)
 - Non-negotiable boundaries ("Never use npm," "Always write tests first")
 
-The rule layer's defining trait: **globally effective, enforced on every session, always present**. It's the foundation of the Agent's worldview.
+The rule layer's defining trait: **globally effective, enforced on every session, present by default**. It's the foundation of the Agent's worldview.
 
 These rules are two kinds of distilled experience: **hard-learned lessons**—every "never" traces back to a real incident; and **proven practices**—every "always" traces back to a pattern that's been validated again and again. New hires (and Agents) don't need to learn the hard way or reinvent the wheel, because those lessons and practices already remember for them.
 
@@ -40,7 +40,7 @@ The cost is equally clear: it permanently occupies context window space. Cram in
 
 The rule layer tells the Agent "what to do and not do." The capability layer tells it "how to do it."
 
-Loading a Skill—say, one specialized in git operations, or one focused on frontend design—essentially injects an entire body of domain knowledge into the system prompt. The Agent instantly goes from "knows a bit of everything" to "expert in this domain."
+Loading a Skill—say, one specialized in git operations, or one focused on frontend design—injects an entire body of domain knowledge into the system prompt. The Agent instantly goes from "knows a bit of everything" to "expert in this domain."
 
 The key difference: **loaded on demand, unloaded when done.** No context cost when not needed.
 
@@ -81,7 +81,7 @@ The dictionary (`llms.txt`, API docs, schema) is for looking things up, not for 
 
 The grammar (`AGENTS.md`, Skills) is for obeying, not for reading. It's rules. It's instructions. Put it in the Agent's core prompt, where it's enforced.
 
-Putting 5,000 lines of API definitions in `AGENTS.md` is like making a developer memorize a dictionary. Putting a critical rule like "never use eval" in some forgotten document is like hanging the "no drunk driving" sign in the bar's bathroom. Both are useless.
+Putting thousands of lines of API definitions in `AGENTS.md` is like making a developer memorize a dictionary. Putting a critical rule like "never use eval" in some forgotten document is like hanging the "no drunk driving" sign in the bar's bathroom. Both are useless.
 
 ## How to Choose
 
@@ -91,15 +91,15 @@ Putting 5,000 lines of API definitions in `AGENTS.md` is like making a developer
 | A domain-specific methodology or workflow | **Capability Layer** | Loaded on demand, no context cost when idle |
 | Project facts (code, docs, structure) | **Project Layer** | Let the Agent read it; you just maintain the source |
 
-A mature agentic workflow is always a combination of all three. The rule layer sets the baseline, the capability layer fills in skills, the project layer provides facts.
+A mature agentic workflow is typically a combination of all three. The rule layer sets the baseline, the capability layer fills in skills, the project layer provides facts.
 
 But all three layers go stale.
 
-Rule layer rules contradict each other—"all functions must have JSDoc" set some time ago may have been silently abandoned, yet it's still in the rules file, and the agent dutifully follows it every time.
-
-Capability layer Skills clash with new requirements—a previously loaded code style Skill may fight the current project's conventions.
-
-Project layer docs rot—the README describes an outdated technical approach while the project has long since moved on, but nobody updated the docs.
+| Layer | How it goes stale | Consequence |
+| :--- | :--- | :--- |
+| Rule layer | Rules contradict each other — "must have JSDoc" was silently abandoned, but it's still in the file | Agent dutifully follows obsolete rules |
+| Capability layer | Skills clash with new requirements — old code style Skill fights current project conventions | Agent behavior becomes inconsistent |
+| Project layer | Docs rot — README describes an outdated approach, project moved on long ago | Agent makes decisions based on wrong information |
 
 Addition decides what to feed. Subtraction decides when to clean. The cost of not cleaning isn't "wasted space"—it's the agent making decisions based on wrong information.
 
@@ -108,12 +108,12 @@ Addition decides what to feed. Subtraction decides when to clean. The cost of no
 One person's prompt is a habit. A team's prompt is a system.
 
 **Rule Debt**
--   Rules are only ever added, never removed.
+-   Rules are often added, but not cleaned up in time.
 -   A rule added a while back and a rule from last week might contradict each other.
--   The Agent won't complain about conflicting instructions. It will just pick one. The outcome is a coin flip.
+-   The Agent won't complain about conflicting rules. It will just pick one. The outcome is a coin flip.
 
 **Audits**
--   Treat instruction files and Skills like code. Review them. Use pull requests.
+-   Treat rule files and Skills like code. Review them. Use pull requests.
 -   Hold regular meetings to go over the rules. "Is this still relevant?" If not, delete it.
 -   Knowledge, like code, accumulates debt. It's easy to take on, and painful to pay back. If you don't audit, you're letting the Agent operate on a set of rules you yourself have forgotten.
 

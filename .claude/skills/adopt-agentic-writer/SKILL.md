@@ -83,12 +83,13 @@ LLM 通过 SSE 流式返回：
 ## Agent Agnostic 原则
 
 - 所有概念使用**通用术语**，不绑任何特定 agent 产品
-- 举例可以多元（Claude Code、Cursor、Windsurf、Copilot 都可以提），但不能让某个产品成为主角
+- 举例可以多元（各种工具都可以提），但不能让某个产品成为主角
 - 不区分 persona、不区分市场
+- **主内容产品名禁令**：`docs/guide/` 和 `docs/en/guide/` 中**禁止**出现 Cursor、Windsurf、GitHub Copilot 等具体产品名（含衍生名如 `.cursorrules`、`copilot-instructions.md`）
 
 ## 内容三重筛选
 
-从"造 agent"的行业知识中筛选"用 agent tool 的人"需要的心智模型：
+从"造 agent"的行业知识中筛选"用 agent tool 的人"需要的概念：
 
 1. **翻译得过来吗？** — 能否从框架实现视角翻译成工具使用者视角？
 2. **用户直接受益吗？** — 理解后能更好地使用工具吗？
@@ -111,7 +112,7 @@ LLM 通过 SSE 流式返回：
 ## 读者定位
 
 - **用 agent tool 的人**，不是造 agent 的人
-- 读者是开发者，使用 Claude Code、Cursor、Windsurf 等工具，想理解底层机制以用得更好
+- 读者是开发者，使用各类 AI coding agent，想理解底层机制以用得更好
 - **不教框架实现**（LangChain / LangGraph / CrewAI 等 out of scope）
 
 ## 禁止事项
@@ -136,7 +137,7 @@ LLM 通过 SSE 流式返回：
 |--------|---------|------|
 | "上下文即资产"叙事 | 节点 1 或 9 | 正常融入 |
 | "AI context is like milk"类比 | 节点 1 | 正常融入 |
-| amplifier 心智模型 | 适当位置 | **极轻** |
+| amplifier 概念 | 适当位置 | **极轻** |
 | agent-friendly code | 节点 3 或 9 | 提一嘴 |
 | llms.txt 知识注入 | 节点 9 | 提一嘴 |
 

@@ -141,7 +141,7 @@ Different products, different mechanisms. But you provide intent, Agent orchestr
 
 ## Controlling Long-Running Loops
 
-You can watch short tasks. But for long tasks—spanning tens of minutes and hundreds of tool calls—you can't, and you shouldn't have to.
+You can watch short tasks. But for long tasks—spanning extended periods with many tool calls—you can't, and you shouldn't have to.
 
 Hands-off doesn't mean uncontrolled. A long-running agent loop needs to know three things: how far it's come, when to stop, and when to start over.
 
@@ -177,5 +177,5 @@ Restarting isn't failure. It's **context subtraction**. You're cutting away nois
 ## Three Things to Watch in Every Chapter
 
 - **Context flow:** Intent enters system + messages → LLM reasons → tool_calls → Agent executes → results appended back to messages → loop. This chapter showed the complete cycle.
-- **Risk:** Vague intent, LLM guesses. Excessive permissions, Agent runs wild. LLM hallucinates, parameters go wrong — blur the boundaries between the three roles and problems are inevitable.
+- **Risk:** Vague intent, LLM guesses. Excessive permissions, Agent runs wild. LLM hallucinates, parameters go wrong — blur the boundaries between the three roles and problems become much more likely.
 - **Auditability:** Every HTTP request body can be exported and replayed. Tool call logs are fully traceable. When things go wrong, trace back from the request body.

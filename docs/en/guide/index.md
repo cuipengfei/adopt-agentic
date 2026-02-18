@@ -20,6 +20,13 @@ Many developers start with **vibe coding**—tossing a few sentences at the agen
 
 Going from vibe coding to context engineering isn't a technology upgrade. It's a shift in how you think—from "let's see if this works" to "design the context so it has to work." This guide is the map for that shift.
 
+| | Vibe Coding | Context Engineering |
+| :--- | :--- | :--- |
+| Approach | Toss a few sentences at the agent | Design the context supply chain |
+| Simple tasks | Works fine | Also works fine |
+| Complex tasks | Random — works today, fails tomorrow | Reproducible, predictable |
+| Core difference | "Let's see if this works" | "Design it so it has to work" |
+
 The next chapter, [Context — The First Principle](./context.md), cracks this open with two rounds of HTTP requests.
 
 ## Concept Map

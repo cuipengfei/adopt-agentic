@@ -320,7 +320,7 @@ After giving requirements, ask the agent to replay its understanding:
 Before you start, tell me your plan.
 ```
 
-If the replay is off, you can correct it before a single line of code is written. Much cheaper than rewriting 500 lines.
+If the replay is off, you can correct it before a single line of code is written. Much cheaper than rewriting a large chunk of code.
 
 ### Leverage Sub-Agents
 

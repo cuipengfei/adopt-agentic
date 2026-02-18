@@ -154,7 +154,7 @@ You need to know the extent of your agent's permissions and consciously supervis
 ## Three Things to Watch in Every Chapter
 
 - **Context flow**: Tool definitions are static context, present in every request; tool return values are dynamic context, appended after execution. Together they drive the LLM's "act-perceive" loop.
-- **Risk**: `read_file` on a 10MB log? Context window instantly blown, critical early information truncated. `bash` auto-executing `rm -rf`? An agent without confirmation will actually do it.
+- **Risk**: `read_file` on a 10MB log? Context window instantly blown, critical early information truncated. `bash` auto-executing `rm -rf`? An agent without confirmation will likely do it.
 - **Auditability**: Every `tool_calls` request and its corresponding `tool`-role message lives in the conversation history — a complete evidence chain of actions.
 
 Next chapter: MCP — when built-in tools aren't enough, how to let agents call external services. The execution path changes, but to the LLM, everything looks the same.

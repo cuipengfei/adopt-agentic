@@ -20,6 +20,15 @@ The main Agent can spawn one or more Sub Agents. Each Sub Agent’s `messages` h
 
 What’s isolated is the conversation history, not the project rules.
 
+```mermaid
+flowchart TD
+    A["Main Agent"] -->|Spawn| B["Sub Agent"]
+    C["System Instructions
+    project standards / coding conventions"] -->|"✅ Inherited"| B
+    D["Conversation history
+    messages array"] -.->|"❌ Isolated"| B
+```
+
 One more thing that’s easy to miss: **the Sub Agent’s initial prompt is constructed by the main Agent, not written by you directly.** You give the main Agent a big task. The main Agent analyzes it, decides "this sub-task needs isolated handling," and constructs an initial prompt for the Sub Agent. You influence the Sub Agent’s quality indirectly through clear instructions to the main Agent—the more precise your input, the better the prompt it constructs.
 
 ## The Handoff Note
@@ -130,7 +139,7 @@ What you can do: give the main Agent clear instructions and sufficient backgroun
 ## Three Things to Watch in Every Chapter
 
 - **Context flow**: The main Agent extracts information from its own context to construct the initial prompt → Sub Agent executes independently in isolated context → returns a summary that gets injected back into the main Agent’s context. Runtime isolation and full logging coexist—they don’t conflict.
-- **Risk**: Isolation is a double-edged sword. If the main Agent omits a key constraint when constructing the prompt, the Sub Agent works in "ignorance" and may produce non-compliant code. Over-splitting also has costs—each Sub Agent needs to rebuild context from scratch, and coordination overhead accumulates.
+- **Risk**: Isolation is a double-edged sword. If the main Agent omits a key constraint when constructing the prompt, the Sub Agent works without critical information and may produce non-compliant code. Over-splitting also has costs—each Sub Agent needs to rebuild context from scratch, and coordination overhead accumulates.
 - **Auditability**: Each Sub Agent’s full session log is saved independently and can be traced. When a summary looks wrong, you can drill down into the Sub Agent’s complete context to investigate. A summary is compression, not truth—the next chapter covers how to verify.
 
 Next up: verification and observability. Is the summary a Sub Agent returned actually reliable? Every output from an Agent needs a verification mechanism as a safety net.
