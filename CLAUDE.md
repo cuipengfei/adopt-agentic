@@ -189,8 +189,47 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
 - 连续 3 段以上纯文字后，必须穿插可视化元素（Mermaid 图、表格、代码块、示意图）。
 - 表格不是自解释的——旁边配简短的具体例子帮助理解。
 - 优先用 Mermaid 图（项目已集成），其次用表格，再次用代码块模拟示意。
+- 禁止纯装饰性插图。
 - **扫描标准**：排除标题、列表项、代码块、表格后，连续 3 个以上"普通段落"（纯文字段）= 可视化荒漠，必须打断。
 - **选型指南**：流程/顺序 → Mermaid flowchart；对比/分类 → 表格；交互示例 → 代码块（HTTP request/response）；状态变化 → Mermaid stateDiagram。
+
+**插图生成工作流（baoyu skills）**
+
+当需要 Mermaid 无法胜任的插图（跨段落高信息密度、需要整体视觉编排、封面图、文章配图等）时，使用 baoyu skills 生成。
+
+- **Skill 选型表**（供 sub-agent 参考，不是主 agent 替它选）：
+
+| 需求 | Skill | 说明 |
+| ---- | ----- | ---- |
+| 结构化信息图（流程/对比/模块） | `baoyu-infographic` | 20 种 layout × 17 种 style 组合，规格驱动 |
+| 文章中间配图（自动分析插位） | `baoyu-article-illustrator` | 分析文章结构，识别需要图的位置，Type×Style 二维选型 |
+| 文章封面图 | `baoyu-cover-image` | 5 维组合（类型/配色/渲染/文字/氛围），支持多种宽高比 |
+| 通用图片生成 | `baoyu-image-gen` | 支持 Google/OpenAI/DashScope 三个 provider |
+| 知识漫画 | `baoyu-comic` | 多面板教育漫画，多种艺术风格 |
+
+  > **为什么必须是 SVG？** LLM 只能输出文本。SVG 是文本格式（XML），所以任何模型都能生成。PNG/JPEG 是二进制，LLM 无法直接输出——只有路径 2（baoyu-image-gen 脚本调真实图片生成 API）才能产出 PNG。
+
+- **委托原则：给目标，不给实现方式。** 主 agent 只做两件事：
+  1. 加载**所有** baoyu skills 给 sub-agent（让它能浏览完整规格库，自己挑最合适的）
+  2. 给出需要插图的源文件路径 + 插图要表达的概念
+
+  选哪个 baoyu skill、layout、style、配色、尺寸、字体、图标、动画效果——**全部由 sub-agent 自己决定**。Sub-agent 是专业的视觉设计 agent，不要用 prompt 限制它的想象力。它会自己浏览 skill 规格库，选择最适合内容的组合。
+
+  **反模式**（禁止）：在 prompt 里指定 viewBox 尺寸、要求用 `<text>` 不用 path、指定配色方案、预定义节点标题和描述。这些都是在替专业 agent 做决策。
+
+- **文件位置**：所有插图放 `docs/public/illustrations/`，SVG 格式优先（可缩放、轻量、加载快）。
+- **现有插图**（全部暗色赛博朋克风格 + SVG 原生动画）：
+
+| 文件 | 对应节点 | 动画数 |
+| ---- | -------- | ------ |
+| `context-supply-chain.svg` | 首页（index） | 3 |
+| `context.svg` | 节点 1 上下文 | 30 |
+| `actors.svg` | 节点 2 三角关系 | 14 |
+| `orchestration.svg` | 节点 11 编排模式 | 15 |
+| `hooks-and-plugins.svg` | 节点 9 Hooks | 18 |
+| `knowledge-feeding.svg` | 节点 10 知识喂养（⭐ 标杆） | 8 |
+| `human-in-the-loop.svg` | 节点 14 HITL | 17 |
+| `eval.svg` | 节点 13 Eval | 24 |
 
 **风格红线**
 
