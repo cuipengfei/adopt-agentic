@@ -1,0 +1,173 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" font-family="'JetBrains Mono', Consolas, monospace" style="background-color: #0f172a;">
+  <!-- Definitions -->
+  <defs>
+    <!-- Grid Pattern -->
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="1"/>
+    </pattern>
+    
+    <!-- Glow Filter -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Packet Shapes -->
+    <circle id="packet-cyan" r="4" fill="#22d3ee" filter="url(#glow)"/>
+    <circle id="packet-pink" r="4" fill="#f472b6" filter="url(#glow)"/>
+    <circle id="packet-green" r="4" fill="#4ade80" filter="url(#glow)"/>
+
+    <!-- Agent Node Icon -->
+    <symbol id="agent-node" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="45" fill="#1e293b" stroke-width="2"/>
+      <circle cx="50" cy="50" r="25" fill="none" stroke-width="2" opacity="0.5"/>
+      <path d="M 50 10 L 50 20 M 50 80 L 50 90 M 10 50 L 20 50 M 80 50 L 90 50" stroke-width="2"/>
+    </symbol>
+  </defs>
+
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="url(#grid)" />
+  
+  <!-- Network Connections (The Mesh) -->
+  <g stroke-width="2" opacity="0.6">
+    <!-- Path A-B (Top to Right) -->
+    <path id="path-ab" d="M 600 180 L 850 480" stroke="#334155" stroke-dasharray="5,5"/>
+    <!-- Path B-C (Right to Left) -->
+    <path id="path-bc" d="M 850 480 L 350 480" stroke="#334155" stroke-dasharray="5,5"/>
+    <!-- Path C-A (Left to Top) -->
+    <path id="path-ca" d="M 350 480 L 600 180" stroke="#334155" stroke-dasharray="5,5"/>
+  </g>
+
+  <!-- Title Block -->
+  <g transform="translate(40, 40)">
+    <rect x="0" y="0" width="320" height="70" fill="none" stroke="#38bdf8" stroke-width="2"/>
+    <text x="15" y="38" fill="#38bdf8" font-size="24" font-weight="bold">PEER-TO-PEER</text>
+    <text x="15" y="60" fill="#94a3b8" font-size="14">DECENTRALIZED AGENT MESH</text>
+  </g>
+
+  <!-- Info Panel (Complexity) -->
+  <g transform="translate(900, 40)">
+     <rect x="0" y="0" width="260" height="90" fill="#1e293b" stroke="#64748b" stroke-width="1" rx="4"/>
+     <text x="15" y="25" fill="#94a3b8" font-size="12">TOPOLOGY: <tspan fill="#ffffff">FULL MESH</tspan></text>
+     <text x="15" y="45" fill="#94a3b8" font-size="12">COORD COST: <tspan fill="#f472b6">HIGH (O(n²))</tspan></text>
+     <text x="15" y="65" fill="#94a3b8" font-size="12">FLOW: <tspan fill="#4ade80">BIDIRECTIONAL</tspan></text>
+     
+     <!-- Pulsing warning dot -->
+     <circle cx="240" cy="45" r="4" fill="#f472b6">
+        <animate attributeName="opacity" values="1;0.2;1" dur="1s" repeatCount="indefinite"/>
+     </circle>
+  </g>
+
+  <!-- Central Shared Context (The "Brain" Merge) -->
+  <g transform="translate(600, 380)" opacity="0.3">
+    <circle r="80" fill="none" stroke="#ffffff" stroke-width="1" stroke-dasharray="2,4">
+       <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="20s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="60" fill="none" stroke="#ffffff" stroke-width="1" stroke-dasharray="4,4">
+       <animateTransform attributeName="transform" type="rotate" from="360" to="0" dur="15s" repeatCount="indefinite"/>
+    </circle>
+    <text x="0" y="5" fill="#ffffff" font-size="12" text-anchor="middle" font-weight="bold" opacity="0.7">SHARED COGNITION</text>
+  </g>
+
+  <!-- AGENT NODES -->
+  
+  <!-- Node A: Frontend (Top) -->
+  <g transform="translate(600, 150)">
+    <use href="#agent-node" x="-50" y="-50" width="100" height="100" fill="#1e293b" stroke="#22d3ee">
+       <animate attributeName="stroke-width" values="2;4;2" dur="3s" repeatCount="indefinite"/>
+    </use>
+    <!-- Label -->
+    <rect x="-70" y="-80" width="140" height="30" fill="#1e293b" stroke="#22d3ee" stroke-width="1"/>
+    <text x="0" y="-60" fill="#22d3ee" font-size="14" text-anchor="middle" font-weight="bold" filter="url(#glow)">AGENT A (FRONTEND)</text>
+    <!-- Context Indicator -->
+    <text x="0" y="70" fill="#94a3b8" font-size="10" text-anchor="middle">Context: UI/UX</text>
+  </g>
+
+  <!-- Node B: Backend (Bottom Right) -->
+  <g transform="translate(850, 510)">
+    <use href="#agent-node" x="-50" y="-50" width="100" height="100" fill="#1e293b" stroke="#f472b6">
+       <animate attributeName="stroke-width" values="2;4;2" dur="3s" begin="1s" repeatCount="indefinite"/>
+    </use>
+    <!-- Label -->
+    <rect x="-70" y="60" width="140" height="30" fill="#1e293b" stroke="#f472b6" stroke-width="1"/>
+    <text x="0" y="80" fill="#f472b6" font-size="14" text-anchor="middle" font-weight="bold" filter="url(#glow)">AGENT B (BACKEND)</text>
+    <!-- Context Indicator -->
+    <text x="0" y="-60" fill="#94a3b8" font-size="10" text-anchor="middle">Context: DB/API</text>
+  </g>
+
+  <!-- Node C: QA (Bottom Left) -->
+  <g transform="translate(350, 510)">
+    <use href="#agent-node" x="-50" y="-50" width="100" height="100" fill="#1e293b" stroke="#4ade80">
+       <animate attributeName="stroke-width" values="2;4;2" dur="3s" begin="2s" repeatCount="indefinite"/>
+    </use>
+    <!-- Label -->
+    <rect x="-70" y="60" width="140" height="30" fill="#1e293b" stroke="#4ade80" stroke-width="1"/>
+    <text x="0" y="80" fill="#4ade80" font-size="14" text-anchor="middle" font-weight="bold" filter="url(#glow)">AGENT C (TEST)</text>
+    <!-- Context Indicator -->
+    <text x="0" y="-60" fill="#94a3b8" font-size="10" text-anchor="middle">Context: QA/Specs</text>
+  </g>
+
+  <!-- DATA FLOW ANIMATIONS (The Mesh Traffic) -->
+  
+  <!-- A <-> B Traffic -->
+  <g>
+    <!-- A to B (Cyan packet) -->
+    <circle r="6" fill="#22d3ee" filter="url(#glow)">
+      <animateMotion dur="2s" repeatCount="indefinite" path="M 600 180 L 850 480" keyPoints="0;1" keyTimes="0;1" calcMode="linear"/>
+      <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.9;1" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <!-- B to A (Pink packet) -->
+    <circle r="6" fill="#f472b6" filter="url(#glow)">
+      <animateMotion dur="2.5s" repeatCount="indefinite" path="M 850 480 L 600 180" keyPoints="0;1" keyTimes="0;1" calcMode="linear"/>
+      <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.9;1" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- B <-> C Traffic -->
+  <g>
+    <!-- B to C (Pink packet) -->
+    <circle r="6" fill="#f472b6" filter="url(#glow)">
+      <animateMotion dur="2s" repeatCount="indefinite" begin="0.5s" path="M 850 480 L 350 480" keyPoints="0;1" keyTimes="0;1" calcMode="linear"/>
+      <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.9;1" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <!-- C to B (Green packet) -->
+    <circle r="6" fill="#4ade80" filter="url(#glow)">
+      <animateMotion dur="3s" repeatCount="indefinite" path="M 350 480 L 850 480" keyPoints="0;1" keyTimes="0;1" calcMode="linear"/>
+      <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.9;1" dur="3s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- C <-> A Traffic -->
+  <g>
+    <!-- C to A (Green packet) -->
+    <circle r="6" fill="#4ade80" filter="url(#glow)">
+      <animateMotion dur="2.2s" repeatCount="indefinite" begin="1s" path="M 350 480 L 600 180" keyPoints="0;1" keyTimes="0;1" calcMode="linear"/>
+      <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.9;1" dur="2.2s" repeatCount="indefinite"/>
+    </circle>
+    <!-- A to C (Cyan packet) -->
+    <circle r="6" fill="#22d3ee" filter="url(#glow)">
+      <animateMotion dur="2.8s" repeatCount="indefinite" path="M 600 180 L 350 480" keyPoints="0;1" keyTimes="0;1" calcMode="linear"/>
+      <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.9;1" dur="2.8s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Collision/Merge Effects at Nodes (Flash when packet arrives) -->
+  <circle cx="600" cy="150" r="50" fill="none" stroke="#ffffff" stroke-width="2" opacity="0">
+    <animate attributeName="r" values="50;80" dur="1s" begin="2.5s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.5;0" dur="1s" begin="2.5s" repeatCount="indefinite"/>
+  </circle>
+  
+  <circle cx="850" cy="510" r="50" fill="none" stroke="#ffffff" stroke-width="2" opacity="0">
+    <animate attributeName="r" values="50;80" dur="1s" begin="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.5;0" dur="1s" begin="2s" repeatCount="indefinite"/>
+  </circle>
+
+  <circle cx="350" cy="510" r="50" fill="none" stroke="#ffffff" stroke-width="2" opacity="0">
+    <animate attributeName="r" values="50;80" dur="1s" begin="2.8s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.5;0" dur="1s" begin="2.8s" repeatCount="indefinite"/>
+  </circle>
+
+</svg>

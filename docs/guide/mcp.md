@@ -8,6 +8,8 @@
 
 你需要一个标准接口，让**任何外部能力**都能接入 Agent。这就是 MCP（Model Context Protocol）。
 
+![MCP: the USB port of the agent world — a standard protocol connecting external tools via stdio or Streamable HTTP, transparent to the LLM](/illustrations/mcp.svg)
+
 ## 什么是 MCP？
 
 一句话：**Agent 世界的 USB 接口。**

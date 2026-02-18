@@ -8,6 +8,8 @@ Skill 解决这个问题。它是一份可加载的指令集，一旦加载，�
 
 Commands 是"这次做什么"，Skills 是"从现在起怎么做"。
 
+![Skills: on-demand system instruction modules — load domain knowledge that persists across every request until unloaded](/illustrations/skills.svg)
+
 ## 加载前后的行为差异
 
 最直观的理解方式：同一个任务，加载 Skill 前后的输出对比。

@@ -1,0 +1,225 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" font-family="'JetBrains Mono', Consolas, monospace" style="background-color: #0f172a;">
+  <!-- Definitions: Gradients, Filters, Markers -->
+  <defs>
+    <!-- Grid Pattern -->
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="1"/>
+    </pattern>
+    
+    <!-- Glow Filters -->
+    <filter id="glow-cyan" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <filter id="glow-pink" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="glow-green" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Markers -->
+    <marker id="arrow-cyan" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#22d3ee" />
+    </marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#4ade80" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="url(#grid)" />
+
+  <!-- Title Block -->
+  <g transform="translate(40, 40)">
+    <rect x="0" y="0" width="320" height="60" fill="none" stroke="#22d3ee" stroke-width="2"/>
+    <text x="15" y="38" fill="#22d3ee" font-size="24" font-weight="bold" filter="url(#glow-cyan)">SLASH COMMANDS</text>
+    <text x="230" y="38" fill="#94a3b8" font-size="14">v1.0</text>
+    <text x="15" y="80" fill="#94a3b8" font-size="14">CONTEXT INJECTION ARCHITECTURE</text>
+  </g>
+
+  <!-- ================================================================================== -->
+  <!-- ZONE 1: USER INPUT (LEFT) -->
+  <!-- ================================================================================== -->
+  <g transform="translate(80, 250)">
+    <!-- Terminal Box -->
+    <rect x="0" y="0" width="220" height="140" rx="8" fill="#0f172a" stroke="#4ade80" stroke-width="2"/>
+    <rect x="0" y="0" width="220" height="24" rx="8" fill="#4ade80" opacity="0.2"/>
+    <circle cx="15" cy="12" r="4" fill="#4ade80"/>
+    <circle cx="30" cy="12" r="4" fill="#4ade80" opacity="0.5"/>
+    <circle cx="45" cy="12" r="4" fill="#4ade80" opacity="0.3"/>
+    
+    <!-- Label -->
+    <text x="110" y="-15" fill="#4ade80" font-size="14" text-anchor="middle" font-weight="bold">USER TRIGGER</text>
+
+    <!-- Typing Animation Group -->
+    <text x="20" y="80" fill="#ffffff" font-size="20" font-family="monospace">
+      &gt; <tspan fill="#4ade80" font-weight="bold">/review</tspan>
+    </text>
+    
+    <!-- Cursor Blink -->
+    <rect x="130" y="62" width="10" height="20" fill="#4ade80">
+      <animate attributeName="opacity" values="1;0;1" dur="1s" repeatCount="indefinite"/>
+    </rect>
+
+    <!-- Trigger Pulse Ring -->
+    <circle cx="220" cy="70" r="5" fill="#4ade80">
+      <animate attributeName="r" values="5;15;5" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.8;0;0.8" dur="2s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Connection: User -> Expander -->
+  <path d="M 300 320 L 380 320" stroke="#4ade80" stroke-width="2" stroke-dasharray="5,5"/>
+  <circle r="3" fill="#4ade80">
+    <animateMotion path="M 300 320 L 380 320" dur="1.5s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- ================================================================================== -->
+  <!-- ZONE 2: TEMPLATE EXPANDER (CENTER) -->
+  <!-- ================================================================================== -->
+  <g transform="translate(380, 200)">
+    <!-- Main Container -->
+    <path d="M 0 20 L 20 0 L 220 0 L 240 20 L 240 220 L 220 240 L 20 240 L 0 220 Z" 
+          fill="#1e293b" stroke="#22d3ee" stroke-width="2"/>
+    
+    <!-- Header -->
+    <text x="120" y="-15" fill="#22d3ee" font-size="14" text-anchor="middle" font-weight="bold" filter="url(#glow-cyan)">TEMPLATE ENGINE</text>
+    
+    <!-- Inner Mechanism -->
+    <rect x="30" y="40" width="180" height="160" fill="#0f172a" stroke="#334155" rx="4"/>
+    
+    <!-- The "Template" expanding -->
+    <g transform="translate(120, 120)">
+      <!-- Background Template Icon -->
+      <rect x="-40" y="-50" width="80" height="100" rx="4" fill="#0e7490" opacity="0.3"/>
+      
+      <!-- Expanding Lines Animation -->
+      <line x1="-30" y1="-30" x2="30" y2="-30" stroke="#22d3ee" stroke-width="2">
+        <animate attributeName="x2" values="-30;30;30" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite"/>
+      </line>
+      <line x1="-30" y1="-10" x2="10" y2="-10" stroke="#22d3ee" stroke-width="2">
+        <animate attributeName="x2" values="-30;10;10" dur="2s" begin="0.2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0;1;0" dur="2s" begin="0.2s" repeatCount="indefinite"/>
+      </line>
+      <line x1="-30" y1="10" x2="20" y2="10" stroke="#22d3ee" stroke-width="2">
+        <animate attributeName="x2" values="-30;20;20" dur="2s" begin="0.4s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0;1;0" dur="2s" begin="0.4s" repeatCount="indefinite"/>
+      </line>
+       <line x1="-30" y1="30" x2="0" y2="30" stroke="#22d3ee" stroke-width="2">
+        <animate attributeName="x2" values="-30;0;0" dur="2s" begin="0.6s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0;1;0" dur="2s" begin="0.6s" repeatCount="indefinite"/>
+      </line>
+      
+      <!-- Scale Pulse -->
+      <animateTransform attributeName="transform" type="scale" values="1;1.05;1" dur="3s" repeatCount="indefinite"/>
+    </g>
+
+    <!-- Processing Gears/Loader -->
+    <circle cx="210" cy="30" r="10" fill="none" stroke="#22d3ee" stroke-width="2" stroke-dasharray="10, 10">
+      <animateTransform attributeName="transform" type="rotate" from="0 210 30" to="360 210 30" dur="4s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Connection: Expander -> Context -->
+  <g>
+    <path d="M 620 320 L 780 320" stroke="#22d3ee" stroke-width="4" opacity="0.3"/>
+    <path d="M 620 320 L 780 320" stroke="#22d3ee" stroke-width="2" stroke-dasharray="10,10"/>
+    
+    <!-- Packet flying across -->
+    <rect x="0" y="-10" width="30" height="20" fill="#22d3ee" rx="2">
+      <animateMotion path="M 620 320 L 780 320" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+
+  <!-- ================================================================================== -->
+  <!-- ZONE 3: REQUEST CONTEXT (RIGHT) -->
+  <!-- ================================================================================== -->
+  <g transform="translate(780, 150)">
+    <!-- Container Outline -->
+    <rect x="0" y="0" width="350" height="400" rx="10" fill="#0f172a" stroke="#64748b" stroke-width="2"/>
+    <text x="175" y="-15" fill="#94a3b8" font-size="14" text-anchor="middle" font-weight="bold">LLM CONTEXT WINDOW</text>
+
+    <!-- LAYER A: SYSTEM INSTRUCTIONS (Persistent) -->
+    <g transform="translate(20, 20)">
+      <rect x="0" y="0" width="310" height="80" rx="4" fill="#1e293b" stroke="#f472b6" stroke-width="2"/>
+      <text x="15" y="30" fill="#f472b6" font-size="14" font-weight="bold" filter="url(#glow-pink)">SYSTEM INSTRUCTION</text>
+      <text x="15" y="55" fill="#f472b6" font-size="12" opacity="0.8">"You are a coding expert..."</text>
+      <circle cx="290" cy="20" r="4" fill="#f472b6">
+         <animate attributeName="opacity" values="0.4;1;0.4" dur="3s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+
+    <!-- LAYER B: INJECTED COMMAND (Transient) -->
+    <g transform="translate(20, 110)">
+      <!-- Ghost placeholder -->
+      <rect x="0" y="0" width="310" height="120" rx="4" fill="#1e293b" stroke="#334155" stroke-dasharray="5,5" opacity="0.5"/>
+      
+      <!-- Actual Injected Content Sliding In -->
+      <g>
+        <rect x="0" y="0" width="310" height="120" rx="4" fill="#0e7490" stroke="#22d3ee" stroke-width="2" opacity="0.2">
+             <animate attributeName="opacity" values="0.2;0.4;0.2" dur="4s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="0" y="0" width="310" height="120" rx="4" fill="none" stroke="#22d3ee" stroke-width="2"/>
+        
+        <text x="15" y="30" fill="#22d3ee" font-size="14" font-weight="bold" filter="url(#glow-cyan)">INJECTED PROMPT</text>
+        <path d="M 280 20 L 290 30 L 300 20" fill="none" stroke="#22d3ee" stroke-width="2"/>
+        
+        <!-- Code Lines -->
+        <line x1="15" y1="50" x2="200" y2="50" stroke="#22d3ee" stroke-width="1" opacity="0.8"/>
+        <line x1="15" y1="70" x2="250" y2="70" stroke="#22d3ee" stroke-width="1" opacity="0.6"/>
+        <line x1="15" y1="90" x2="180" y2="90" stroke="#22d3ee" stroke-width="1" opacity="0.4"/>
+
+        <!-- Slide In Animation -->
+        <animateTransform attributeName="transform" type="translate" from="-50 0" to="0 0" dur="0.5s" fill="freeze" />
+        <animate attributeName="opacity" values="0;1" dur="0.5s" fill="freeze"/>
+      </g>
+    </g>
+
+    <!-- LAYER C: MESSAGES (History) -->
+    <g transform="translate(20, 240)">
+      <rect x="0" y="0" width="310" height="140" rx="4" fill="#1e293b" stroke="#64748b" stroke-width="1"/>
+      <text x="15" y="30" fill="#94a3b8" font-size="14" font-weight="bold">MESSAGES</text>
+      
+      <!-- Chat bubbles -->
+      <rect x="15" y="50" width="200" height="30" rx="15" fill="#334155"/>
+      <rect x="95" y="90" width="200" height="30" rx="15" fill="#475569"/>
+    </g>
+    
+    <!-- Connector Lines inside Context -->
+    <line x1="175" y1="100" x2="175" y2="110" stroke="#64748b" stroke-width="2"/>
+    <line x1="175" y1="230" x2="175" y2="240" stroke="#64748b" stroke-width="2"/>
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(40, 600)">
+    <g transform="translate(0, 0)">
+      <circle r="5" fill="#f472b6" filter="url(#glow-pink)"/>
+      <text x="15" y="4" fill="#94a3b8" font-size="12">Persistent (Global)</text>
+    </g>
+    <g transform="translate(180, 0)">
+      <circle r="5" fill="#22d3ee" filter="url(#glow-cyan)"/>
+      <text x="15" y="4" fill="#94a3b8" font-size="12">Transient (One-shot)</text>
+    </g>
+    <g transform="translate(360, 0)">
+      <circle r="5" fill="#4ade80" filter="url(#glow-green)"/>
+      <text x="15" y="4" fill="#94a3b8" font-size="12">User Trigger</text>
+    </g>
+  </g>
+
+</svg>

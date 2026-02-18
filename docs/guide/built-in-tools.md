@@ -10,6 +10,8 @@
 
 LLM 自己不能运行这些函数。它能做的是生成一个 JSON 请求，告诉 Agent "帮我执行这个操作"。Agent 执行后，把结果喂回给 LLM。这个循环就是 agentic 工作流的核心引擎。
 
+![Built-in Tools: LLM generates tool_calls JSON, Agent executes locally, results feed back as context — the action-perception loop powering agentic workflows](/illustrations/built-in-tools.svg)
+
 ## 工具调用流程
 
 让我们通过一个完整的 HTTP 请求/响应流程，看看这个引擎怎么转。

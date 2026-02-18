@@ -1,0 +1,170 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" font-family="'JetBrains Mono', Consolas, monospace" style="background-color: #0f172a;">
+  <!-- Definitions: Gradients, Markers, Filters -->
+  <defs>
+    <!-- Grid Pattern -->
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="1"/>
+    </pattern>
+    
+    <!-- Glow Filter -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Matrix/Code Rain Gradient -->
+    <linearGradient id="codeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#4ade80" stop-opacity="0" />
+      <stop offset="50%" stop-color="#4ade80" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#4ade80" stop-opacity="0" />
+    </linearGradient>
+
+    <!-- Markers -->
+    <marker id="arrow-pink" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#f472b6" />
+    </marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#4ade80" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="url(#grid)" />
+
+  <!-- Top Left: Title -->
+  <g transform="translate(40, 40)">
+    <rect x="0" y="0" width="340" height="60" fill="none" stroke="#38bdf8" stroke-width="2"/>
+    <text x="20" y="38" fill="#38bdf8" font-size="24" font-weight="bold" filter="url(#glow)">AGENT-NATIVE CLI</text>
+    <text x="20" y="80" fill="#94a3b8" font-size="14">THE UNIVERSAL INTERFACE</text>
+  </g>
+
+  <!-- Top Right: Status -->
+  <g transform="translate(950, 40)">
+     <text x="0" y="0" fill="#94a3b8" font-size="10" text-anchor="end">Protocol: STDOUT/STDIN</text>
+     <text x="0" y="15" fill="#94a3b8" font-size="10" text-anchor="end">Format: JSON STREAM</text>
+     <circle cx="10" cy="-5" r="3" fill="#4ade80">
+        <animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite"/>
+     </circle>
+  </g>
+
+  <!-- LEFT: The Agent (Sender) -->
+  <g transform="translate(150, 300)">
+    <!-- Agent Box -->
+    <rect x="-80" y="-60" width="160" height="120" rx="10" fill="#1e293b" stroke="#f472b6" stroke-width="2" filter="url(#glow)"/>
+    <text x="0" y="-20" fill="#f472b6" font-size="18" font-weight="bold" text-anchor="middle">AGENT</text>
+    <text x="0" y="10" fill="#cbd5e1" font-size="12" text-anchor="middle">Intent &amp; Logic</text>
+    
+    <!-- Processing Pulse -->
+    <circle cx="0" cy="40" r="4" fill="#f472b6">
+        <animate attributeName="r" values="4;8;4" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- CENTER: The Terminal (The Interface) -->
+  <g transform="translate(400, 180)">
+    <!-- Terminal Window -->
+    <rect x="0" y="0" width="400" height="280" rx="5" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
+    <!-- Title Bar -->
+    <rect x="0" y="0" width="400" height="30" rx="5" fill="#38bdf8" opacity="0.2"/>
+    <circle cx="20" cy="15" r="4" fill="#ef4444"/>
+    <circle cx="35" cy="15" r="4" fill="#f59e0b"/>
+    <circle cx="50" cy="15" r="4" fill="#22c55e"/>
+    <text x="200" y="20" fill="#7dd3fc" font-size="12" text-anchor="middle">bash — agent-session — 80x24</text>
+
+    <!-- Terminal Content Area -->
+    <g transform="translate(20, 50)">
+        <!-- Prompt Line -->
+        <text x="0" y="0" fill="#4ade80" font-size="14" font-weight="bold">agent@sys:~$ </text>
+        
+        <!-- Animated Typing Command -->
+        <text x="110" y="0" fill="#f472b6" font-size="14">
+            git log --json
+            <animate attributeName="opacity" values="0;1;1;0" dur="4s" repeatCount="indefinite" keyTimes="0;0.1;0.8;1"/>
+        </text>
+        
+        <!-- Blinking Cursor -->
+        <rect x="230" y="-12" width="8" height="16" fill="#f472b6">
+            <animate attributeName="opacity" values="0;1;0" dur="0.8s" repeatCount="indefinite"/>
+             <animate attributeName="x" values="110;230" dur="0.5s" fill="freeze" calcMode="discrete" repeatCount="indefinite"/> 
+             <!-- Simple cursor position jump for simplicity in SVG -->
+        </rect>
+
+        <!-- Command 2: Pipe example -->
+        <text x="0" y="30" fill="#4ade80" font-size="14" opacity="0.6">agent@sys:~$ </text>
+        <text x="110" y="30" fill="#f472b6" font-size="14" opacity="0.6">curl | jq .data</text>
+
+        <!-- Output Area (JSON Structure) -->
+        <g transform="translate(0, 60)">
+             <text x="0" y="0" fill="#94a3b8" font-size="12">{</text>
+             <text x="20" y="20" fill="#22d3ee" font-size="12">"commit": "a1b2c3",</text>
+             <text x="20" y="40" fill="#22d3ee" font-size="12">"author": "Sis",</text>
+             <text x="20" y="60" fill="#22d3ee" font-size="12">"msg": "feat: cli"</text>
+             <text x="0" y="80" fill="#94a3b8" font-size="12">}</text>
+             
+             <!-- Highlight Scanline over Output -->
+             <rect x="0" y="-10" width="360" height="20" fill="url(#codeGradient)" opacity="0.3">
+                <animate attributeName="y" values="-10;100" dur="2s" repeatCount="indefinite"/>
+             </rect>
+        </g>
+    </g>
+  </g>
+
+  <!-- RIGHT: The System (Receiver) -->
+  <g transform="translate(1000, 300)">
+    <!-- System Stack -->
+    <path d="M -60 -40 L 60 -40 L 60 40 L -60 40 Z" fill="#1e293b" stroke="#22d3ee" stroke-width="2"/>
+    <ellipse cx="0" cy="-40" rx="60" ry="15" fill="#1e293b" stroke="#22d3ee" stroke-width="2"/>
+    <ellipse cx="0" cy="0" rx="60" ry="15" fill="none" stroke="#22d3ee" stroke-width="2"/>
+    <ellipse cx="0" cy="40" rx="60" ry="15" fill="#1e293b" stroke="#22d3ee" stroke-width="2"/>
+    
+    <text x="0" y="10" fill="#22d3ee" font-size="16" font-weight="bold" text-anchor="middle" filter="url(#glow)">SYSTEM</text>
+    
+    <!-- Active Status Light -->
+    <circle cx="40" cy="-40" r="3" fill="#4ade80">
+         <animate attributeName="fill" values="#4ade80;#22c55e;#4ade80" dur="1s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- CONNECTIONS & FLOW -->
+  
+  <!-- 1. Agent to CLI (Command Injection) -->
+  <path d="M 230 300 L 300 300 L 300 250 L 400 250" fill="none" stroke="#f472b6" stroke-width="2" stroke-dasharray="5,5"/>
+  <circle r="4" fill="#f472b6">
+    <animateMotion path="M 230 300 L 300 300 L 300 250 L 400 250" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <text x="310" y="240" fill="#f472b6" font-size="12">Construct Command</text>
+
+  <!-- 2. CLI to System (Execution) -->
+  <path d="M 800 250 L 900 250 L 900 300 L 940 300" fill="none" stroke="#22d3ee" stroke-width="2" stroke-dasharray="5,5"/>
+  <circle r="4" fill="#22d3ee">
+    <animateMotion path="M 800 250 L 900 250 L 900 300 L 940 300" dur="2s" begin="1s" repeatCount="indefinite"/>
+  </circle>
+  <text x="850" y="240" fill="#22d3ee" font-size="12">Execute</text>
+
+  <!-- 3. System to CLI (Raw Output) -->
+  <path d="M 940 320 L 900 320 L 900 400 L 800 400" fill="none" stroke="#4ade80" stroke-width="2" stroke-dasharray="5,5" opacity="0.5"/>
+  <text x="850" y="420" fill="#4ade80" font-size="12" opacity="0.8">Raw Output</text>
+
+  <!-- 4. CLI to Agent (Structured Context) -->
+  <path d="M 400 400 L 300 400 L 300 320 L 230 320" fill="none" stroke="#4ade80" stroke-width="3"/>
+  <circle r="5" fill="#ffffff">
+    <animateMotion path="M 400 400 L 300 400 L 300 320 L 230 320" dur="2s" begin="1.5s" repeatCount="indefinite"/>
+  </circle>
+  <text x="310" y="420" fill="#4ade80" font-size="12" font-weight="bold">Structured Context</text>
+
+  <!-- Bottom Labels: Philosophy -->
+  <g transform="translate(600, 600)" text-anchor="middle">
+      <text x="-250" y="0" fill="#cbd5e1" font-size="14">TEXT INTERFACE</text>
+      <circle cx="-250" cy="20" r="3" fill="#38bdf8"/>
+      
+      <text x="0" y="0" fill="#cbd5e1" font-size="14">PREDICTABLE</text>
+      <circle cx="0" cy="20" r="3" fill="#38bdf8"/>
+      
+      <text x="250" y="0" fill="#cbd5e1" font-size="14">COMPOSABLE</text>
+      <circle cx="250" cy="20" r="3" fill="#38bdf8"/>
+  </g>
+</svg>

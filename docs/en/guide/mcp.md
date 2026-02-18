@@ -8,6 +8,8 @@ Wait for the agent developer to add it? Impractical. Modify the agent's source c
 
 You need a standard interface that lets **any external capability** plug into the agent. That's MCP (Model Context Protocol).
 
+![MCP: the USB port of the agent world — a standard protocol connecting external tools via stdio or Streamable HTTP, transparent to the LLM](/illustrations/mcp.svg)
+
 ## What is MCP?
 
 One sentence: **the USB port of the agent world.**

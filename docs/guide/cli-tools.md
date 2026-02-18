@@ -6,6 +6,8 @@
 
 回到内置工具那一节的结论：`bash` 是最万能的工具，理论上它能做任何事。CLI 工具正是 bash 的弹药库——Agent 通过 bash 调用 `git`、`curl`、`jq`、`rg`，CLI 的输出直接成为上下文的一部分。
 
+![Agent-Native CLI Tools: Unix philosophy meets agentic workflows — plain text output becomes context, composable through pipes, predictable and auditable](/illustrations/cli-tools.svg)
+
 ## 为什么 CLI 天然适合 Agent
 
 > 做一件事，做好它，并与其他程序良好协作。

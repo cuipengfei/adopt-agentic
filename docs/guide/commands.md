@@ -8,6 +8,8 @@
 
 这就是 Slash Command：**一个以 `/` 开头的快捷方式，背后是一段预先写好的 prompt 模板**。你触发它，Agent 展开模板，塞进发给 LLM 的请求里。LLM 根本不知道你按了什么——它看到的只是一段结构化的指令。
 
+![Slash Commands: user triggers a shortcut, Agent expands the prompt template and injects it into the LLM request — one-shot context injection](/illustrations/commands.svg)
+
 ## 命令展开的过程
 
 当你执行 `/review` 时，Agent 读取关联的模板：

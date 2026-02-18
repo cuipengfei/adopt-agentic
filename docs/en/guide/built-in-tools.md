@@ -10,6 +10,8 @@ Of these, `bash` (or `shell`) is the most versatile. In theory it can do anythin
 
 The LLM can't run these functions itself. What it can do is generate a JSON request telling the agent "execute this operation for me." The agent executes it, feeds the result back. This loop is the core engine of agentic workflows.
 
+![Built-in Tools: LLM generates tool_calls JSON, Agent executes locally, results feed back as context — the action-perception loop powering agentic workflows](/illustrations/built-in-tools.svg)
+
 ## The Tool-Call Flow
 
 Let's trace this engine through a complete HTTP request/response flow.

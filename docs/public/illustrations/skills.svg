@@ -1,0 +1,187 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" font-family="'JetBrains Mono', Consolas, monospace" style="background-color: #0f172a;">
+  <!-- Definitions: Gradients, Markers, Filters, Patterns -->
+  <defs>
+    <!-- Dark Grid Pattern -->
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="1" opacity="0.5"/>
+    </pattern>
+    
+    <!-- Glow Filter for Neon Effects -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <!-- Skill Module Gradient -->
+    <linearGradient id="skillGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#22d3ee" stop-opacity="0.8"/>
+    </linearGradient>
+
+    <!-- Command Pulse Gradient -->
+    <linearGradient id="cmdGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f472b6" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#f472b6" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#f472b6" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="url(#grid)" />
+
+  <!-- =========================================
+       Title & Status Blocks
+       ========================================= -->
+  <g transform="translate(40, 40)">
+    <rect x="0" y="0" width="280" height="60" fill="none" stroke="#38bdf8" stroke-width="2"/>
+    <rect x="2" y="2" width="276" height="56" fill="#38bdf8" opacity="0.1"/>
+    <text x="20" y="38" fill="#38bdf8" font-size="24" font-weight="bold" letter-spacing="1">SKILL INJECTION</text>
+    <text x="20" y="80" fill="#94a3b8" font-size="12">DYNAMIC CONTEXT MODIFICATION</text>
+  </g>
+
+  <g transform="translate(900, 40)">
+     <text x="260" y="10" fill="#94a3b8" font-size="10" text-anchor="end">SYSTEM STATUS</text>
+     <text x="260" y="30" fill="#22d3ee" font-size="14" text-anchor="end" font-weight="bold">AUGMENTED</text>
+     <!-- Blinking Status Light -->
+     <circle cx="280" cy="25" r="4" fill="#22d3ee">
+        <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/>
+     </circle>
+  </g>
+
+  <!-- =========================================
+       Center: The Agent Core / System Instructions
+       ========================================= -->
+  <g transform="translate(450, 200)">
+    <!-- Main Processor Box -->
+    <rect x="0" y="0" width="300" height="300" rx="4" fill="#0f172a" stroke="#475569" stroke-width="2"/>
+    
+    <!-- Header -->
+    <rect x="0" y="0" width="300" height="40" rx="4" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+    <text x="150" y="28" fill="#e2e8f0" font-size="14" text-anchor="middle" font-weight="bold">SYSTEM INSTRUCTIONS</text>
+    
+    <!-- Base Instructions (Static) -->
+    <rect x="20" y="60" width="260" height="60" rx="2" fill="#1e293b" stroke="#334155" stroke-dasharray="4,4"/>
+    <text x="150" y="95" fill="#94a3b8" font-size="12" text-anchor="middle">Base Persona (Static)</text>
+
+    <!-- Expansion Slot Area -->
+    <rect x="20" y="140" width="260" height="140" rx="2" fill="#0f172a" stroke="#334155"/>
+    <text x="150" y="215" fill="#475569" font-size="12" text-anchor="middle" opacity="0.5">DYNAMIC INSTRUCTION SLOT</text>
+    
+    <!-- The "Inserted" Skill (Animated) -->
+    <g transform="translate(20, 140)">
+       <rect x="0" y="0" width="260" height="0" fill="url(#skillGrad)" stroke="#22d3ee" stroke-width="1" opacity="0.8">
+          <animate attributeName="height" values="0; 60; 60; 0" keyTimes="0; 0.2; 0.8; 1" dur="6s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0; 0.8; 0.8; 0" keyTimes="0; 0.2; 0.8; 1" dur="6s" repeatCount="indefinite" />
+       </rect>
+       <text x="130" y="35" fill="#cffafe" font-size="14" text-anchor="middle" font-weight="bold" opacity="0">
+          GIT-MASTER SKILL
+          <animate attributeName="opacity" values="0; 1; 1; 0" keyTimes="0; 0.25; 0.75; 1" dur="6s" repeatCount="indefinite" />
+       </text>
+    </g>
+    
+    <!-- Scanning Line (Active when skill is loaded) -->
+    <line x1="20" y1="140" x2="280" y2="140" stroke="#22d3ee" stroke-width="2" opacity="0">
+        <animate attributeName="y1" values="140; 200; 140" keyTimes="0; 0.5; 1" dur="2s" begin="1.2s" repeatCount="indefinite" />
+        <animate attributeName="y2" values="140; 200; 140" keyTimes="0; 0.5; 1" dur="2s" begin="1.2s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0; 1; 1; 0" keyTimes="0; 0.2; 0.8; 1" dur="6s" repeatCount="indefinite" />
+    </line>
+  </g>
+
+  <!-- =========================================
+       Left: Inputs (Command vs Skill)
+       ========================================= -->
+  
+  <!-- 1. Skill Input (The Cartridge) -->
+  <g transform="translate(100, 340)">
+     <path d="M 0 0 L 180 0 L 200 20 L 200 60 L 0 60 Z" fill="#1e293b" stroke="#22d3ee" stroke-width="2" filter="url(#glow)"/>
+     <text x="30" y="35" fill="#22d3ee" font-size="14" font-weight="bold">SKILL PACKAGE</text>
+     <text x="30" y="52" fill="#22d3ee" font-size="10" opacity="0.7">Persistent Rules</text>
+     
+     <!-- Connection Wire to Core -->
+     <path d="M 200 30 L 325 30 L 325 -100 L 450 -100" fill="none" stroke="#22d3ee" stroke-width="2" stroke-dasharray="5,5" opacity="0.3"/>
+     
+     <!-- Traveling Data Packet (Skill Loading) -->
+     <circle r="4" fill="#22d3ee" filter="url(#glow)">
+        <animateMotion path="M 200 30 L 325 30 L 325 -100 L 450 -100" dur="6s" repeatCount="indefinite" keyPoints="0;1" keyTimes="0;1" calcMode="linear"/>
+        <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.2;0.21;1" dur="6s" repeatCount="indefinite" />
+     </circle>
+  </g>
+
+  <!-- 2. Command Input (The Transient Pulse) -->
+  <g transform="translate(100, 180)">
+     <rect x="0" y="0" width="180" height="60" rx="30" fill="#1e293b" stroke="#f472b6" stroke-width="2" stroke-dasharray="4,4"/>
+     <text x="30" y="35" fill="#f472b6" font-size="14" font-weight="bold">COMMAND /cmd</text>
+     
+     <!-- Connection Wire to Core -->
+     <path d="M 180 30 L 450 30" fill="none" stroke="#f472b6" stroke-width="2" opacity="0.3"/>
+     
+     <!-- Fast Pulse Animation -->
+     <rect x="0" y="-2" width="40" height="4" fill="#f472b6" filter="url(#glow)">
+        <animateMotion path="M 180 30 L 450 30" dur="2s" repeatCount="indefinite" />
+        <animate attributeName="width" values="40; 10; 40" dur="0.5s" repeatCount="indefinite"/>
+     </rect>
+  </g>
+
+
+  <!-- =========================================
+       Right: Outputs (Behavior)
+       ========================================= -->
+  
+  <g transform="translate(850, 200)">
+     <!-- Output Pipe -->
+     <path d="M -100 150 L 50 150" fill="none" stroke="#475569" stroke-width="4"/>
+     
+     <!-- Normal Behavior (Always there) -->
+     <g transform="translate(50, 150)">
+        <text x="10" y="0" fill="#94a3b8" font-size="14" dominant-baseline="middle">Standard Output</text>
+        <circle r="3" fill="#94a3b8">
+           <animate attributeName="cx" values="0; 200" dur="2s" repeatCount="indefinite"/>
+           <animate attributeName="opacity" values="1; 0" dur="2s" repeatCount="indefinite"/>
+        </circle>
+     </g>
+
+     <!-- Enhanced Behavior (Only when Skill Active) -->
+     <g transform="translate(50, 180)">
+        <text x="10" y="5" fill="#22d3ee" font-size="14" font-weight="bold" opacity="0">
+           ENHANCED OUTPUT
+           <animate attributeName="opacity" values="0; 1; 1; 0" keyTimes="0; 0.2; 0.8; 1" dur="6s" repeatCount="indefinite" />
+        </text>
+        
+        <!-- Animated Particles for Enhanced Output -->
+        <circle r="4" fill="#22d3ee" filter="url(#glow)" opacity="0">
+           <animate attributeName="cx" values="0; 250" dur="1s" repeatCount="indefinite"/>
+           <animate attributeName="opacity" values="0; 1; 1; 0" keyTimes="0; 0.2; 0.8; 1" dur="6s" repeatCount="indefinite" />
+        </circle>
+        <circle r="4" fill="#22d3ee" filter="url(#glow)" opacity="0">
+           <animate attributeName="cx" values="0; 250" dur="1s" begin="0.1s" repeatCount="indefinite"/>
+           <animate attributeName="opacity" values="0; 1; 1; 0" keyTimes="0; 0.2; 0.8; 1" dur="6s" repeatCount="indefinite" />
+        </circle>
+     </g>
+  </g>
+
+  <!-- =========================================
+       Comparison Table / Labels
+       ========================================= -->
+  <g transform="translate(300, 580)">
+     <line x1="0" y1="0" x2="600" y2="0" stroke="#334155" stroke-width="1"/>
+     
+     <!-- Column 1 -->
+     <text x="100" y="30" fill="#f472b6" font-size="14" text-anchor="middle" font-weight="bold">COMMANDS</text>
+     <text x="100" y="50" fill="#94a3b8" font-size="12" text-anchor="middle">"Do this once"</text>
+     <text x="100" y="70" fill="#64748b" font-size="10" text-anchor="middle">Transient Injection</text>
+
+     <!-- Separator -->
+     <line x1="300" y1="10" x2="300" y2="70" stroke="#334155" stroke-width="1"/>
+
+     <!-- Column 2 -->
+     <text x="500" y="30" fill="#22d3ee" font-size="14" text-anchor="middle" font-weight="bold">SKILLS</text>
+     <text x="500" y="50" fill="#94a3b8" font-size="12" text-anchor="middle">"Do this from now on"</text>
+     <text x="500" y="70" fill="#64748b" font-size="10" text-anchor="middle">Persistent State</text>
+  </g>
+
+  <!-- Connecting Lines Animation (Data Flow) -->
+  <path d="M 450 230 L 750 230" stroke="url(#cmdGrad)" stroke-width="2" fill="none">
+    <animate attributeName="stroke-dasharray" values="0,1000; 1000,0" dur="2s" repeatCount="indefinite"/>
+  </path>
+
+</svg>

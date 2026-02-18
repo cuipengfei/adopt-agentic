@@ -4,6 +4,8 @@
 
 The previous chapter established the human as the ultimate arbiter of context. Even in multi-Agent collaboration, that doesn't change—but the way context flows gets more complex.
 
+![Peer-to-Peer Agents: bidirectional context flow among equals — no hierarchy, multi-perspective collision with O(n²) coordination overhead](/illustrations/peer-to-peer-agents.svg)
+
 ## Hierarchical vs. Peer-to-Peer
 
 In the [Sub Agent](./sub-agents.md) world, the relationship is a clear hierarchy: the main Agent is the general, Sub Agents are the soldiers. The general gives orders, soldiers execute and report back. Context flows one way—clean and controllable.

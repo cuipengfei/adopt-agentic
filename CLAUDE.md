@@ -225,11 +225,19 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
 | `context-supply-chain.svg` | 首页（index） | 3 |
 | `context.svg` | 节点 1 上下文 | 30 |
 | `actors.svg` | 节点 2 三角关系 | 14 |
-| `orchestration.svg` | 节点 11 编排模式 | 15 |
+| `system-instructions.svg` | 节点 3 系统指令 | 21 |
+| `built-in-tools.svg` | 节点 4 内置工具 | 14 |
+| `mcp.svg` | 节点 5 MCP | 14 |
+| `commands.svg` | 节点 6 Slash Commands | 20 |
+| `skills.svg` | 节点 7 Skills | 19 |
+| `cli-tools.svg` | 节点 8 CLI 工具 | 11 |
 | `hooks-and-plugins.svg` | 节点 9 Hooks | 18 |
 | `knowledge-feeding.svg` | 节点 10 知识喂养（⭐ 标杆） | 8 |
-| `human-in-the-loop.svg` | 节点 14 HITL | 17 |
+| `orchestration.svg` | 节点 11 编排模式 | 15 |
+| `sub-agents.svg` | 节点 12 子代理 | 14 |
 | `eval.svg` | 节点 13 Eval | 24 |
+| `human-in-the-loop.svg` | 节点 14 HITL | 17 |
+| `peer-to-peer-agents.svg` | 节点 15 P2P Agents | 24 |
 
 **风格红线**
 

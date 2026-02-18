@@ -4,6 +4,8 @@
 
 上一节讲了编排模式——怎么组织步骤。这一节看执行单元：当主 Agent 需要一个干净的环境来处理子任务时，它会派生出 Sub Agent。
 
+![Sub Agents: context isolation through spawning — main Agent delegates with a handoff note, Sub Agent works in a clean room, returns summary back to main context](/illustrations/sub-agents.svg)
+
 ## 问题：上下文越来越脏
 
 还记得[第一原则](./context.md)里的"上下文污染"吗？

@@ -4,6 +4,8 @@
 
 The previous chapter covered orchestration patterns—how to organize steps. This chapter looks at the execution unit: when the main Agent needs a clean environment for a sub-task, it spawns a Sub Agent.
 
+![Sub Agents: context isolation through spawning — main Agent delegates with a handoff note, Sub Agent works in a clean room, returns summary back to main context](/illustrations/sub-agents.svg)
+
 ## The Problem: Context Gets Dirty
 
 Remember "context pollution" from [The First Principle](./context.md)?

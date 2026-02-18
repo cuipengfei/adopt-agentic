@@ -4,6 +4,8 @@
 
 上一节讲了人类作为上下文的最终仲裁者。即便进入多 Agent 协作，这一点不变——但上下文的流动方式会变得更复杂。
 
+![Peer-to-Peer Agents: bidirectional context flow among equals — no hierarchy, multi-perspective collision with O(n²) coordination overhead](/illustrations/peer-to-peer-agents.svg)
+
 ## 层级式 vs 平级式
 
 在 [Sub Agent](./sub-agents.md) 的世界里，关系是层级结构：主 Agent 是将军，Sub Agent 是士兵。将军发令，士兵执行，然后汇报。上下文单向流动，清晰可控。

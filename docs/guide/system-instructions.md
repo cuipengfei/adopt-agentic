@@ -8,6 +8,8 @@
 
 你打字之前，它就已经在了。
 
+![System Instructions: the behavioral baseline injected into every request — maintainable asset with version control, context injector assembling system rules before user input, and guardrails paving the road](/illustrations/system-instructions.svg)
+
 **── 第 1 轮 ──**
 
 ```json

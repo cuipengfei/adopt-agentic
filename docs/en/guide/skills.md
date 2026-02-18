@@ -8,6 +8,8 @@ Skills solve this. A Skill is a loadable instruction set. Once loaded, its conte
 
 Commands are "what to do this time." Skills are "how to behave from now on."
 
+![Skills: on-demand system instruction modules — load domain knowledge that persists across every request until unloaded](/illustrations/skills.svg)
+
 ## Behavior Before and After Loading
 
 The most intuitive way to understand: compare outputs for the same task, before and after loading a Skill.

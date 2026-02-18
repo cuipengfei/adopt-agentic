@@ -8,6 +8,8 @@ As the previous chapter covered, the Agent orchestrates context. System instruct
 
 Before you type anything, they're already there.
 
+![System Instructions: the behavioral baseline injected into every request — maintainable asset with version control, context injector assembling system rules before user input, and guardrails paving the road](/illustrations/system-instructions.svg)
+
 **── Round 1 ──**
 
 ```json
