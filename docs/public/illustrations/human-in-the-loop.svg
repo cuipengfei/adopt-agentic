@@ -1,193 +1,285 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" font-family="'JetBrains Mono', Consolas, monospace" style="background-color: #0f172a;">
-  <!-- Background Grid -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" style="background-color: #FDFBF7;">
+  <!-- 
+    Style: Storybook Watercolor
+    Layout: Winding Roadmap
+    Concept: Human-in-the-Loop Journey
+    Updated: Restored Info Density & Animations
+  -->
+  
   <defs>
-    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="1"/>
-    </pattern>
-    <!-- Glow Filters -->
-    <filter id="glow-blue" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
-      <feMerge>
-        <feMergeNode in="coloredBlur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-    <filter id="glow-red" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-      <feMerge>
-        <feMergeNode in="coloredBlur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-    <filter id="glow-green" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
-      <feMerge>
-        <feMergeNode in="coloredBlur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-    
-    <!-- Markers -->
-    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L0,6 L9,3 z" fill="#38bdf8" />
-    </marker>
-    <marker id="arrow-red" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L0,6 L9,3 z" fill="#f87171" />
-    </marker>
-    <marker id="arrow-green" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L0,6 L9,3 z" fill="#4ade80" />
-    </marker>
+    <!-- FONTS -->
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&amp;display=swap');
+      text { font-family: 'Patrick Hand', 'Comic Sans MS', 'Chalkboard SE', sans-serif; }
+      .label { font-size: 24px; fill: #37474F; font-weight: bold; }
+      .sublabel { font-size: 16px; fill: #546E7A; }
+      .tiny { font-size: 14px; fill: #78909C; }
+      .risk-label { font-size: 14px; font-weight: bold; }
+    </style>
 
-    <!-- Gradients -->
-    <linearGradient id="grad-gate" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#f87171" stop-opacity="0.1"/>
-      <stop offset="50%" stop-color="#f87171" stop-opacity="0.3"/>
-      <stop offset="100%" stop-color="#f87171" stop-opacity="0.1"/>
+    <!-- FILTERS for Watercolor Effect -->
+    <!-- 1. Wobbly edges for shapes -->
+    <filter id="watercolor-edge" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" />
+    </filter>
+
+    <!-- 2. Paper Texture Overlay -->
+    <filter id="paper-texture">
+      <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="3" result="noise" />
+      <feDiffuseLighting in="noise" lighting-color="#fff" surfaceScale="1">
+        <feDistantLight azimuth="45" elevation="60" />
+      </feDiffuseLighting>
+      <feComposite operator="arithmetic" k1="0" k2="1" k3="1" k4="0" in="SourceGraphic" result="texture"/>
+      <feComposite operator="in" in="texture" in2="SourceGraphic" />
+    </filter>
+
+    <!-- 3. Wash/Bleed Effect -->
+    <filter id="wash" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feComposite operator="over" in="SourceGraphic" in2="blur" opacity="0.8"/>
+    </filter>
+
+    <!-- GRADIENTS -->
+    <linearGradient id="grad-sky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#E0F7FA" />
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0" />
     </linearGradient>
+    
+    <linearGradient id="grad-ground" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0" />
+      <stop offset="100%" stop-color="#F1F8E9" />
+    </linearGradient>
+
+    <!-- MARKERS -->
+    <marker id="arrow-pencil" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 L4,6 Z" fill="#546E7A" filter="url(#watercolor-edge)"/>
+    </marker>
   </defs>
 
-  <!-- Background -->
-  <rect width="100%" height="100%" fill="url(#grid)" />
-
-  <!-- Title Block -->
-  <g transform="translate(40, 40)">
-    <rect x="0" y="0" width="320" height="60" fill="none" stroke="#f472b6" stroke-width="2"/>
-    <text x="15" y="38" fill="#f472b6" font-size="24" font-weight="bold" filter="url(#glow-red)">HUMAN-IN-THE-LOOP</text>
-    <text x="330" y="38" fill="#94a3b8" font-size="14">DECISION PROTOCOL</text>
-  </g>
-
-  <!-- ======================== MAIN COMPONENTS ======================== -->
-
-  <!-- 1. INPUT STATION (Left) - "Define Task" -->
-  <g transform="translate(100, 300)">
-    <rect x="0" y="-40" width="120" height="80" rx="4" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
-    <text x="60" y="-15" fill="#38bdf8" font-size="14" font-weight="bold" text-anchor="middle">USER INTENT</text>
-    <text x="60" y="10" fill="#94a3b8" font-size="10" text-anchor="middle">Task Definition</text>
-    
-    <!-- Pulse Effect -->
-    <circle cx="60" cy="0" r="45" fill="none" stroke="#38bdf8" stroke-width="1" opacity="0.5">
-      <animate attributeName="r" values="45; 55; 45" dur="3s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0.5; 0; 0.5" dur="3s" repeatCount="indefinite"/>
-    </circle>
-  </g>
-
-  <!-- 2. AGENT CORE (Center Left) - "Agent Planning" -->
-  <g transform="translate(350, 300)">
-    <circle cx="0" cy="0" r="50" fill="#1e293b" stroke="#38bdf8" stroke-width="2" filter="url(#glow-blue)"/>
-    <text x="0" y="5" fill="#38bdf8" font-size="14" font-weight="bold" text-anchor="middle">AGENT</text>
-    
-    <!-- Spinning Ring -->
-    <path d="M -60 0 A 60 60 0 0 1 60 0" fill="none" stroke="#38bdf8" stroke-width="1" stroke-dasharray="10,10">
-      <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="10s" repeatCount="indefinite"/>
-    </path>
-    <path d="M -60 0 A 60 60 0 0 0 60 0" fill="none" stroke="#38bdf8" stroke-width="1" stroke-dasharray="10,10" opacity="0.5">
-      <animateTransform attributeName="transform" type="rotate" from="360 0 0" to="0 0 0" dur="10s" repeatCount="indefinite"/>
-    </path>
-  </g>
-
-  <!-- 3. RISK ANALYZER (Splitter) -->
-  <g transform="translate(550, 300)">
-    <polygon points="0,-30 30,0 0,30 -30,0" fill="#1e293b" stroke="#94a3b8" stroke-width="2"/>
-    <text x="0" y="5" fill="#94a3b8" font-size="10" text-anchor="middle">RISK?</text>
-  </g>
-
-  <!-- 4. HUMAN GATE (Top Center) - "Approval/Review" -->
-  <g transform="translate(750, 150)">
-    <!-- Gate Box -->
-    <rect x="-80" y="-40" width="160" height="80" rx="4" fill="#1e293b" stroke="#f472b6" stroke-width="2" filter="url(#glow-red)"/>
-    <text x="0" y="-15" fill="#f472b6" font-size="16" font-weight="bold" text-anchor="middle">HUMAN GATE</text>
-    <text x="0" y="10" fill="#f472b6" font-size="10" text-anchor="middle">Review / Modify</text>
-    
-    <!-- Warning Light Blink -->
-    <circle cx="-65" cy="-25" r="4" fill="#f472b6">
-      <animate attributeName="opacity" values="1;0.2;1" dur="1s" repeatCount="indefinite"/>
-    </circle>
-  </g>
-
-  <!-- 5. OUTPUT (Right) - "Production" -->
-  <g transform="translate(1050, 300)">
-    <rect x="-50" y="-40" width="100" height="80" fill="#1e293b" stroke="#4ade80" stroke-width="2" filter="url(#glow-green)"/>
-    <text x="0" y="5" fill="#4ade80" font-size="14" font-weight="bold" text-anchor="middle">RESULT</text>
-  </g>
-
-  <!-- ======================== PATHS & CONNECTIONS ======================== -->
-
-  <!-- Path 1: Input to Agent -->
-  <path d="M 160 300 L 290 300" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <!-- BACKGROUND LAYERS -->
+  <rect width="100%" height="100%" fill="#FDFBF7" filter="url(#paper-texture)" />
   
-  <!-- Path 2: Agent to Risk -->
-  <path d="M 410 300 L 510 300" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <!-- Soft Washes -->
+  <circle cx="200" cy="100" r="300" fill="url(#grad-sky)" opacity="0.6" filter="url(#wash)" />
+  <circle cx="1000" cy="600" r="400" fill="url(#grad-ground)" opacity="0.6" filter="url(#wash)" />
+  
+  <!-- DECORATIVE ELEMENTS (Bg) -->
+  <!-- Trees/Bushes -->
+  <g filter="url(#watercolor-edge)" opacity="0.8">
+    <path d="M 100 600 Q 120 500 140 600 Z" fill="#C5E1A5" />
+    <path d="M 130 620 Q 150 530 170 620 Z" fill="#AED581" />
+    <path d="M 850 450 Q 880 400 910 450 Z" fill="#C5E1A5" />
+    <circle cx="900" cy="460" r="20" fill="#AED581" opacity="0.7" />
+  </g>
 
-  <!-- Path 3: Risk -> Low Risk (Direct to Output) -->
-  <path d="M 580 300 L 990 300" stroke="#4ade80" stroke-width="2" stroke-dasharray="5,5" opacity="0.3"/>
-  <text x="750" y="320" fill="#4ade80" font-size="10" opacity="0.6" text-anchor="middle">LOW RISK (AUTO)</text>
+  <!-- PATHS -->
+  <!-- 1. Main Road (High Risk Path) -->
+  <path id="road-base" d="M 150 550 C 450 550, 450 300, 750 300 C 950 300, 950 150, 1050 150" 
+        fill="none" stroke="#EFEBE9" stroke-width="60" stroke-linecap="round" filter="url(#watercolor-edge)"/>
+  
+  <!-- Dashed Center Line -->
+  <path id="road-line" d="M 150 550 C 450 550, 450 300, 750 300 C 950 300, 950 150, 1050 150" 
+        fill="none" stroke="#D7CCC8" stroke-width="4" stroke-dasharray="15,10" filter="url(#watercolor-edge)" opacity="0.6"/>
 
-  <!-- Path 4: Risk -> High Risk (To Human Gate) -->
-  <path d="M 550 270 L 550 150 L 660 150" stroke="#f87171" stroke-width="2" fill="none" marker-end="url(#arrow-red)"/>
-  <text x="560" y="210" fill="#f87171" font-size="10" transform="rotate(-90 540 210)">HIGH RISK</text>
+  <!-- 2. Low Risk Shortcut Path (New) -->
+  <!-- Starts near Risk Check (450, 425) and curves to Review (1050, 150) -->
+  <path id="path-low-risk" d="M 450 425 Q 700 600 1050 180" 
+        fill="none" stroke="#C8E6C9" stroke-width="20" stroke-linecap="round" filter="url(#watercolor-edge)" opacity="0.6"/>
+  <path id="path-low-risk-line" d="M 450 425 Q 700 600 1050 180" 
+        fill="none" stroke="#81C784" stroke-width="2" stroke-dasharray="8,8" filter="url(#watercolor-edge)"/>
 
-  <!-- Path 5: Human -> Approved (To Output) -->
-  <path d="M 830 150 L 1050 150 L 1050 250" stroke="#4ade80" stroke-width="2" fill="none" marker-end="url(#arrow-green)"/>
-  <text x="940" y="140" fill="#4ade80" font-size="10" text-anchor="middle">APPROVED</text>
+  <!-- ==================== STATIONS ==================== -->
 
-  <!-- Path 6: Human -> Rejected/Modified (Context Injection back to Agent) -->
-  <path d="M 750 190 L 750 450 L 350 450 L 350 360" stroke="#f472b6" stroke-width="2" stroke-dasharray="4,4" fill="none" marker-end="url(#arrow-blue)"/>
-  <text x="550" y="440" fill="#f472b6" font-size="10" text-anchor="middle">CONTEXT INJECTION (CORRECTION)</text>
+  <!-- 1. START: DEFINITION -->
+  <g transform="translate(150, 520)">
+    <ellipse cx="0" cy="30" rx="60" ry="20" fill="#FFCCBC" opacity="0.5" filter="url(#wash)"/>
+    <g filter="url(#watercolor-edge)">
+      <path d="M -15 0 L 15 0 L 10 -40 L -10 -40 Z" fill="#FFAB91" />
+      <circle cx="0" cy="-50" r="12" fill="#FFAB91" />
+      <rect x="10" y="-35" width="20" height="25" fill="#FFF" stroke="#90A4AE" stroke-width="1" transform="rotate(-10)"/>
+      <line x1="12" y1="-30" x2="28" y2="-30" stroke="#90A4AE" stroke-width="1" transform="rotate(-10)"/>
+      <line x1="12" y1="-25" x2="28" y2="-25" stroke="#90A4AE" stroke-width="1" transform="rotate(-10)"/>
+    </g>
+    <text x="-80" y="-70" class="label">1. Define Task</text>
+    <text x="-80" y="-50" class="sublabel">"Paving the Road"</text>
+    <animateTransform attributeName="transform" type="translate" values="150 520; 150 515; 150 520" dur="4s" repeatCount="indefinite"/>
+  </g>
 
+  <!-- 2. RISK CHECK (New Station) -->
+  <g transform="translate(450, 400)">
+    <!-- Signpost -->
+    <line x1="0" y1="0" x2="0" y2="-50" stroke="#8D6E63" stroke-width="4" filter="url(#watercolor-edge)"/>
+    <rect x="-35" y="-70" width="70" height="25" fill="#FFE0B2" filter="url(#watercolor-edge)" transform="rotate(-5)"/>
+    <text x="-5" y="-52" text-anchor="middle" class="risk-label" fill="#E65100" transform="rotate(-5)">RISK?</text>
+    
+    <!-- Pulse Animation -->
+    <circle cx="0" cy="-60" r="40" fill="none" stroke="#FF9800" stroke-width="1" opacity="0.0">
+        <animate attributeName="r" values="30; 50" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.5; 0" dur="2s" repeatCount="indefinite"/>
+    </circle>
+  </g>
 
-  <!-- ======================== ANIMATIONS ======================== -->
+  <!-- Labels for Paths -->
+  <text x="600" y="520" class="tiny" fill="#388E3C" transform="rotate(-15)">LOW RISK (AUTO)</text>
+  <text x="500" y="320" class="tiny" fill="#D84315" transform="rotate(-15)">HIGH RISK</text>
+  <text x="500" y="335" class="tiny" fill="#D84315" font-size="10" transform="rotate(-15)">(Needs Approval)</text>
 
-  <!-- Animation 1: Initial Task Packets (Input -> Agent) -->
-  <circle r="4" fill="#38bdf8">
-    <animateMotion path="M 160 300 L 290 300" dur="2s" repeatCount="indefinite"/>
-    <animate attributeName="opacity" values="0;1;1;0" dur="2s" repeatCount="indefinite"/>
-  </circle>
-
-  <!-- Animation 2: Low Risk Flow (Fast Track) -->
-  <circle r="3" fill="#4ade80">
-    <animateMotion path="M 580 300 L 990 300" dur="1.5s" begin="0.5s" repeatCount="indefinite"/>
-  </circle>
-  <circle r="3" fill="#4ade80">
-    <animateMotion path="M 580 300 L 990 300" dur="1.5s" begin="1.2s" repeatCount="indefinite"/>
-  </circle>
-
-  <!-- Animation 3: High Risk Flow (Up to Gate) -->
-  <rect width="8" height="8" fill="#f87171" rx="1">
-    <animateMotion path="M 550 270 L 550 150 L 660 150" dur="2s" repeatCount="indefinite"/>
-  </rect>
-
-  <!-- Animation 4: Approval Flow (Gate -> Output) -->
-  <circle r="4" fill="#4ade80" filter="url(#glow-green)">
-    <animateMotion path="M 830 150 L 1050 150 L 1050 250" dur="2s" begin="1s" repeatCount="indefinite"/>
-    <animate attributeName="r" values="4;6;4" dur="1s" repeatCount="indefinite"/>
-  </circle>
-
-  <!-- Animation 5: Correction Loop (Gate -> Context Injection -> Agent) -->
+  <!-- 3. THE JOURNEY: AGENT -->
   <g>
-    <text x="0" y="0" fill="#f472b6" font-size="12" font-weight="bold">!</text>
-    <animateMotion path="M 750 190 L 750 450 L 350 450 L 350 360" dur="3s" begin="2s" repeatCount="indefinite"/>
-    <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="1s" repeatCount="indefinite" additive="sum"/>
-  </g>
-
-  <!-- Animation 6: Context Absorption (at Agent bottom) -->
-  <circle cx="350" cy="360" r="0" fill="none" stroke="#f472b6" stroke-width="2">
-     <animate attributeName="r" values="0; 20" dur="1s" begin="0s" repeatCount="indefinite"/>
-     <animate attributeName="opacity" values="1; 0" dur="1s" begin="0s" repeatCount="indefinite"/>
-  </circle>
-
-  <!-- Decorative: Binary Rain in Background (Subtle) -->
-  <g opacity="0.1" font-size="10" fill="#38bdf8">
-    <text x="1100" y="50">1</text>
-    <text x="1100" y="70">0</text>
-    <text x="1100" y="90">1</text>
-    <animateTransform attributeName="transform" type="translate" values="0 0; 0 20" dur="1s" repeatCount="indefinite"/>
+    <g id="agent-group">
+        <animateMotion dur="8s" repeatCount="indefinite" rotate="auto">
+            <mpath href="#road-line"/>
+        </animateMotion>
+        <g transform="translate(0, -15) rotate(0)" filter="url(#watercolor-edge)">
+            <circle cx="0" cy="0" r="20" fill="#B3E5FC" stroke="#4FC3F7" stroke-width="2"/>
+            <rect x="-15" y="-15" width="30" height="20" rx="5" fill="#E1F5FE"/>
+            <circle cx="-7" cy="-8" r="3" fill="#0277BD"/>
+            <circle cx="7" cy="-8" r="3" fill="#0277BD"/>
+            <circle cx="0" cy="-25" r="4" fill="#FFEB3B"/>
+            <line x1="0" y1="-20" x2="0" y2="-25" stroke="#4FC3F7" stroke-width="2"/>
+            <circle cx="-10" cy="15" r="8" fill="#546E7A"/>
+            <circle cx="10" cy="15" r="8" fill="#546E7A"/>
+        </g>
+    </g>
   </g>
   
-  <!-- Legend -->
-  <g transform="translate(40, 600)">
-     <rect x="0" y="0" width="10" height="10" fill="#38bdf8"/> <text x="20" y="9" fill="#94a3b8" font-size="10">Auto Flow</text>
-     <rect x="100" y="0" width="10" height="10" fill="#f87171"/> <text x="120" y="9" fill="#94a3b8" font-size="10">Needs Approval</text>
-     <rect x="230" y="0" width="10" height="10" fill="#f472b6"/> <text x="250" y="9" fill="#94a3b8" font-size="10">Context Shift</text>
+  <!-- 4. COGNITIVE DEBT -->
+  <g transform="translate(800, 450)">
+    <path d="M 0 0 Q 30 -30 60 0 T 120 0 V 40 H 0 Z" fill="#CFD8DC" opacity="0.6" filter="url(#watercolor-edge)">
+        <animate attributeName="d" values="M 0 0 Q 30 -30 60 0 T 120 0 V 40 H 0 Z; M 0 0 Q 30 -10 60 0 T 120 0 V 40 H 0 Z; M 0 0 Q 30 -30 60 0 T 120 0 V 40 H 0 Z" dur="6s" repeatCount="indefinite"/>
+    </path>
+    <text x="60" y="30" text-anchor="middle" class="sublabel" fill="#78909C" font-style="italic">Cognitive Debt</text>
+    <text x="60" y="50" text-anchor="middle" class="tiny">(Drifting off course)</text>
+    <g transform="translate(0, -20) rotate(-10)">
+        <path d="M 0 0 L 10 -30 L 20 0 Z" fill="#FFCC80" stroke="#FF9800"/>
+        <text x="8" y="-5" font-size="16" fill="#E65100">!</text>
+    </g>
+  </g>
+
+  <!-- 5. CHECKPOINT: APPROVAL -->
+  <g transform="translate(750, 300)">
+    <g filter="url(#watercolor-edge)">
+      <rect x="-40" y="-60" width="10" height="60" fill="#D7CCC8" />
+      <rect x="30" y="-60" width="10" height="60" fill="#D7CCC8" />
+      <rect x="-50" y="-50" width="100" height="15" fill="#A1887F" />
+      <rect x="-45" y="-65" width="90" height="10" fill="#8D6E63" />
+    </g>
+    <g transform="translate(50, -20)" filter="url(#watercolor-edge)">
+      <circle cx="0" cy="-30" r="10" fill="#FFAB91"/>
+      <path d="M -10 0 L 10 0 L 5 -25 L -5 -25 Z" fill="#FFCCBC"/>
+      <circle cx="15" cy="-20" r="8" fill="#A5D6A7">
+        <animate attributeName="fill" values="#A5D6A7;#EF9A9A;#A5D6A7" dur="3s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+    <text x="0" y="-80" text-anchor="middle" class="label">2. Approval</text>
+    <text x="0" y="-65" text-anchor="middle" class="tiny">Gatekeeper</text>
+  </g>
+
+  <!-- 6. DESTINATION: REVIEW -->
+  <g transform="translate(1050, 150)">
+    <g filter="url(#watercolor-edge)">
+      <rect x="-30" y="-10" width="60" height="10" fill="#CFD8DC" />
+      <rect x="-20" y="-20" width="40" height="10" fill="#B0BEC5" />
+      <line x1="20" y1="-20" x2="20" y2="-80" stroke="#546E7A" stroke-width="3"/>
+      <path d="M 20 -80 L 50 -65 L 20 -50 Z" fill="#F48FB1" />
+    </g>
+    <g transform="translate(-10, -30)" filter="url(#watercolor-edge)">
+      <circle cx="0" cy="-20" r="12" fill="#FFAB91"/>
+      <path d="M -12 10 L 12 10 L 8 -15 L -8 -15 Z" fill="#FFCCBC"/>
+      <circle cx="10" cy="-10" r="8" fill="none" stroke="#546E7A" stroke-width="2"/>
+      <line x1="16" y1="-4" x2="22" y2="2" stroke="#546E7A" stroke-width="2"/>
+    </g>
+    <text x="0" y="-100" text-anchor="middle" class="label">3. Review</text>
+    <text x="0" y="-85" text-anchor="middle" class="sublabel">Acceptance</text>
+  </g>
+
+  <!-- FEEDBACK LOOP (Correction) -->
+  <path id="feedback-path" d="M 1050 120 Q 800 50 600 150 T 200 450" fill="none" stroke="#90A4AE" stroke-width="2" stroke-dasharray="5,5" opacity="0.5"/>
+  <g>
+    <animateMotion dur="5s" repeatCount="indefinite" rotate="auto" path="M 1050 120 Q 800 50 600 150 T 200 450"/>
+    <path d="M 0 0 L -15 5 L -10 0 L -15 -5 Z" fill="#90A4AE" />
+  </g>
+  <text x="450" y="110" class="tiny" fill="#546E7A" transform="rotate(-10)">CONTEXT INJECTION</text>
+  <text x="480" y="125" class="tiny" fill="#78909C" transform="rotate(-10)">(Correction Loop)</text>
+
+
+  <!-- ==================== NEW ANIMATIONS (PARTICLES) ==================== -->
+  
+  <!-- 1. Input Flow Particles (Start -> Risk) -->
+  <!-- Using keyPoints to stop at the risk check (approx 35% of the path) -->
+  <circle r="3" fill="#B3E5FC" opacity="0.8">
+    <animateMotion dur="4s" repeatCount="indefinite" keyPoints="0;0.35" keyTimes="0;1" calcMode="linear">
+      <mpath href="#road-line"/>
+    </animateMotion>
+    <animate attributeName="opacity" values="0;1;0" dur="4s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- 2. Low Risk Particles (Fast Green) -->
+  <circle r="3" fill="#81C784">
+    <animateMotion dur="2s" repeatCount="indefinite" begin="0.5s">
+      <mpath href="#path-low-risk-line"/>
+    </animateMotion>
+  </circle>
+  <circle r="3" fill="#81C784">
+    <animateMotion dur="2s" repeatCount="indefinite" begin="1.5s">
+      <mpath href="#path-low-risk-line"/>
+    </animateMotion>
+  </circle>
+
+  <!-- 3. High Risk Particles (Slow Orange) -->
+  <rect width="6" height="6" fill="#FF8A65" rx="1">
+     <animateMotion dur="5s" repeatCount="indefinite" keyPoints="0.35;0.65" keyTimes="0;1" calcMode="linear">
+      <mpath href="#road-line"/>
+    </animateMotion>
+  </rect>
+  
+  <!-- 4. Approved Particles (Green after Gate) -->
+  <circle r="4" fill="#81C784">
+     <animateMotion dur="4s" repeatCount="indefinite" keyPoints="0.65;1" keyTimes="0;1" calcMode="linear">
+      <mpath href="#road-line"/>
+    </animateMotion>
+  </circle>
+
+  <!-- 5. Correction Packets (Back flow) -->
+  <circle r="2" fill="#F06292">
+    <animateMotion dur="5s" repeatCount="indefinite" begin="2.5s" path="M 1050 120 Q 800 50 600 150 T 200 450"/>
+  </circle>
+
+  <!-- LEGEND -->
+  <g transform="translate(50, 600)">
+     <rect width="280" height="50" fill="#FFF" opacity="0.7" rx="5" filter="url(#watercolor-edge)"/>
+     <text x="10" y="20" class="tiny" font-weight="bold" fill="#37474F">LEGEND</text>
+     
+     <g transform="translate(10, 35)">
+        <circle cx="0" cy="0" r="4" fill="#81C784"/>
+        <text x="10" y="4" class="tiny" font-size="12">Auto Flow</text>
+     </g>
+     <g transform="translate(100, 35)">
+        <rect x="-4" y="-4" width="8" height="8" fill="#FF8A65" rx="1"/>
+        <text x="10" y="4" class="tiny" font-size="12">Needs Approval</text>
+     </g>
+     <g transform="translate(210, 35)">
+        <path d="M -4 0 L 4 0" stroke="#90A4AE" stroke-width="2" stroke-dasharray="2,2"/>
+        <text x="10" y="4" class="tiny" font-size="12">Ctx Shift</text>
+     </g>
+  </g>
+
+  <!-- TITLE -->
+  <g transform="translate(50, 50)">
+    <rect x="-10" y="-30" width="300" height="50" fill="#FFF" opacity="0.8" rx="10" filter="url(#watercolor-edge)"/>
+    <text x="0" y="0" font-family="'Patrick Hand', cursive" font-size="32" fill="#E91E63">Human-in-the-Loop</text>
+    <text x="0" y="25" class="tiny">Paving the road for agents</text>
+  </g>
+
+  <!-- Floating Clouds (Animation) -->
+  <g opacity="0.8" filter="url(#wash)">
+    <path d="M 100 100 Q 120 80 140 100 T 180 100 T 200 110 H 100 Z" fill="#FFF">
+        <animateTransform attributeName="transform" type="translate" from="0 0" to="100 0" dur="20s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 500 50 Q 530 20 560 50 T 620 50 H 500 Z" fill="#FFF">
+        <animateTransform attributeName="transform" type="translate" from="0 0" to="-50 0" dur="25s" repeatCount="indefinite"/>
+    </path>
   </g>
 
 </svg>

@@ -1,169 +1,231 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" font-family="'JetBrains Mono', Consolas, monospace" style="background-color: #0f172a;">
-  <!-- Background Grid & Defs -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" style="background-color: #ffffff;">
+  <!--
+    STYLE: Bold Graphic / Pop Art
+    LAYOUT: Hub & Spoke
+    CONCEPT: Agentic Triangle (User -> Agent <-> LLM)
+  -->
+
   <defs>
-    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="1"/>
+    <!-- Halftone Pattern -->
+    <pattern id="halftone" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+      <circle cx="5" cy="5" r="2" fill="#000000" opacity="0.15"/>
     </pattern>
-    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L0,6 L9,3 z" fill="#38bdf8" />
+    
+    <!-- Stripe Pattern -->
+    <pattern id="stripes" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect x="0" y="0" width="10" height="20" fill="#000000" opacity="0.1"/>
+    </pattern>
+
+    <!-- Comic Arrow Marker -->
+    <marker id="arrow-head" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <path d="M 0 0 L 6 3 L 0 6 Z" fill="#000000"/>
     </marker>
-    <marker id="arrow-pink" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L0,6 L9,3 z" fill="#d946ef" />
-    </marker>
-    <marker id="arrow-green" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L0,6 L9,3 z" fill="#4ade80" />
-    </marker>
-    <filter id="glow">
-      <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+
+    <!-- Glow filter for data packets -->
+    <filter id="pop-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
       <feMerge>
-        <feMergeNode in="coloredBlur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-    <filter id="glow-strong">
-      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-      <feMerge>
-        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="blur"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
   </defs>
-  <rect width="100%" height="100%" fill="url(#grid)" />
 
-  <!-- Title Block -->
-  <g transform="translate(40, 40)">
-    <rect x="0" y="0" width="320" height="60" fill="none" stroke="#38bdf8" stroke-width="2"/>
-    <text x="15" y="38" fill="#38bdf8" font-size="24" font-weight="bold" filter="url(#glow)">AGENTIC TRIANGLE</text>
-    <text x="15" y="80" fill="#94a3b8" font-size="14">ORCHESTRATION PROTOCOL v2.0</text>
-  </g>
-
-  <!-- Status Panel -->
-  <g transform="translate(950, 40)">
-     <text x="0" y="0" fill="#94a3b8" font-size="12" text-anchor="end">SYSTEM: ONLINE</text>
-     <text x="0" y="20" fill="#94a3b8" font-size="12" text-anchor="end">LOOP: ACTIVE</text>
-     <circle cx="15" cy="-5" r="4" fill="#4ade80">
-        <animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite"/>
-     </circle>
-  </g>
-
-  <!-- CONNECTIONS (PIPES) - Layered behind nodes -->
+  <!-- Background Texture -->
+  <rect width="100%" height="100%" fill="url(#halftone)"/>
   
-  <!-- 1. User -> Agent (Bottom Horizontal) -->
-  <g>
-    <path d="M 350 510 L 850 510" stroke="#4ade80" stroke-width="2" stroke-dasharray="10,5" opacity="0.4" />
-    <!-- Moving Packet: Intent -->
-    <rect x="-10" y="-10" width="20" height="20" fill="#4ade80" filter="url(#glow)">
-        <animateMotion path="M 350 510 L 850 510" dur="2s" repeatCount="indefinite" />
-    </rect>
-    <text x="600" y="540" fill="#4ade80" font-size="14" text-anchor="middle" opacity="0.8">1. Intent / Task</text>
+  <!-- Dynamic Background Splashes (Comic Action Shapes) -->
+  <path d="M 600 337.5 L 620 200 L 700 300 L 850 250 L 750 350 L 900 400 L 750 450 L 800 600 L 650 500 L 550 600 L 500 450 L 350 500 L 450 400 L 300 300 L 450 300 L 420 150 Z" 
+        fill="#ffcc00" opacity="0.1" transform="scale(1.2) translate(-100 -50)"/>
+
+  <!-- Title Block (Top Left) -->
+  <g transform="translate(50, 50)">
+    <!-- Hard Shadow -->
+    <rect x="10" y="10" width="420" height="80" fill="#000000"/>
+    <!-- Box -->
+    <rect x="0" y="0" width="420" height="80" fill="#ffffff" stroke="#000000" stroke-width="6"/>
+    <!-- Text -->
+    <text x="20" y="40" font-family="Arial, sans-serif" font-weight="900" font-size="36" fill="#000000">AGENTIC TRIANGLE</text>
+    <text x="20" y="65" font-family="Courier New, monospace" font-weight="bold" font-size="14" fill="#666666">ORCHESTRATION PROTOCOL v2.0</text>
   </g>
 
-  <!-- 2. Agent -> LLM (Right Diagonal Up) -->
-  <g>
-    <path d="M 950 450 L 950 300 L 700 160" stroke="#38bdf8" stroke-width="2" stroke-dasharray="10,5" opacity="0.4" fill="none" />
-    <!-- Moving Packet: Context -->
-    <rect x="-10" y="-10" width="20" height="20" fill="#38bdf8" filter="url(#glow)">
-        <animateMotion path="M 950 450 L 950 300 L 700 160" dur="2s" begin="0.5s" repeatCount="indefinite" />
-    </rect>
-    <text x="910" y="300" fill="#38bdf8" font-size="14" text-anchor="start" opacity="0.8">2. Context + History</text>
-  </g>
-
-  <!-- 3. LLM -> Agent (Right Diagonal Down) -->
-  <g>
-    <path d="M 680 180 L 830 260 L 830 450" stroke="#d946ef" stroke-width="2" stroke-dasharray="10,5" opacity="0.4" fill="none" />
-    <!-- Moving Packet: Tool Call / Decision -->
-    <circle r="8" fill="#d946ef" filter="url(#glow)">
-        <animateMotion path="M 680 180 L 830 260 L 830 450" dur="2s" begin="1s" repeatCount="indefinite" />
+  <!-- Status Stamp (Top Right) -->
+  <g transform="translate(920, 50) rotate(-5)">
+    <rect x="0" y="0" width="230" height="60" fill="#000000"/>
+    <text x="115" y="25" font-family="Courier New, monospace" font-weight="bold" font-size="16" fill="#22c55e" text-anchor="middle">SYSTEM: ONLINE</text>
+    <!-- Active loop indicator with blinking dot -->
+    <circle cx="30" cy="45" r="5" fill="#22c55e">
+      <animate attributeName="opacity" values="1;0.2;1" dur="1.5s" repeatCount="indefinite"/>
     </circle>
-    <text x="760" y="240" fill="#d946ef" font-size="14" text-anchor="end" opacity="0.8">3. Tool Calls / Reasoning</text>
+    <text x="115" y="50" font-family="Courier New, monospace" font-weight="bold" font-size="14" fill="#22c55e" text-anchor="middle">LOOP: ACTIVE</text>
   </g>
 
-  <!-- 4. Agent Internal Loop (Tool Execution) -->
-  <g transform="translate(1080, 510)">
-      <path d="M 0 0 C 40 -40, 40 40, 0 0" stroke="#38bdf8" stroke-width="2" fill="none" opacity="0.6" />
-      <circle r="4" fill="#ffffff">
-          <animateMotion path="M 0 0 C 40 -40, 40 40, 0 0" dur="1s" repeatCount="indefinite" />
-      </circle>
-      <text x="30" y="50" fill="#bae6fd" font-size="12" text-anchor="middle">Execute</text>
+
+  <!-- CONNECTIONS (The Spokes) -->
+  
+  <!-- Spoke 1: User -> Agent -->
+  <g>
+    <!-- Line -->
+    <path d="M 250 337.5 L 500 337.5" stroke="#000000" stroke-width="8" fill="none" marker-end="url(#arrow-head)"/>
+    <!-- Animated Dash -->
+    <line x1="250" y1="337.5" x2="500" y2="337.5" stroke="#ffffff" stroke-width="4" stroke-dasharray="20,20" opacity="0.5">
+       <animate attributeName="stroke-dashoffset" from="40" to="0" dur="1s" repeatCount="indefinite"/>
+    </line>
+    <!-- Flying Data Packet -->
+    <rect x="-8" y="-8" width="16" height="16" fill="#3b82f6" stroke="#000000" stroke-width="2" filter="url(#pop-glow)">
+      <animateMotion path="M 250 337.5 L 500 337.5" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.8;1" dur="2s" repeatCount="indefinite"/>
+    </rect>
+    <!-- Label Box -->
+    <g transform="translate(320, 290)">
+      <rect x="0" y="0" width="110" height="30" fill="#ffffff" stroke="#000000" stroke-width="3"/>
+      <text x="55" y="22" font-family="Arial, sans-serif" font-weight="bold" font-size="16" text-anchor="middle">INTENT</text>
+    </g>
+  </g>
+
+  <!-- Spoke 2: Agent <-> LLM -->
+  <g>
+    <!-- Context (Agent -> LLM) -->
+    <path d="M 700 337.5 L 950 260" stroke="#000000" stroke-width="6" fill="none" marker-end="url(#arrow-head)"/>
+    <!-- Reasoning (LLM -> Agent) -->
+    <path d="M 950 290 L 700 360" stroke="#000000" stroke-width="6" fill="none" marker-end="url(#arrow-head)"/>
+    
+    <!-- Flying Packet: Context (Agent -> LLM) -->
+    <circle r="7" fill="#ef4444" stroke="#000000" stroke-width="2" filter="url(#pop-glow)">
+      <animateMotion path="M 700 337.5 L 950 260" dur="2s" begin="0.3s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.8;1" dur="2s" begin="0.3s" repeatCount="indefinite"/>
+    </circle>
+    <!-- Flying Packet: Reasoning (LLM -> Agent) -->
+    <circle r="7" fill="#ffcc00" stroke="#000000" stroke-width="2" filter="url(#pop-glow)">
+      <animateMotion path="M 950 290 L 700 360" dur="2s" begin="1.3s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.8;1" dur="2s" begin="1.3s" repeatCount="indefinite"/>
+    </circle>
+
+    <!-- Labels rotated along path approx -->
+    <g transform="translate(800, 270) rotate(-15)">
+       <rect x="-40" y="-15" width="80" height="30" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+       <text x="0" y="5" font-family="Arial, sans-serif" font-weight="bold" font-size="12" text-anchor="middle">CONTEXT</text>
+    </g>
+    <g transform="translate(800, 350) rotate(15)">
+       <rect x="-50" y="-15" width="100" height="30" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+       <text x="0" y="5" font-family="Arial, sans-serif" font-weight="bold" font-size="12" text-anchor="middle">REASONING</text>
+    </g>
+  </g>
+
+  <!-- Spoke 3: Agent -> Tools (Bottom) -->
+  <g>
+    <path d="M 600 440 L 600 550" stroke="#000000" stroke-width="8" fill="none" marker-end="url(#arrow-head)"/>
+     <line x1="600" y1="440" x2="600" y2="550" stroke="#ffffff" stroke-width="4" stroke-dasharray="20,20" opacity="0.5">
+       <animate attributeName="stroke-dashoffset" from="40" to="0" dur="0.5s" repeatCount="indefinite"/>
+    </line>
+    <!-- Flying Data Packet -->
+    <rect x="-6" y="-6" width="12" height="12" fill="#22c55e" stroke="#000000" stroke-width="2" transform="rotate(45)" filter="url(#pop-glow)">
+      <animateMotion path="M 600 440 L 600 550" dur="1.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.7;1" dur="1.5s" repeatCount="indefinite"/>
+    </rect>
+    <g transform="translate(545, 480)">
+        <rect x="0" y="0" width="110" height="30" fill="#ffffff" stroke="#000000" stroke-width="3"/>
+        <text x="55" y="22" font-family="Arial, sans-serif" font-weight="bold" font-size="16" text-anchor="middle">ACTION</text>
+    </g>
   </g>
 
 
   <!-- NODES -->
 
-  <!-- NODE 1: USER (Bottom Left) -->
-  <g transform="translate(150, 450)">
-    <!-- Node Body -->
-    <path d="M 0 20 L 20 0 L 180 0 L 200 20 L 200 100 L 180 120 L 20 120 L 0 100 Z" 
-          fill="#0f172a" stroke="#4ade80" stroke-width="2" />
-    
-    <!-- Icon/Graphic -->
-    <rect x="30" y="40" width="140" height="40" rx="4" fill="#1e293b" stroke="none"/>
-    <text x="40" y="65" fill="#4ade80" font-size="14" font-family="monospace">&gt; intent_</text>
-    <animate attributeName="opacity" values="1;0.5;1" dur="3s" repeatCount="indefinite" />
-    
-    <!-- Label -->
-    <text x="100" y="-15" fill="#4ade80" font-size="18" font-weight="bold" text-anchor="middle" filter="url(#glow)">USER</text>
-    <text x="100" y="145" fill="#86efac" font-size="14" text-anchor="middle">Provides Intent</text>
-  </g>
-
-  <!-- NODE 2: LLM (Top Center) -->
-  <g transform="translate(500, 100)">
-    <!-- Node Body -->
-    <path d="M 0 20 L 20 0 L 180 0 L 200 20 L 200 100 L 180 120 L 20 120 L 0 100 Z" 
-          fill="#0f172a" stroke="#d946ef" stroke-width="2" />
-    
-    <!-- Brain/Chip Graphic -->
-    <rect x="40" y="30" width="120" height="60" fill="none" stroke="#d946ef" stroke-width="1" opacity="0.5"/>
-    <line x1="60" y1="30" x2="60" y2="90" stroke="#d946ef" opacity="0.3"/>
-    <line x1="80" y1="30" x2="80" y2="90" stroke="#d946ef" opacity="0.3"/>
-    <line x1="100" y1="30" x2="100" y2="90" stroke="#d946ef" opacity="0.3"/>
-    <line x1="120" y1="30" x2="120" y2="90" stroke="#d946ef" opacity="0.3"/>
-    <line x1="140" y1="30" x2="140" y2="90" stroke="#d946ef" opacity="0.3"/>
-    
-    <!-- Pulse Animation on Chip -->
-    <rect x="40" y="30" width="120" height="2" fill="#d946ef">
-        <animate attributeName="y" values="30;90;30" dur="2s" repeatCount="indefinite" />
-        <animate attributeName="opacity" values="0.8;0.2;0.8" dur="2s" repeatCount="indefinite" />
+  <!-- NODE 1: USER (Left) -->
+  <g transform="translate(100, 262.5)">
+    <!-- Shadow -->
+    <path d="M 10 10 L 160 10 L 160 160 L 10 160 Z" fill="#000000"/>
+    <!-- Shape: Comic Panel Box -->
+    <rect x="0" y="0" width="150" height="150" fill="#3b82f6" stroke="#000000" stroke-width="6"/>
+    <!-- Icon: Simple Face Silhouette -->
+    <circle cx="75" cy="60" r="25" fill="#ffffff"/>
+    <path d="M 35 110 Q 75 60 115 110" fill="#ffffff"/>
+    <!-- Blinking cursor (terminal vibe) -->
+    <rect x="60" y="100" width="2" height="14" fill="#ffffff">
+      <animate attributeName="opacity" values="1;0;1" dur="1s" repeatCount="indefinite"/>
     </rect>
-
     <!-- Label -->
-    <text x="100" y="-15" fill="#d946ef" font-size="18" font-weight="bold" text-anchor="middle" filter="url(#glow)">LLM API</text>
-    <text x="100" y="145" fill="#f0abfc" font-size="14" text-anchor="middle">Reasoning Engine</text>
+    <text x="75" y="135" font-family="Arial, sans-serif" font-weight="900" font-size="24" fill="#ffffff" stroke="#000000" stroke-width="2" text-anchor="middle">USER</text>
+    <!-- Role description -->
+    <text x="75" y="170" font-family="Arial, sans-serif" font-weight="bold" font-size="11" fill="#000000" text-anchor="middle">Provides Intent</text>
   </g>
 
-  <!-- NODE 3: AGENT (Bottom Right) -->
-  <g transform="translate(850, 450)">
-    <!-- Node Body -->
-    <path d="M 0 20 L 20 0 L 180 0 L 200 20 L 200 100 L 180 120 L 20 120 L 0 100 Z" 
-          fill="#0f172a" stroke="#38bdf8" stroke-width="2" />
-    
-    <!-- Gears/Runtime Graphic -->
-    <circle cx="60" cy="60" r="25" stroke="#38bdf8" stroke-width="2" fill="none" stroke-dasharray="8,4">
-       <animateTransform attributeName="transform" type="rotate" from="0 60 60" to="360 60 60" dur="10s" repeatCount="indefinite" />
-    </circle>
-    <circle cx="140" cy="60" r="15" stroke="#38bdf8" stroke-width="2" fill="none" stroke-dasharray="6,3">
-       <animateTransform attributeName="transform" type="rotate" from="360 140 60" to="0 140 60" dur="5s" repeatCount="indefinite" />
-    </circle>
-    <rect x="90" y="55" width="20" height="10" fill="#38bdf8">
-        <animate attributeName="width" values="0;20;0" dur="1s" repeatCount="indefinite" />
+  <!-- NODE 2: LLM (Right) -->
+  <g transform="translate(950, 200)">
+    <!-- Shadow -->
+    <path d="M 10 10 L 160 10 L 160 160 L 10 160 Z" fill="#000000"/>
+    <!-- Shape -->
+    <rect x="0" y="0" width="150" height="150" fill="#ef4444" stroke="#000000" stroke-width="6"/>
+    <!-- Pattern Overlay -->
+    <rect x="6" y="6" width="138" height="138" fill="url(#stripes)" opacity="0.2"/>
+    <!-- Icon: Lightning Bolt -->
+    <path d="M 85 30 L 55 80 L 85 80 L 65 130 L 105 70 L 75 70 L 95 30 Z" fill="#ffcc00" stroke="#000000" stroke-width="3">
+       <animate attributeName="fill" values="#ffcc00;#ffffff;#ffcc00" dur="0.5s" repeatCount="indefinite"/>
+    </path>
+    <!-- Scan Line (thinking pulse) -->
+    <rect x="6" y="6" width="138" height="3" fill="#ffffff" opacity="0.3">
+      <animate attributeName="y" values="6;138;6" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.5;0.1;0.5" dur="2s" repeatCount="indefinite"/>
     </rect>
-
     <!-- Label -->
-    <text x="100" y="-15" fill="#38bdf8" font-size="18" font-weight="bold" text-anchor="middle" filter="url(#glow)">AGENT RUNTIME</text>
-    <text x="100" y="145" fill="#bae6fd" font-size="14" text-anchor="middle">"Glue" Code &amp; Tools</text>
+    <text x="75" y="135" font-family="Arial, sans-serif" font-weight="900" font-size="24" fill="#ffffff" stroke="#000000" stroke-width="2" text-anchor="middle">LLM</text>
+    <!-- Role description -->
+    <text x="75" y="170" font-family="Arial, sans-serif" font-weight="bold" font-size="11" fill="#000000" text-anchor="middle">Reasoning Engine</text>
   </g>
 
-  <!-- Decoration: Data Stream Particles -->
-  <g opacity="0.3">
-      <circle r="2" fill="#fff">
-          <animateMotion path="M 350 510 L 850 510" dur="3s" begin="0.2s" repeatCount="indefinite" />
-      </circle>
-      <circle r="2" fill="#fff">
-          <animateMotion path="M 950 450 L 950 300 L 700 160" dur="2.5s" begin="0.7s" repeatCount="indefinite" />
-      </circle>
-      <circle r="2" fill="#fff">
-          <animateMotion path="M 680 180 L 830 260 L 830 450" dur="2.5s" begin="1.2s" repeatCount="indefinite" />
-      </circle>
+  <!-- NODE 3: TOOLS (Bottom) -->
+  <g transform="translate(525, 550)">
+    <!-- Shadow -->
+    <rect x="10" y="10" width="150" height="80" fill="#000000"/>
+    <!-- Shape -->
+    <rect x="0" y="0" width="150" height="80" fill="#22c55e" stroke="#000000" stroke-width="6"/>
+    <!-- Animated gear teeth -->
+    <path d="M 20 40 L 130 40" stroke="#000000" stroke-width="15" stroke-dasharray="15,10">
+      <animate attributeName="stroke-dashoffset" from="0" to="25" dur="2s" repeatCount="indefinite"/>
+    </path>
+    <!-- Execution spinner -->
+    <g transform="translate(75, 40)">
+      <rect x="-3" y="-18" width="6" height="12" fill="#ffffff" opacity="0.6">
+        <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="1.5s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+    <!-- Label -->
+    <text x="75" y="55" font-family="Arial, sans-serif" font-weight="900" font-size="24" fill="#ffffff" stroke="#000000" stroke-width="2" text-anchor="middle">TOOLS</text>
   </g>
+
+
+  <!-- CENTRAL HUB: AGENT -->
+  <g transform="translate(600, 337.5)">
+    <!-- Pulse Animation Group -->
+    <g>
+      <animateTransform attributeName="transform" type="scale" values="1;1.05;1" dur="2s" repeatCount="indefinite"/>
+      
+      <!-- Hard Shadow -->
+      <circle cx="10" cy="10" r="100" fill="#000000"/>
+      
+      <!-- Main Circle -->
+      <circle cx="0" cy="0" r="100" fill="#ffcc00" stroke="#000000" stroke-width="8"/>
+      
+      <!-- Inner Design: The "Brain" or "Glue" -->
+      <circle cx="0" cy="0" r="80" fill="none" stroke="#000000" stroke-width="2" stroke-dasharray="5,5"/>
+      <text x="0" y="15" font-family="Arial, sans-serif" font-weight="900" font-size="48" fill="#000000" text-anchor="middle">AGENT</text>
+      <text x="0" y="40" font-family="Arial, sans-serif" font-weight="bold" font-size="12" fill="#000000" text-anchor="middle">"Glue" Code &amp; Tools</text>
+    </g>
+  </g>
+  
+  <!-- Comic FX: Action Lines around Agent -->
+  <g transform="translate(600, 337.5)">
+     <path d="M -130 -130 L -110 -110 M 130 -130 L 110 -110 M -130 130 L -110 110 M 130 130 L 110 110" stroke="#000000" stroke-width="6" stroke-linecap="round"/>
+  </g>
+
+  <!-- Recursive Loop (bottom path: Output → Input for next turn) -->
+  <path d="M 700 380 Q 750 420 750 460 L 750 620 Q 750 640 730 640 L 200 640 Q 180 640 180 620 L 180 420 Q 180 400 200 400 L 230 400" 
+        fill="none" stroke="#000000" stroke-width="3" stroke-dasharray="12,6" opacity="0.4"/>
+  <!-- Animated arrow on loop -->
+  <circle r="5" fill="#000000" opacity="0.6">
+    <animateMotion path="M 700 380 Q 750 420 750 460 L 750 620 Q 750 640 730 640 L 200 640 Q 180 640 180 620 L 180 420 Q 180 400 200 400 L 230 400" dur="4s" repeatCount="indefinite"/>
+  </circle>
+  <text x="470" y="655" font-family="Courier New, monospace" font-weight="bold" font-size="12" fill="#000000" text-anchor="middle" opacity="0.5">THE RECURSIVE LOOP — Output becomes next Input</text>
 
 </svg>

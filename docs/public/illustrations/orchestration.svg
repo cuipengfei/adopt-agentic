@@ -1,236 +1,254 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" font-family="'JetBrains Mono', Consolas, monospace" style="background-color: #0f172a;">
-  <!-- Definitions -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif" style="background-color: #F8FAFC;">
+  <!-- Corporate Memphis Palette -->
+  <!-- 
+    Background: #F8FAFC (Slate 50)
+    Cards: #FFFFFF (White)
+    Primary Blue: #4338CA (Indigo 700)
+    Secondary Teal: #14B8A6 (Teal 500)
+    Accent Yellow: #FBBF24 (Amber 400)
+    Accent Pink: #F472B6 (Pink 400)
+    Text Dark: #1E293B (Slate 800)
+    Text Light: #64748B (Slate 500)
+    Stroke Width: 3 (Bold)
+  -->
+
   <defs>
-    <!-- Dark Grid Pattern -->
-    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="1"/>
-    </pattern>
-    
-    <!-- Glow Filter -->
-    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-      <feMerge>
-        <feMergeNode in="coloredBlur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
+    <!-- Soft Shadow for Cards -->
+    <filter id="card-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#64748B" flood-opacity="0.1"/>
     </filter>
+    
+    <!-- Pattern: Polka Dots for texture -->
+    <pattern id="polka-dots" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.5" fill="#E2E8F0"/>
+    </pattern>
 
     <!-- Markers -->
-    <marker id="arrow-cyan" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L0,6 L9,3 z" fill="#22d3ee" />
+    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#4338CA"/>
     </marker>
-    <marker id="arrow-pink" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L0,6 L9,3 z" fill="#f472b6" />
+    <marker id="arrow-pink" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#F472B6"/>
     </marker>
-    <marker id="arrow-green" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L0,6 L9,3 z" fill="#4ade80" />
-    </marker>
-    <marker id="arrow-orange" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L0,6 L9,3 z" fill="#fb923c" />
-    </marker>
-
-    <!-- Gradients -->
-    <linearGradient id="grad-cyan" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.1" />
-      <stop offset="100%" stop-color="#22d3ee" stop-opacity="0.3" />
-    </linearGradient>
   </defs>
 
-  <!-- Background -->
-  <rect width="100%" height="100%" fill="url(#grid)" />
+  <!-- Background Texture -->
+  <rect width="100%" height="100%" fill="url(#polka-dots)"/>
 
-  <!-- Main Title Block -->
+  <!-- ================= HEADER SECTION ================= -->
   <g transform="translate(40, 40)">
-    <rect x="0" y="0" width="340" height="60" fill="none" stroke="#38bdf8" stroke-width="2"/>
-    <rect x="0" y="0" width="10" height="60" fill="#38bdf8" opacity="0.5"/>
-    <text x="25" y="38" fill="#38bdf8" font-size="24" font-weight="bold">ORCHESTRATION PATTERNS</text>
-    <text x="25" y="80" fill="#94a3b8" font-size="14">CONTEXT FLOW &amp; CONTROL LOGIC</text>
+    <!-- Title -->
+    <text x="0" y="40" font-size="36" font-weight="900" fill="#1E293B">ORCHESTRATION</text>
+    <text x="320" y="40" font-size="36" font-weight="300" fill="#64748B">PATTERNS</text>
+    
+    <!-- Subtitle/Tagline -->
+    <text x="5" y="70" font-size="16" fill="#64748B" font-weight="500">CONTEXT FLOW &amp; CONTROL LOGIC DASHBOARD</text>
+
+    <!-- Decorative Squiggles (animated) -->
+    <path d="M 540 25 Q 560 5 580 25 T 620 25" fill="none" stroke="#FBBF24" stroke-width="6" stroke-linecap="round" stroke-dasharray="80" stroke-dashoffset="80">
+      <animate attributeName="stroke-dashoffset" values="80;0;80" dur="4s" repeatCount="indefinite"/>
+    </path>
+    <circle cx="650" cy="25" r="8" fill="#F472B6">
+      <animate attributeName="r" values="8;10;8" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <rect x="680" y="15" width="20" height="20" transform="rotate(15 690 25)" fill="#14B8A6">
+      <animateTransform attributeName="transform" type="rotate" values="15 690 25;25 690 25;15 690 25" dur="3s" repeatCount="indefinite"/>
+    </rect>
   </g>
 
-  <!-- Status Indicators -->
-  <g transform="translate(950, 40)">
-     <text x="0" y="10" fill="#94a3b8" font-size="12" text-anchor="end">SYSTEM: ONLINE</text>
-     <text x="0" y="30" fill="#94a3b8" font-size="12" text-anchor="end">SYNC: ACTIVE</text>
-     <circle cx="15" cy="5" r="4" fill="#4ade80">
-        <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/>
-     </circle>
-  </g>
+  <!-- ================= GRID LAYOUT (2x2) ================= -->
+  
+  <!-- === CARD 1: SEQUENTIAL (Linear Flow) === -->
+  <g transform="translate(40, 110)">
+    <!-- Card Base -->
+    <rect width="540" height="260" rx="16" fill="#FFFFFF" filter="url(#card-shadow)"/>
+    <!-- Top colored bar -->
+    <path d="M 0 16 A 16 16 0 0 1 16 0 L 524 0 A 16 16 0 0 1 540 16 L 540 60 L 0 60 Z" fill="#EEF2FF"/>
+    
+    <!-- Header -->
+    <circle cx="40" cy="30" r="15" fill="#4338CA"/>
+    <text x="40" y="36" font-size="16" font-weight="bold" fill="#FFFFFF" text-anchor="middle">1</text>
+    <text x="70" y="38" font-size="18" font-weight="800" fill="#4338CA">SEQUENTIAL</text>
+    <text x="500" y="38" font-size="14" font-weight="600" fill="#64748B" text-anchor="end">LINEAR FLOW</text>
 
-  <!-- ========================================== -->
-  <!-- MODULE 1: SEQUENTIAL (Linear Flow) -->
-  <!-- Top Left -->
-  <!-- ========================================== -->
-  <g transform="translate(100, 150)">
-    <!-- Frame -->
-    <rect x="0" y="0" width="450" height="200" rx="4" fill="#0f172a" stroke="#1e293b" stroke-width="2"/>
-    <text x="20" y="30" fill="#22d3ee" font-size="16" font-weight="bold" filter="url(#glow)">01 SEQUENTIAL</text>
-    <line x1="20" y1="45" x2="430" y2="45" stroke="#22d3ee" stroke-width="1" opacity="0.3"/>
-
-    <!-- Nodes -->
-    <g transform="translate(50, 100)">
-      <!-- Step 1 -->
-      <rect x="0" y="-25" width="80" height="50" rx="4" fill="#0f172a" stroke="#22d3ee" stroke-width="2"/>
-      <text x="40" y="5" fill="#22d3ee" font-size="12" text-anchor="middle">STEP 1</text>
-      
-      <!-- Step 2 -->
-      <rect x="130" y="-25" width="80" height="50" rx="4" fill="#0f172a" stroke="#22d3ee" stroke-width="2"/>
-      <text x="170" y="5" fill="#22d3ee" font-size="12" text-anchor="middle">STEP 2</text>
-      
-      <!-- Step 3 -->
-      <rect x="260" y="-25" width="80" height="50" rx="4" fill="#0f172a" stroke="#22d3ee" stroke-width="2"/>
-      <text x="300" y="5" fill="#22d3ee" font-size="12" text-anchor="middle">STEP 3</text>
-
-      <!-- Connections -->
-      <line x1="80" y1="0" x2="130" y2="0" stroke="#22d3ee" stroke-width="2"/>
-      <line x1="210" y1="0" x2="260" y2="0" stroke="#22d3ee" stroke-width="2"/>
-
-      <!-- Animation: Pulse moving through -->
-      <circle r="4" fill="#ffffff" filter="url(#glow)">
-        <animateMotion path="M 40 0 L 300 0" dur="3s" repeatCount="indefinite" keyPoints="0;0.33;0.33;0.66;0.66;1" keyTimes="0;0.2;0.4;0.6;0.8;1" calcMode="linear"/>
-      </circle>
-      
-      <!-- Highlight Nodes Animation -->
-      <rect x="0" y="-25" width="80" height="50" rx="4" fill="#22d3ee" opacity="0">
-         <animate attributeName="opacity" values="0;0.3;0;0;0;0" dur="3s" repeatCount="indefinite"/>
-      </rect>
-      <rect x="130" y="-25" width="80" height="50" rx="4" fill="#22d3ee" opacity="0">
-         <animate attributeName="opacity" values="0;0;0.3;0;0;0" dur="3s" repeatCount="indefinite"/>
-      </rect>
-      <rect x="260" y="-25" width="80" height="50" rx="4" fill="#22d3ee" opacity="0">
-         <animate attributeName="opacity" values="0;0;0;0;0.3;0" dur="3s" repeatCount="indefinite"/>
-      </rect>
-    </g>
-    <text x="430" y="180" fill="#94a3b8" font-size="10" text-anchor="end">Linear Accumulation</text>
-  </g>
-
-  <!-- ========================================== -->
-  <!-- MODULE 2: PARALLEL (Split & Merge) -->
-  <!-- Top Right -->
-  <!-- ========================================== -->
-  <g transform="translate(650, 150)">
-    <!-- Frame -->
-    <rect x="0" y="0" width="450" height="200" rx="4" fill="#0f172a" stroke="#1e293b" stroke-width="2"/>
-    <text x="20" y="30" fill="#f472b6" font-size="16" font-weight="bold" filter="url(#glow)">02 PARALLEL</text>
-    <line x1="20" y1="45" x2="430" y2="45" stroke="#f472b6" stroke-width="1" opacity="0.3"/>
-
-    <g transform="translate(50, 100)">
-      <!-- Start Node -->
-      <circle cx="0" cy="0" r="10" fill="#1e293b" stroke="#f472b6" stroke-width="2"/>
-      
-      <!-- Paths -->
-      <path d="M 10 0 L 50 0 L 80 -40 L 250 -40 L 280 0 L 320 0" fill="none" stroke="#f472b6" stroke-width="2" opacity="0.5"/>
-      <path d="M 10 0 L 320 0" fill="none" stroke="#f472b6" stroke-width="2" opacity="0.5"/>
-      <path d="M 10 0 L 50 0 L 80 40 L 250 40 L 280 0 L 320 0" fill="none" stroke="#f472b6" stroke-width="2" opacity="0.5"/>
-      
-      <!-- Sub Agent Blocks -->
-      <rect x="120" y="-55" width="80" height="30" rx="2" fill="#1e293b" stroke="#f472b6" stroke-width="1"/>
-      <text x="160" y="-35" fill="#f472b6" font-size="10" text-anchor="middle">SUB A</text>
-      
-      <rect x="120" y="-15" width="80" height="30" rx="2" fill="#1e293b" stroke="#f472b6" stroke-width="1"/>
-      <text x="160" y="5" fill="#f472b6" font-size="10" text-anchor="middle">SUB B</text>
-      
-      <rect x="120" y="25" width="80" height="30" rx="2" fill="#1e293b" stroke="#f472b6" stroke-width="1"/>
-      <text x="160" y="45" fill="#f472b6" font-size="10" text-anchor="middle">SUB C</text>
-
-      <!-- End Node -->
-      <circle cx="330" cy="0" r="10" fill="#1e293b" stroke="#f472b6" stroke-width="2"/>
-
-      <!-- Animations: Particles splitting and merging -->
-      <circle r="3" fill="#f472b6" filter="url(#glow)">
-        <animateMotion path="M 10 0 L 50 0 L 80 -40 L 250 -40 L 280 0 L 320 0" dur="2s" repeatCount="indefinite" />
-      </circle>
-      <circle r="3" fill="#f472b6" filter="url(#glow)">
-        <animateMotion path="M 10 0 L 320 0" dur="2s" repeatCount="indefinite" />
-      </circle>
-      <circle r="3" fill="#f472b6" filter="url(#glow)">
-        <animateMotion path="M 10 0 L 50 0 L 80 40 L 250 40 L 280 0 L 320 0" dur="2s" repeatCount="indefinite" />
-      </circle>
-    </g>
-    <text x="430" y="180" fill="#94a3b8" font-size="10" text-anchor="end">Split Context / Merge Result</text>
-  </g>
-
-  <!-- ========================================== -->
-  <!-- MODULE 3: PLAN-EXECUTE (Draft to Final) -->
-  <!-- Bottom Left -->
-  <!-- ========================================== -->
-  <g transform="translate(100, 400)">
-    <!-- Frame -->
-    <rect x="0" y="0" width="450" height="200" rx="4" fill="#0f172a" stroke="#1e293b" stroke-width="2"/>
-    <text x="20" y="30" fill="#4ade80" font-size="16" font-weight="bold" filter="url(#glow)">03 PLAN &amp; EXECUTE</text>
-    <line x1="20" y1="45" x2="430" y2="45" stroke="#4ade80" stroke-width="1" opacity="0.3"/>
-
-    <g transform="translate(60, 80)">
-      <!-- Phase 1: Planning (Dotted) -->
-      <path d="M 0 0 L 80 0" stroke="#4ade80" stroke-width="2" stroke-dasharray="4,4"/>
-      <rect x="80" y="-30" width="100" height="60" rx="2" fill="#1e293b" stroke="#4ade80" stroke-width="2" stroke-dasharray="4,4"/>
-      <text x="130" y="5" fill="#4ade80" font-size="12" text-anchor="middle" opacity="0.8">PLAN</text>
-      
-      <!-- Human Checkpoint -->
-      <path d="M 180 0 L 220 0" stroke="#4ade80" stroke-width="2"/>
-      <circle cx="220" cy="0" r="12" fill="#1e293b" stroke="#4ade80" stroke-width="2"/>
-      <text x="220" y="4" fill="#4ade80" font-size="10" text-anchor="middle">✓</text>
-      
-      <!-- Phase 2: Execute (Solid) -->
-      <path d="M 232 0 L 270 0" stroke="#4ade80" stroke-width="2"/>
-      <rect x="270" y="-30" width="100" height="60" rx="2" fill="#1e293b" stroke="#4ade80" stroke-width="2"/>
-      <text x="320" y="5" fill="#4ade80" font-size="12" text-anchor="middle" font-weight="bold">EXECUTE</text>
-
-      <!-- Scanning Animation on Plan -->
-      <line x1="85" y1="-25" x2="175" y2="-25" stroke="#4ade80" stroke-width="2" opacity="0.5">
-         <animate attributeName="y1" values="-25;25;-25" dur="3s" repeatCount="indefinite"/>
-         <animate attributeName="y2" values="-25;25;-25" dur="3s" repeatCount="indefinite"/>
+    <!-- Visualization: Progress Bar / Steps -->
+    <g transform="translate(60, 100)">
+      <!-- Connecting Line -->
+      <line x1="40" y1="50" x2="380" y2="50" stroke="#E2E8F0" stroke-width="8" stroke-linecap="round"/>
+      <line x1="40" y1="50" x2="380" y2="50" stroke="#4338CA" stroke-width="8" stroke-linecap="round" stroke-dasharray="340" stroke-dashoffset="340">
+        <animate attributeName="stroke-dashoffset" values="340;0" dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1"/>
       </line>
-      
-      <!-- Pulse moving to Execute -->
-      <circle r="4" fill="#ffffff" filter="url(#glow)">
-         <animateMotion path="M 190 0 L 370 0" dur="3s" begin="1s" repeatCount="indefinite"/>
-      </circle>
+
+      <!-- Steps -->
+      <g>
+        <circle cx="40" cy="50" r="24" fill="#FFFFFF" stroke="#4338CA" stroke-width="4"/>
+        <text x="40" y="56" font-size="16" font-weight="bold" fill="#4338CA" text-anchor="middle">A</text>
+        <text x="40" y="95" font-size="14" font-weight="600" fill="#1E293B" text-anchor="middle">INPUT</text>
+      </g>
+      <g>
+        <circle cx="210" cy="50" r="24" fill="#FFFFFF" stroke="#4338CA" stroke-width="4"/>
+        <text x="210" y="56" font-size="16" font-weight="bold" fill="#4338CA" text-anchor="middle">B</text>
+        <text x="210" y="95" font-size="14" font-weight="600" fill="#1E293B" text-anchor="middle">PROCESS</text>
+        <!-- Active indicator -->
+        <circle cx="210" cy="50" r="16" fill="#FBBF24" opacity="0.3">
+           <animate attributeName="r" values="16;30;16" dur="2s" repeatCount="indefinite"/>
+           <animate attributeName="opacity" values="0.6;0;0.6" dur="2s" repeatCount="indefinite"/>
+        </circle>
+      </g>
+      <g>
+        <circle cx="380" cy="50" r="24" fill="#FFFFFF" stroke="#4338CA" stroke-width="4"/>
+        <text x="380" y="56" font-size="16" font-weight="bold" fill="#4338CA" text-anchor="middle">C</text>
+        <text x="380" y="95" font-size="14" font-weight="600" fill="#1E293B" text-anchor="middle">OUTPUT</text>
+      </g>
     </g>
-    <text x="430" y="180" fill="#94a3b8" font-size="10" text-anchor="end">Human-in-the-loop Approval</text>
+    
+    <!-- Principle Tag -->
+    <rect x="360" y="210" width="160" height="30" rx="15" fill="#E0E7FF"/>
+    <text x="440" y="230" font-size="12" font-weight="bold" fill="#4338CA" text-anchor="middle">SIMPLE ACCUMULATION</text>
   </g>
 
-  <!-- ========================================== -->
-  <!-- MODULE 4: ITERATIVE (Loop) -->
-  <!-- Bottom Right -->
-  <!-- ========================================== -->
-  <g transform="translate(650, 400)">
-    <!-- Frame -->
-    <rect x="0" y="0" width="450" height="200" rx="4" fill="#0f172a" stroke="#1e293b" stroke-width="2"/>
-    <text x="20" y="30" fill="#fb923c" font-size="16" font-weight="bold" filter="url(#glow)">04 ITERATIVE LOOP</text>
-    <line x1="20" y1="45" x2="430" y2="45" stroke="#fb923c" stroke-width="1" opacity="0.3"/>
+  <!-- === CARD 2: PARALLEL (Split & Merge) === -->
+  <g transform="translate(620, 110)">
+    <!-- Card Base -->
+    <rect width="540" height="260" rx="16" fill="#FFFFFF" filter="url(#card-shadow)"/>
+    <!-- Top colored bar -->
+    <path d="M 0 16 A 16 16 0 0 1 16 0 L 524 0 A 16 16 0 0 1 540 16 L 540 60 L 0 60 Z" fill="#F0FDFA"/>
+    
+    <!-- Header -->
+    <circle cx="40" cy="30" r="15" fill="#14B8A6"/>
+    <text x="40" y="36" font-size="16" font-weight="bold" fill="#FFFFFF" text-anchor="middle">2</text>
+    <text x="70" y="38" font-size="18" font-weight="800" fill="#14B8A6">PARALLEL</text>
+    <text x="500" y="38" font-size="14" font-weight="600" fill="#64748B" text-anchor="end">SPLIT &amp; MERGE</text>
 
-    <g transform="translate(225, 100)">
-      <!-- Central Core -->
-      <circle cx="0" cy="0" r="30" fill="#1e293b" stroke="#fb923c" stroke-width="2"/>
-      <text x="0" y="5" fill="#fb923c" font-size="12" text-anchor="middle" font-weight="bold">EVAL</text>
+    <!-- Visualization: Fork Diagram -->
+    <g transform="translate(60, 90)">
+      <!-- Main Path -->
+      <path d="M 0 60 L 60 60 C 90 60 90 20 120 20 L 300 20 C 330 20 330 60 360 60 L 420 60" fill="none" stroke="#E2E8F0" stroke-width="6" stroke-linecap="round"/>
+      <path d="M 120 60 L 300 60" fill="none" stroke="#E2E8F0" stroke-width="6" stroke-linecap="round"/>
+      <path d="M 60 60 C 90 60 90 100 120 100 L 300 100 C 330 100 330 60 360 60" fill="none" stroke="#E2E8F0" stroke-width="6" stroke-linecap="round"/>
 
-      <!-- Orbit Path -->
-      <circle cx="0" cy="0" r="60" fill="none" stroke="#fb923c" stroke-width="1" stroke-dasharray="5,5" opacity="0.5"/>
+      <!-- Animated Blobs (Agents) -->
+      <!-- Top -->
+      <rect x="180" y="5" width="60" height="30" rx="8" fill="#14B8A6">
+        <animate attributeName="x" values="120;240" dur="2s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1"/>
+      </rect>
+      <!-- Middle -->
+      <rect x="180" y="45" width="60" height="30" rx="8" fill="#14B8A6" opacity="0.7">
+        <animate attributeName="x" values="120;240" dur="2s" begin="0.2s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1"/>
+      </rect>
+      <!-- Bottom -->
+      <rect x="180" y="85" width="60" height="30" rx="8" fill="#14B8A6" opacity="0.4">
+        <animate attributeName="x" values="120;240" dur="2s" begin="0.4s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1"/>
+      </rect>
+
+      <!-- Labels -->
+      <text x="0" y="55" font-size="12" font-weight="bold" fill="#64748B">Main</text>
+      <text x="420" y="55" font-size="12" font-weight="bold" fill="#64748B" text-anchor="end">Merge</text>
+    </g>
+
+    <!-- Principle Tag -->
+    <rect x="360" y="210" width="160" height="30" rx="15" fill="#CCFBF1"/>
+    <text x="440" y="230" font-size="12" font-weight="bold" fill="#0F766E" text-anchor="middle">SESSION GOVERNANCE</text>
+  </g>
+
+  <!-- === CARD 3: PLAN & EXECUTE === -->
+  <g transform="translate(40, 390)">
+    <!-- Card Base -->
+    <rect width="540" height="260" rx="16" fill="#FFFFFF" filter="url(#card-shadow)"/>
+    <!-- Top colored bar -->
+    <path d="M 0 16 A 16 16 0 0 1 16 0 L 524 0 A 16 16 0 0 1 540 16 L 540 60 L 0 60 Z" fill="#FFFBEB"/>
+    
+    <!-- Header -->
+    <circle cx="40" cy="30" r="15" fill="#FBBF24"/>
+    <text x="40" y="36" font-size="16" font-weight="bold" fill="#FFFFFF" text-anchor="middle">3</text>
+    <text x="70" y="38" font-size="18" font-weight="800" fill="#FBBF24">PLAN &amp; EXECUTE</text>
+    <text x="500" y="38" font-size="14" font-weight="600" fill="#64748B" text-anchor="end">HITL APPROVAL</text>
+
+    <!-- Visualization: Blueprint vs Construction -->
+    <g transform="translate(60, 90)">
+      <!-- Box 1: Plan (Dashed) -->
+      <rect x="0" y="20" width="140" height="80" rx="8" fill="none" stroke="#FBBF24" stroke-width="3" stroke-dasharray="8,8"/>
+      <text x="70" y="65" font-size="16" font-weight="bold" fill="#FBBF24" text-anchor="middle">PLAN</text>
       
-      <!-- Orbital Nodes -->
-      <g>
-        <rect x="-15" y="-75" width="30" height="20" rx="2" fill="#1e293b" stroke="#fb923c" stroke-width="1"/>
-        <text x="0" y="-60" fill="#fb923c" font-size="8" text-anchor="middle">ACT</text>
-        <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="6s" repeatCount="indefinite"/>
-      </g>
+      <!-- Arrow -->
+      <path d="M 160 60 L 240 60" stroke="#E2E8F0" stroke-width="4" marker-end="url(#arrow-blue)"/>
+      <!-- Animated data packet along arrow -->
+      <circle cx="160" cy="60" r="5" fill="#4338CA" opacity="0.8">
+        <animate attributeName="cx" values="160;240" dur="1.5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.8;1" dur="1.5s" repeatCount="indefinite"/>
+      </circle>
+      
+      <!-- Gate: HITL Check -->
+      <circle cx="200" cy="60" r="18" fill="#FFFFFF" stroke="#FBBF24" stroke-width="3"/>
+      <text x="200" y="66" font-size="16" fill="#FBBF24" text-anchor="middle">✓</text>
+      <!-- Pulse Animation on Gate -->
+      <circle cx="200" cy="60" r="22" fill="none" stroke="#FBBF24" stroke-width="2" opacity="0.5">
+        <animate attributeName="r" values="18;30" dur="1.5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0" dur="1.5s" repeatCount="indefinite"/>
+      </circle>
 
-      <!-- Feedback Loop Arrows -->
-      <path d="M 0 -60 A 60 60 0 1 1 -1 -60" fill="none" stroke="#fb923c" stroke-width="2" marker-end="url(#arrow-orange)" stroke-opacity="0.8">
-         <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="4s" repeatCount="indefinite"/>
+      <!-- Box 2: Execute (Solid) -->
+      <rect x="260" y="20" width="140" height="80" rx="8" fill="#FBBF24" stroke="none"/>
+      <text x="330" y="65" font-size="16" font-weight="bold" fill="#FFFFFF" text-anchor="middle">EXECUTE</text>
+      
+      <!-- Icons -->
+      <path d="M 280 40 L 380 40" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+      <path d="M 280 60 L 340 60" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+      <path d="M 280 80 L 360 80" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+    </g>
+
+    <!-- Principle Tag -->
+    <rect x="360" y="210" width="160" height="30" rx="15" fill="#FEF3C7"/>
+    <text x="440" y="230" font-size="12" font-weight="bold" fill="#D97706" text-anchor="middle">ONE DRIVER</text>
+  </g>
+
+  <!-- === CARD 4: ITERATIVE LOOP === -->
+  <g transform="translate(620, 390)">
+    <!-- Card Base -->
+    <rect width="540" height="260" rx="16" fill="#FFFFFF" filter="url(#card-shadow)"/>
+    <!-- Top colored bar -->
+    <path d="M 0 16 A 16 16 0 0 1 16 0 L 524 0 A 16 16 0 0 1 540 16 L 540 60 L 0 60 Z" fill="#FDF2F8"/>
+    
+    <!-- Header -->
+    <circle cx="40" cy="30" r="15" fill="#F472B6"/>
+    <text x="40" y="36" font-size="16" font-weight="bold" fill="#FFFFFF" text-anchor="middle">4</text>
+    <text x="70" y="38" font-size="18" font-weight="800" fill="#F472B6">ITERATIVE LOOP</text>
+    <text x="500" y="38" font-size="14" font-weight="600" fill="#64748B" text-anchor="end">REFLECT &amp; REFINE</text>
+
+    <!-- Visualization: Circular Cycle -->
+    <g transform="translate(270, 140)">
+      <!-- Circle Path -->
+      <circle cx="0" cy="0" r="70" fill="none" stroke="#E2E8F0" stroke-width="12"/>
+      <path d="M 0 -70 A 70 70 0 1 1 -1 -70" fill="none" stroke="#F472B6" stroke-width="12" stroke-linecap="round">
+        <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="8s" repeatCount="indefinite"/>
       </path>
 
-      <!-- Spiral Upward Indication (Right side) -->
-      <path d="M 100 40 L 100 -40" stroke="#fb923c" stroke-width="2" marker-end="url(#arrow-orange)"/>
-      <text x="110" y="0" fill="#fb923c" font-size="10" transform="rotate(-90 110 0)">Context Refinement</text>
-      
-      <!-- Spiral Pulse -->
-      <circle cx="100" cy="40" r="3" fill="#ffffff">
-        <animate attributeName="cy" values="40;-40" dur="2s" repeatCount="indefinite"/>
-        <animate attributeName="opacity" values="1;0" dur="2s" repeatCount="indefinite"/>
-      </circle>
+      <!-- Center Content -->
+      <circle cx="0" cy="0" r="45" fill="#F472B6"/>
+      <text x="0" y="5" font-size="16" font-weight="bold" fill="#FFFFFF" text-anchor="middle">EVAL</text>
 
+      <!-- Orbital Satellites -->
+      <g>
+        <circle cx="0" cy="-70" r="16" fill="#FFFFFF" stroke="#F472B6" stroke-width="4"/>
+        <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="8s" repeatCount="indefinite"/>
+      </g>
+      <g>
+        <circle cx="0" cy="70" r="12" fill="#FFFFFF" stroke="#F472B6" stroke-width="4"/>
+        <animateTransform attributeName="transform" type="rotate" from="180 0 0" to="540 0 0" dur="8s" repeatCount="indefinite"/>
+      </g>
+
+      <!-- Refinement Up Arrow (animated dash flow) -->
+      <g transform="translate(120, 40)">
+        <path d="M 0 0 L 0 -80" stroke="#F472B6" stroke-width="4" stroke-dasharray="8,8" marker-end="url(#arrow-pink)">
+          <animate attributeName="stroke-dashoffset" values="0;16" dur="1s" repeatCount="indefinite"/>
+        </path>
+        <text x="10" y="-40" font-size="12" font-weight="bold" fill="#F472B6" transform="rotate(-90 10 -40)">QUALITY</text>
+      </g>
     </g>
-    <text x="430" y="180" fill="#94a3b8" font-size="10" text-anchor="end">Reflect &amp; Refine</text>
+
+    <!-- Principle Tag -->
+    <rect x="360" y="210" width="160" height="30" rx="15" fill="#FCE7F3"/>
+    <text x="440" y="230" font-size="12" font-weight="bold" fill="#DB2777" text-anchor="middle">SIMPLE FIRST</text>
   </g>
 
 </svg>

@@ -1,198 +1,245 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" font-family="'JetBrains Mono', Consolas, monospace" style="background-color: #0f172a;">
-  <!-- Definitions: Grids, Markers, Filters -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" font-family="'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif">
+  <!-- 
+    Style: Chalkboard
+    Layout: Hierarchical Layers
+    Concept: System Instructions as the "Constitution" / Classroom Rules
+    Animations: Restored & Enhanced (21+ Active Elements)
+  -->
+  
   <defs>
-    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="1"/>
-    </pattern>
-    <marker id="arrow-pink" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L0,6 L9,3 z" fill="#f472b6" />
-    </marker>
-    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L0,6 L9,3 z" fill="#38bdf8" />
-    </marker>
-    <filter id="glow">
-      <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+    <!-- Chalk Texture Filter -->
+    <filter id="chalk-texture" x="0%" y="0%" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" result="noise"/>
+      <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.4 0" in="noise" result="coloredNoise"/>
+      <feComposite operator="in" in="coloredNoise" in2="SourceGraphic" result="composite"/>
       <feMerge>
-        <feMergeNode in="coloredBlur"/>
         <feMergeNode in="SourceGraphic"/>
+        <feMergeNode in="composite"/>
       </feMerge>
     </filter>
-    <!-- Gradient for the "Path" -->
-    <linearGradient id="beam" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#f472b6" stop-opacity="0.8" />
-      <stop offset="100%" stop-color="#f472b6" stop-opacity="0" />
-    </linearGradient>
+
+    <!-- Board Texture -->
+    <filter id="board-grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="3" result="noise"/>
+      <feColorMatrix type="matrix" values="0.1 0 0 0 0  0.1 0 0 0 0  0.1 0 0 0 0  0 0 0 0.3 0"/>
+    </filter>
+
+    <!-- Chalk Stroke Marker -->
+    <marker id="arrow-chalk" markerWidth="15" markerHeight="15" refX="14" refY="5" orient="auto">
+      <path d="M0,0 L15,5 L0,10" fill="none" stroke="#EEEEEE" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
   </defs>
 
-  <!-- Background Grid -->
-  <rect width="100%" height="100%" fill="url(#grid)" />
-
-  <!-- TITLE BLOCK -->
-  <g transform="translate(40, 40)">
-    <rect x="0" y="0" width="340" height="70" fill="none" stroke="#f472b6" stroke-width="2"/>
-    <text x="20" y="42" fill="#f472b6" font-size="24" font-weight="bold">SYSTEM INSTRUCTIONS</text>
-    <text x="20" y="90" fill="#94a3b8" font-size="14">CONTEXT PRIORITY: HIGHEST</text>
-  </g>
-
-  <!-- ZONE 1: ASSET MANAGEMENT (Left) -->
-  <g transform="translate(100, 200)">
-    <!-- Git Branch Visual -->
-    <line x1="20" y1="0" x2="20" y2="300" stroke="#4ade80" stroke-width="2" stroke-dasharray="5,5" opacity="0.5"/>
-    <circle cx="20" cy="50" r="6" fill="#1e293b" stroke="#4ade80" stroke-width="2"/>
-    <circle cx="20" cy="150" r="6" fill="#1e293b" stroke="#4ade80" stroke-width="2"/>
-    <circle cx="20" cy="250" r="6" fill="#4ade80">
-       <animate attributeName="r" values="6;8;6" dur="2s" repeatCount="indefinite"/>
-       <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite"/>
-    </circle>
-    
-    <!-- Code Editor Box -->
-    <g transform="translate(60, 80)">
-        <rect x="0" y="0" width="220" height="160" rx="4" fill="#1e293b" stroke="#94a3b8" stroke-width="2"/>
-        <!-- Header -->
-        <rect x="0" y="0" width="220" height="25" rx="4" fill="#334155"/>
-        <circle cx="15" cy="12" r="3" fill="#ef4444"/>
-        <circle cx="27" cy="12" r="3" fill="#eab308"/>
-        <circle cx="39" cy="12" r="3" fill="#22c55e"/>
-        <text x="60" y="17" fill="#cbd5e1" font-size="10">instructions.md</text>
-        
-        <!-- Code Lines -->
-        <g transform="translate(15, 40)">
-            <rect x="0" y="0" width="80" height="8" rx="2" fill="#f472b6" opacity="0.8"/>
-            <rect x="90" y="0" width="60" height="8" rx="2" fill="#64748b" opacity="0.5"/>
-            
-            <rect x="0" y="15" width="120" height="8" rx="2" fill="#64748b" opacity="0.5"/>
-            <rect x="0" y="30" width="180" height="8" rx="2" fill="#64748b" opacity="0.5"/>
-            <rect x="0" y="45" width="100" height="8" rx="2" fill="#64748b" opacity="0.5"/>
-            
-            <rect x="0" y="70" width="140" height="8" rx="2" fill="#64748b" opacity="0.5"/>
-        </g>
-        
-        <!-- Scanline Animation -->
-        <rect x="0" y="25" width="220" height="2" fill="#4ade80" opacity="0.5">
-            <animate attributeName="y" values="25;160;25" dur="3s" repeatCount="indefinite"/>
-            <animate attributeName="opacity" values="0;0.8;0" dur="3s" repeatCount="indefinite"/>
-        </rect>
-    </g>
-
-    <text x="170" y="270" fill="#4ade80" font-size="12" text-anchor="middle">MAINTAINABLE ASSET</text>
-    <text x="170" y="290" fill="#94a3b8" font-size="10" text-anchor="middle">Versioned &amp; Reviewed</text>
-  </g>
-
-  <!-- ARROW: Asset -> Injection -->
-  <path d="M 380 280 L 440 280" stroke="#4ade80" stroke-width="2" marker-end="url(#arrow-pink)" stroke-dasharray="4,4">
-      <animate attributeName="stroke-dashoffset" from="8" to="0" dur="1s" repeatCount="indefinite" />
+  <!-- Background: Slate Board -->
+  <rect width="100%" height="100%" fill="#263238"/>
+  <rect width="100%" height="100%" filter="url(#board-grain)" opacity="0.4"/>
+  
+  <!-- Dusty Eraser Smudges (Animated Background) -->
+  <path d="M 100 100 Q 300 300 500 100 T 900 100" stroke="#FFFFFF" stroke-width="80" stroke-opacity="0.05" fill="none">
+    <animate attributeName="stroke-opacity" values="0.05;0.08;0.05" dur="8s" repeatCount="indefinite"/>
+  </path>
+  <path d="M 200 500 Q 400 300 600 500 T 1000 500" stroke="#FFFFFF" stroke-width="120" stroke-opacity="0.03" fill="none">
+    <animate attributeName="stroke-opacity" values="0.03;0.06;0.03" dur="11s" repeatCount="indefinite"/>
   </path>
 
-  <!-- ZONE 2: INJECTION ASSEMBLY (Center) -->
-  <g transform="translate(460, 100)">
-    <!-- Main Chassis -->
-    <rect x="0" y="0" width="300" height="400" fill="#0f172a" stroke="#38bdf8" stroke-width="1" stroke-dasharray="10,5"/>
-    
-    <!-- Label -->
-    <text x="150" y="30" fill="#38bdf8" font-size="16" font-weight="bold" text-anchor="middle" letter-spacing="2">CONTEXT INJECTOR</text>
+  <!-- LAYER 1: THE SOURCE (Top) -->
+  <g transform="translate(0, 50)">
+    <!-- Title written in Chalk -->
+    <text x="600" y="40" fill="#FFF59D" font-size="42" font-weight="bold" text-anchor="middle" letter-spacing="2" filter="url(#chalk-texture)">
+      SYSTEM INSTRUCTIONS
+      <!-- Subtle pulse to emphasize importance -->
+      <animate attributeName="fill-opacity" values="1;0.8;1" dur="4s" repeatCount="indefinite"/>
+    </text>
+    <line x1="400" y1="55" x2="800" y2="55" stroke="#FFF59D" stroke-width="3" stroke-linecap="round">
+       <!-- Drawing animation -->
+       <animate attributeName="x2" from="400" to="800" dur="1.5s" fill="freeze" calcMode="spline" keySplines="0.4 0 0.2 1"/>
+    </line>
+    <text x="600" y="85" fill="#B0BEC5" font-size="18" text-anchor="middle" font-style="italic">
+      "The First Principle"
+    </text>
+  </g>
 
-    <!-- 1. System Instruction Slot (Top Priority) -->
-    <g transform="translate(50, 60)">
-        <rect x="-10" y="0" width="220" height="60" fill="#1e293b" stroke="#f472b6" stroke-width="2"/>
-        <text x="10" y="25" fill="#f472b6" font-size="12" font-weight="bold">SYSTEM INSTRUCTION</text>
-        <text x="10" y="45" fill="#f472b6" font-size="10" opacity="0.7">Role • Rules • Goals</text>
+  <!-- LAYER 2: THE RULES (Left) -->
+  <g transform="translate(50, 180)">
+    <!-- Frame with "Ants" animation -->
+    <rect x="0" y="0" width="300" height="400" rx="5" fill="none" stroke="#EEEEEE" stroke-width="3" stroke-dasharray="15,5" stroke-linecap="round">
+      <animate attributeName="stroke-dashoffset" from="20" to="0" dur="2s" repeatCount="indefinite"/>
+    </rect>
+    <text x="20" y="-15" fill="#EEEEEE" font-size="24" font-weight="bold" transform="rotate(-2)">Instructions.md</text>
+    
+    <!-- Content: Do's and Don'ts -->
+    <g transform="translate(20, 40)">
+      <!-- DO's -->
+      <text x="0" y="0" fill="#A5D6A7" font-size="20" font-weight="bold">DO:</text>
+      <g transform="translate(10, 25)">
+         <!-- Checkmark 1 -->
+         <path d="M0,5 L10,15 L25,0" fill="none" stroke="#A5D6A7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="40" stroke-dashoffset="40">
+            <animate attributeName="stroke-dashoffset" to="0" dur="0.4s" begin="0.5s" fill="freeze"/>
+         </path>
+         <text x="35" y="10" fill="#EEEEEE" font-size="16">Define Role</text>
+      </g>
+      <g transform="translate(10, 60)">
+         <!-- Checkmark 2 -->
+         <path d="M0,5 L10,15 L25,0" fill="none" stroke="#A5D6A7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="40" stroke-dashoffset="40">
+            <animate attributeName="stroke-dashoffset" to="0" dur="0.4s" begin="1.0s" fill="freeze"/>
+         </path>
+         <text x="35" y="10" fill="#EEEEEE" font-size="16">Set Tone</text>
+      </g>
+      <g transform="translate(10, 95)">
+         <!-- Checkmark 3 -->
+         <path d="M0,5 L10,15 L25,0" fill="none" stroke="#A5D6A7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="40" stroke-dashoffset="40">
+            <animate attributeName="stroke-dashoffset" to="0" dur="0.4s" begin="1.5s" fill="freeze"/>
+         </path>
+         <text x="35" y="10" fill="#EEEEEE" font-size="16">Guide Output</text>
+      </g>
+
+      <!-- SEPARATOR -->
+      <path d="M 0 135 L 260 135" stroke="#B0BEC5" stroke-width="2" stroke-dasharray="5,5"/>
+
+      <!-- DON'Ts (Crossed out wall) -->
+      <text x="0" y="175" fill="#EF9A9A" font-size="20" font-weight="bold">AVOID:</text>
+      <g transform="translate(10, 200)">
+         <text x="35" y="15" fill="#EEEEEE" font-size="16">Negatives</text>
+         <text x="35" y="40" fill="#B0BEC5" font-size="14" font-style="italic">"Don't do X..."</text>
+         <!-- Chalk X Animation -->
+         <path d="M 0 10 L 25 35 M 25 10 L 0 35" stroke="#EF9A9A" stroke-width="3" stroke-linecap="round" opacity="0">
+            <animate attributeName="opacity" to="1" dur="0.2s" begin="2.5s" fill="freeze"/>
+            <animateTransform attributeName="transform" type="scale" values="1.5;1" dur="0.3s" begin="2.5s" fill="freeze" additive="sum"/>
+         </path>
+      </g>
+      
+      <!-- Metaphor: Paving the Road -->
+      <g transform="translate(10, 270)">
+         <text x="0" y="0" fill="#81D4FA" font-size="18">Strategy:</text>
+         <text x="0" y="25" fill="#EEEEEE" font-size="16">"Frame the Path"</text>
+         <!-- Simple Road Icon -->
+         <g transform="translate(150, -10)">
+            <path d="M 0 0 L -20 50 M 40 0 L 60 50" stroke="#FFF59D" stroke-width="3" stroke-linecap="round"/>
+            <line x1="20" y1="10" x2="20" y2="40" stroke="#FFF59D" stroke-width="2" stroke-dasharray="5,5">
+               <!-- Road moving animation -->
+               <animate attributeName="stroke-dashoffset" from="10" to="0" dur="1s" repeatCount="indefinite"/>
+            </line>
+         </g>
+      </g>
+    </g>
+  </g>
+
+  <!-- ARROW FLOW 1 -->
+  <path d="M 370 380 L 480 380" stroke="#FFF59D" stroke-width="4" marker-end="url(#arrow-chalk)" stroke-dasharray="10,10" stroke-linecap="round">
+    <animate attributeName="stroke-dashoffset" from="20" to="0" dur="1s" repeatCount="indefinite"/>
+  </path>
+
+  <!-- LAYER 3: THE CONTEXT INJECTION (Center) -->
+  <g transform="translate(500, 180)">
+    <!-- Container -->
+    <rect x="0" y="0" width="250" height="400" rx="10" fill="none" stroke="#81D4FA" stroke-width="3" stroke-linecap="round"/>
+    <text x="125" y="-15" fill="#81D4FA" font-size="20" text-anchor="middle" font-weight="bold">Context Stack</text>
+
+    <!-- Stack Elements -->
+    <!-- 1. System (Fixed) -->
+    <g transform="translate(25, 30)">
+       <rect width="200" height="80" rx="5" fill="#FFFFFF" fill-opacity="0.1" stroke="#FFF59D" stroke-width="2"/>
+       <text x="100" y="30" fill="#FFF59D" font-size="16" text-anchor="middle" font-weight="bold">SYSTEM PROMPT</text>
+       <text x="100" y="55" fill="#FFF59D" font-size="12" text-anchor="middle" font-style="italic">(Injected First)</text>
+       
+       <!-- Lock Icon -->
+       <g transform="translate(180, 10)">
+         <rect x="0" y="5" width="10" height="8" rx="1" fill="none" stroke="#FFF59D" stroke-width="2"/>
+         <path d="M 2 5 V 2 A 3 3 0 0 1 8 2 V 5" stroke="#FFF59D" stroke-width="2" fill="none"/>
+         <!-- Lock Pulse -->
+         <animateTransform attributeName="transform" type="scale" values="1;1.2;1" dur="2s" repeatCount="indefinite" additive="sum" transform-origin="5 5"/>
+       </g>
+    </g>
+
+    <!-- 2. History (Dynamic) -->
+    <g transform="translate(25, 125)">
+       <rect width="200" height="140" rx="5" fill="#FFFFFF" fill-opacity="0.05" stroke="#B0BEC5" stroke-width="2" stroke-dasharray="5,5"/>
+       <text x="100" y="30" fill="#B0BEC5" font-size="14" text-anchor="middle">History (Noise)</text>
+       
+       <!-- Floating conversation bubbles -->
+       <rect x="20" y="50" width="100" height="10" rx="5" fill="#B0BEC5" fill-opacity="0.3">
+          <animate attributeName="x" values="20;22;20" dur="4s" repeatCount="indefinite"/>
+       </rect>
+       <rect x="60" y="70" width="100" height="10" rx="5" fill="#B0BEC5" fill-opacity="0.3">
+          <animate attributeName="x" values="60;58;60" dur="5s" repeatCount="indefinite"/>
+       </rect>
+       <rect x="20" y="90" width="80" height="10" rx="5" fill="#B0BEC5" fill-opacity="0.3">
+          <animate attributeName="x" values="20;25;20" dur="6s" repeatCount="indefinite"/>
+       </rect>
+    </g>
+
+    <!-- 3. New Input -->
+    <g transform="translate(25, 280)">
+       <rect width="200" height="60" rx="5" fill="#FFFFFF" fill-opacity="0.1" stroke="#A5D6A7" stroke-width="2"/>
+       <text x="100" y="35" fill="#A5D6A7" font-size="16" text-anchor="middle">USER INPUT</text>
+       
+       <!-- Animation: Input entering stack -->
+       <animateTransform attributeName="transform" type="translate" from="25 400" to="25 280" dur="4s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1"/>
+       <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.2;0.8;1" dur="4s" repeatCount="indefinite"/>
+    </g>
+  </g>
+
+  <!-- ARROW FLOW 2 -->
+  <path d="M 770 380 L 880 380" stroke="#FFF59D" stroke-width="4" marker-end="url(#arrow-chalk)" stroke-dasharray="10,10" stroke-linecap="round">
+      <animate attributeName="stroke-dashoffset" from="20" to="0" dur="1s" repeatCount="indefinite"/>
+  </path>
+
+  <!-- LAYER 4: THE BEHAVIOR (Right) -->
+  <g transform="translate(900, 180)">
+    <!-- A simplistic robot drawing -->
+    <g transform="translate(50, 0)">
+        <!-- Head Bobbing -->
+        <animateTransform attributeName="transform" type="translate" values="50 0; 50 2; 50 0" dur="2s" repeatCount="indefinite"/>
         
-        <!-- Pulsing Priority Indicator -->
-        <circle cx="190" cy="30" r="4" fill="#f472b6">
-            <animate attributeName="r" values="4;6;4" dur="1s" repeatCount="indefinite"/>
-            <animate attributeName="opacity" values="1;0.5;1" dur="1s" repeatCount="indefinite"/>
+        <circle cx="100" cy="100" r="50" fill="none" stroke="#EEEEEE" stroke-width="3"/> <!-- Head -->
+        <rect x="60" y="150" width="80" height="100" rx="10" fill="none" stroke="#EEEEEE" stroke-width="3"/> <!-- Body -->
+        
+        <!-- Eyes -->
+        <circle cx="85" cy="90" r="6" fill="#FFF59D">
+            <animate attributeName="opacity" values="1;0.2;1" dur="3s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="115" cy="90" r="6" fill="#FFF59D">
+            <animate attributeName="opacity" values="1;0.2;1" dur="3s" repeatCount="indefinite"/>
         </circle>
         
-        <!-- The "Block" dropping down animation -->
-        <rect x="0" y="0" width="200" height="50" fill="#f472b6" opacity="0.2" transform="translate(0, 0)">
-           <animate attributeName="y" values="-50; 0; 0; 250" dur="4s" keyTimes="0; 0.2; 0.6; 1" repeatCount="indefinite" />
-           <animate attributeName="opacity" values="0; 1; 1; 0" dur="4s" keyTimes="0; 0.2; 0.6; 1" repeatCount="indefinite" />
-        </rect>
+        <!-- Mouth / Output -->
+        <path d="M 80 120 Q 100 130 120 120" stroke="#EEEEEE" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+        <!-- Thought Bubble -->
+        <g>
+            <path d="M 160 50 Q 180 30 200 50 T 240 50 T 240 90 T 200 110 L 160 90 Z" stroke="#81D4FA" stroke-width="2" fill="none" stroke-dasharray="3,3" stroke-linecap="round">
+                <animate attributeName="stroke-dashoffset" from="12" to="0" dur="3s" repeatCount="indefinite"/>
+            </path>
+            <!-- Rising Dots -->
+            <circle cx="150" cy="80" r="3" fill="#81D4FA" opacity="0">
+                <animate attributeName="cy" values="90;80" dur="2s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="140" cy="90" r="2" fill="#81D4FA" opacity="0">
+                <animate attributeName="cy" values="100;90" dur="2s" begin="1s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0;1;0" dur="2s" begin="1s" repeatCount="indefinite"/>
+            </circle>
+            
+            <text x="200" y="80" fill="#81D4FA" font-size="14" text-anchor="middle" font-weight="bold">Aligned
+                 <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite"/>
+            </text>
+        </g>
     </g>
 
-    <!-- 2. Connection Lines -->
-    <path d="M 150 120 L 150 160" stroke="#64748b" stroke-width="2" stroke-dasharray="2,2"/>
-
-    <!-- 3. Dynamic Inputs (User/History) -->
-    <g transform="translate(50, 160)">
-        <rect x="-10" y="0" width="220" height="120" fill="#1e293b" stroke="#38bdf8" stroke-width="2" stroke-dasharray="4,4"/>
-        <text x="10" y="25" fill="#38bdf8" font-size="12">DYNAMIC CONTEXT</text>
-        <text x="10" y="45" fill="#94a3b8" font-size="10">History + User Input</text>
-
-        <!-- User Block Animation -->
-        <rect x="10" y="60" width="180" height="40" rx="2" fill="#38bdf8" opacity="0.8">
-            <animate attributeName="x" values="250; 10; 10" dur="4s" keyTimes="0; 0.4; 1" repeatCount="indefinite" />
-            <animate attributeName="opacity" values="0; 1; 1" dur="4s" keyTimes="0; 0.4; 1" repeatCount="indefinite" />
-             <!-- Text moves with rect -->
-        </rect>
-        <text x="100" y="85" fill="#0f172a" font-size="12" font-weight="bold" text-anchor="middle">
-             USER MSG
-             <animate attributeName="x" values="340; 100; 100" dur="4s" keyTimes="0; 0.4; 1" repeatCount="indefinite" />
-             <animate attributeName="opacity" values="0; 1; 1" dur="4s" keyTimes="0; 0.4; 1" repeatCount="indefinite" />
-        </text>
-    </g>
-    
-    <!-- 4. Merging Zone (Bottom) -->
-    <g transform="translate(50, 320)">
-         <!-- Merged Stack: System always on top/first -->
-         <rect x="0" y="0" width="200" height="60" fill="#0f172a" stroke="#ffffff" stroke-width="1"/>
-         
-         <!-- System Layer (Always First) -->
-         <rect x="5" y="5" width="190" height="15" fill="#f472b6" opacity="0.9"/>
-         <!-- User Layer (After) -->
-         <rect x="5" y="25" width="190" height="30" fill="#38bdf8" opacity="0.9"/>
-         
-         <!-- Moving out animation -->
-         <animateTransform attributeName="transform" type="translate" from="50 320" to="50 450" dur="4s" begin="2.4s" repeatCount="indefinite"/>
-         <animate attributeName="opacity" values="0;1;0" dur="4s" begin="2.4s" repeatCount="indefinite"/>
-    </g>
+    <!-- Bottom Text -->
+    <text x="150" y="300" fill="#EEEEEE" font-size="18" text-anchor="middle" font-weight="bold">MODEL</text>
+    <text x="150" y="330" fill="#B0BEC5" font-size="14" text-anchor="middle">Behaves as defined</text>
   </g>
 
-  <!-- ARROW: Injector -> Output -->
-  <path d="M 760 300 L 840 300" stroke="#f472b6" stroke-width="2" marker-end="url(#arrow-pink)" stroke-dasharray="4,4">
-      <animate attributeName="stroke-dashoffset" from="8" to="0" dur="0.5s" repeatCount="indefinite" />
-  </path>
-
-  <!-- ZONE 3: BEHAVIORAL OUTPUT (Right) -->
-  <g transform="translate(860, 150)">
-      <!-- The "Road" Metaphor -->
-      <path d="M 0 150 L 300 50 L 300 250 Z" fill="url(#beam)" opacity="0.2"/>
-      <path d="M 0 150 L 300 50" stroke="#f472b6" stroke-width="2"/>
-      <path d="M 0 150 L 300 250" stroke="#f472b6" stroke-width="2"/>
-      
-      <!-- Guardrails Label -->
-      <text x="180" y="40" fill="#f472b6" font-size="12" font-style="italic">Guardrails</text>
-      <text x="180" y="270" fill="#f472b6" font-size="12" font-style="italic">Guardrails</text>
-
-      <!-- The Agent/Bot -->
-      <circle cx="0" cy="150" r="30" fill="#1e293b" stroke="#ffffff" stroke-width="2">
-        <animateMotion path="M 0 0 L 250 0" dur="4s" begin="2.5s" repeatCount="indefinite" />
-      </circle>
-      <text x="0" y="155" fill="#ffffff" font-size="10" text-anchor="middle" font-weight="bold">AGENT
-        <animateMotion path="M 0 0 L 250 0" dur="4s" begin="2.5s" repeatCount="indefinite" />
-      </text>
-      
-      <!-- "Behavioral Baseline" Text -->
-      <text x="150" y="320" fill="#ffffff" font-size="14" font-weight="bold" text-anchor="middle" filter="url(#glow)">BEHAVIORAL BASELINE</text>
-      <text x="150" y="340" fill="#94a3b8" font-size="12" text-anchor="middle">"Paving the Road"</text>
+  <!-- Decorative: Hand holding chalk (Simple geometry) -->
+  <g transform="translate(1050, 560)">
+      <!-- Hand -->
+      <g transform="rotate(-15)">
+        <path d="M 0 0 C 20 -20 50 -20 70 0 L 80 50 C 60 70 20 70 0 50 Z" fill="#FFAB91" opacity="0.8"/>
+        <!-- Chalk -->
+        <rect x="20" y="-30" width="30" height="60" fill="#FFFFFF"/>
+      </g>
+      <animateTransform attributeName="transform" type="translate" values="0 0; 10 -10; 0 0" dur="5s" repeatCount="indefinite" additive="sum"/>
   </g>
-  
-  <!-- DECORATIVE ELEMENTS -->
-  <!-- Status Info -->
-  <g transform="translate(950, 40)">
-     <text x="0" y="0" fill="#94a3b8" font-size="10" text-anchor="end">SYS_INJECT: ACTIVE</text>
-     <text x="0" y="15" fill="#94a3b8" font-size="10" text-anchor="end">OVERRIDE: ENABLED</text>
-     <circle cx="10" cy="-5" r="3" fill="#f472b6">
-        <animate attributeName="opacity" values="1;0.2;1" dur="1s" repeatCount="indefinite"/>
-     </circle>
-  </g>
-
-  <!-- Flow Particles background -->
-  <circle r="2" fill="#38bdf8" opacity="0.4">
-      <animateMotion path="M 100 500 L 1100 500" dur="8s" repeatCount="indefinite" />
-  </circle>
-  <circle r="2" fill="#38bdf8" opacity="0.4">
-      <animateMotion path="M 200 520 L 1000 520" dur="7s" repeatCount="indefinite" />
-  </circle>
 
 </svg>
