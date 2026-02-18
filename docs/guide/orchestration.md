@@ -36,6 +36,8 @@ Agent 的编排模式就像电路板：串联、并联、或者更复杂的组�
 
 先记住一条行业共识：**简单循环优先**。能用单 agent 顺序执行搞定的，别上并行；能用一层循环解决的，别套两层。复杂编排不是"更强"，而是"更多失败点"——每多一层抽象，上下文对齐的难度翻倍。先从最简单的模式开始，真正不够用了再升级。
 
+![Four orchestration patterns compared: Sequential (linear accumulation), Parallel (split and merge), Plan-and-Execute (draft to frozen), and Iterative Loop (spiral ascent)](/illustrations/orchestration.svg)
+
 ### 1. 顺序执行 (Sequential)
 
 最简单的模式：一步接一步。

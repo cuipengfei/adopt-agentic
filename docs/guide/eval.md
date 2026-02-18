@@ -90,6 +90,8 @@ Agent 看到这条消息，知道重构破坏了过期 token 的校验逻辑，�
 
 越底层越自动化，越顶层越靠人。
 
+![The Verification Pyramid: three layers of validation — Execution (automated), Task Logic (tests), and System Value (human judgment) — with feedback loops injecting signals back into context](/illustrations/eval.svg)
+
 ### Level 1: 语法与执行
 Agent 自动检查：代码能跑吗？报错吗？
 

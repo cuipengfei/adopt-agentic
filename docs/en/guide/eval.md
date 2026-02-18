@@ -86,6 +86,8 @@ This is observability—continuous monitoring of the Agent’s behavioral patter
 
 Structure verification as a pyramid. Lower levels automate; the top requires humans.
 
+![The Verification Pyramid: three layers of validation — Execution (automated), Task Logic (tests), and System Value (human judgment) — with feedback loops injecting signals back into context](/illustrations/eval.svg)
+
 ### Level 1: Syntax and execution
 Agent checks automatically. Does it run? Do commands error out?
 

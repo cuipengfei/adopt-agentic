@@ -34,6 +34,8 @@ An agent's orchestration patterns are like a circuit board: series, parallel, or
 
 One industry consensus to internalize first: **start with the simplest loop**. If a single agent running sequentially can handle it, don't reach for parallelism. If one loop solves it, don't nest two. Complex orchestration isn't "more powerful" — it's "more failure points." Every added layer of abstraction doubles the difficulty of keeping context aligned. Start simple. Upgrade only when you've genuinely outgrown it.
 
+![Four orchestration patterns compared: Sequential (linear accumulation), Parallel (split and merge), Plan-and-Execute (draft to frozen), and Iterative Loop (spiral ascent)](/illustrations/orchestration.svg)
+
 ### 1. Sequential Execution
 
 The simplest pattern: step by step.
