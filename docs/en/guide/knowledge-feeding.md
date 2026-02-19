@@ -67,6 +67,8 @@ The project layer's defining trait: **no extra context window cost** (informatio
 
 Think of it this way: optimizing your project structure for an Agent also optimizes it for human teammates. A codebase that an Agent can't navigate is one that new human team members probably can't either.
 
+There's another layer: your technology choices are context too. Mature, well-documented stacks have abundant high-quality training samples, so Agents handle them better out of the box. Niche frameworks or tools with sparse documentation? Agents perform noticeably worse—not because they're dumb, but because they've barely seen them during training.
+
 ## On-Demand Knowledge: Treat Agents Like People
 
 Agents, like people, can't remember everything. Hand them an encyclopedia, and they'll just skip it.
@@ -74,6 +76,8 @@ Agents, like people, can't remember everything. Hand them an encyclopedia, and t
 Don't stuff your entire API documentation or database schema into `AGENTS.md`. Instead, provide an index. "For the DB schema, see `docs/db-schema.md`."
 
 The Agent will look up that schema file when it actually needs to write SQL. Let it pull knowledge, don't push it.
+
+Your instruction file itself should follow this principle. Rather than cramming every detail into one file, make it a table of contents—pointing to detailed docs under `docs/`. What the Agent sees at startup is a map, not an encyclopedia. When it needs depth, it follows the pointers.
 
 ## The Dictionary and the Grammar
 

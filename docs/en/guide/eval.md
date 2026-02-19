@@ -190,6 +190,8 @@ Your job is to keep step 3 intact. Tests ran but results weren't fed back? That'
 
 **Fix**: Verification density must keep up with generation speed. Agent modified code? Immediately run tests, lint, type checking. For things automated verification can't catch (naming, design intent, architectural consistency), do manual reviews at key checkpoints. Not every time—but spot-check every few tasks.
 
+All three anti-patterns share the same root cause: Agents are amplifiers—they faithfully replicate patterns already in your codebase, including the bad ones. Three inconsistent error-handling styles? The Agent picks one at random. Stale comments? The Agent references them when writing new code. It amplifies everything, good and bad. Verification isn't a one-time sweep—it's ongoing maintenance.
+
 ## Key Takeaways
 
 - **Context flow**: Each verification layer produces signals (exit codes, test reports, metrics) that get injected back into context, becoming the basis for the Agent’s next decision. Verification isn’t a post-mortem—it’s real-time navigation.
