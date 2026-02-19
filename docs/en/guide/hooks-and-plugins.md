@@ -171,7 +171,7 @@ Hooks and plugins have the most power and the most risk. They are just code. The
 
 With great power comes great responsibility to review. You can use built-in tools without a thought. You should glance at an MCP's declared permissions. You must review hooks and plugins line-by-line, just like any other code.
 
-## Three Things to Watch For
+## Key Takeaways
 
 - **Context flow**: Hooks execute at **critical points** in the context flow—before and after tool calls, during system prompt construction, during session compaction. They can either work as side channels (not affecting context) or directly modify context content. Plugins bundle multiple context manipulation mechanisms. This is the most fine-grained context control available to users.
 - **Risk**: Hook and plugin code runs with **extensive** system privileges—a broken before-tool-call hook can block all tool calls, completely paralyzing the agent. This isn't prompt-level "fix the wording"—it's code-level "break it and it crashes." Plugin sources also need vetting—you're installing code that executes on every agent run.

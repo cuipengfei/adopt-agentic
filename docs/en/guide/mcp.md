@@ -132,7 +132,7 @@ MCP's value isn't "yet another protocol." Its value is **freeing you from depend
 - **Connect internal systems**: Your company's internal API will most likely never get official agent support, but you can write (or find) an MCP Server for it.
 - **Reuse across agents**: An MCP Server can theoretically be used by any agent that supports the protocol — not locked to a specific tool.
 
-## Three Things to Watch in Every Chapter
+## Key Takeaways
 
 - **Context flow**: MCP tool definitions are injected into every request (static); return values are appended after execution (dynamic). They travel the same context pipeline as built-in tools — the LLM perceives no difference.
 - **Risk**: MCP's trust problem is sharper than built-in tools. A malicious MCP Server could return false data to pollute your context, or log your sensitive requests. Installing an MCP Server is like installing a browser extension — is the source trustworthy? Are the permissions reasonable?

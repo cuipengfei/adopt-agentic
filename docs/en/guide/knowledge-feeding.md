@@ -119,7 +119,7 @@ One person's prompt is a habit. A team's prompt is a system.
 -   Hold regular meetings to go over the rules. "Is this still relevant?" If not, delete it.
 -   Knowledge, like code, accumulates debt. It's easy to take on, and painful to pay back. If you don't audit, you're letting the Agent operate on a set of rules you yourself have forgotten.
 
-## Three Things to Watch in Every Chapter
+## Key Takeaways
 
 - **Context flow**: Three paths, three injection timings. The rule layer claims space at session start; the capability layer appends when a task triggers it; the project layer enters on-demand as the Agent reads files. Knowledge freshness and context cost are always in tension.
 - **Risk**: Too much knowledge dilutes reasoning capacity (attention dilution). Too little, and the Agent fabricates answers based on generic knowledge that don't match your project's reality. Stale docs are worse than no docs—the Agent won't question your README.

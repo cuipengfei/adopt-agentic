@@ -96,6 +96,8 @@ The LLM may return multiple tool_calls at once. After extracting a function, it 
 
 Agent executes them one by one, appending each result back to `messages` — next round the LLM sees all execution results.
 
+For a more complete multi-round interaction sequence diagram, see the [Context](/en/guide/context#managing-context) chapter. The focus here isn't on how the request inflates, but on **what each of the three parties did**—the user sends intent, the Agent orchestrates and executes, and the LLM reasons and requests tools.
+
 ## API Protocols
 
 Three mainstream formats:
@@ -105,6 +107,8 @@ Three mainstream formats:
 - **Responses API** (OpenAI)
 
 All HTTP, same core: send context, receive reasoning. Agent shields you from differences.
+
+Understanding the communication format leads to a natural question: how does this way of working differ from a normal chat?
 
 ## Why Agentic, Not Chat
 
@@ -116,7 +120,11 @@ Key difference: **Tools**. Chat just exchanges text. Agentic means LLM calls too
 
 That's why it's called "agent"—it has agency, not just response.
 
-## How to Task an Agent
+## From Roles to Practice: Working with Your Agent
+
+With the three roles clarified, next comes practical guidance based on these role relationships—how to assign tasks, and how to let the agent run long autonomous tasks without losing control.
+
+### How to Task an Agent
 
 Vague vs precise:
 
@@ -141,13 +149,13 @@ Break large tasks into small chunks — verify one before starting the next. Far
 
 Different products, different mechanisms. But you provide intent, Agent orchestrates context, LLM reasons — **the triangular relationship stays the same.**
 
-## Controlling Long-Running Loops
+### Controlling Long-Running Loops
 
 You can watch short tasks. But for long tasks—spanning extended periods with many tool calls—you can't, and you shouldn't have to.
 
 Hands-off doesn't mean uncontrolled. A long-running agent loop needs to know three things: how far it's come, when to stop, and when to start over.
 
-### Checkpoints
+#### Checkpoints
 
 The worst part of a long task is crashing halfway and starting from scratch.
 
@@ -155,7 +163,7 @@ A checkpoint saves your progress. Good agents automatically save state at key po
 
 Checkpoints break a long task into recoverable chunks. If it crashes, you resume from the last checkpoint, not from zero.
 
-### Stop Conditions
+#### Stop Conditions
 
 Agents don't know when to stop. You have to tell them.
 
@@ -163,7 +171,7 @@ Clear stop conditions are external signals: all tests pass, the build succeeds, 
 
 In practice, give the agent a checklist or clear acceptance criteria. It checks off items as it works. When everything is checked, it stops. That's more reliable than asking it to "let me know when you're done."
 
-### When to Continue, When to Restart
+#### When to Continue, When to Restart
 
 Longer sessions are not always better. Context windows are finite. The longer the conversation, the more likely that early details get compressed or dropped entirely.
 
@@ -176,7 +184,7 @@ Longer sessions are not always better. Context windows are finite. The longer th
 
 Restarting isn't failure. It's **context subtraction**. You're cutting away noise to continue with a clean slate. A fresh session is often ten times more productive than a polluted one.
 
-## Three Things to Watch in Every Chapter
+## Key Takeaways
 
 - **Context flow:** Intent enters system + messages → LLM reasons → tool_calls → Agent executes → results appended back to messages → loop. This chapter showed the complete cycle.
 - **Risk:** Vague intent, LLM guesses. Excessive permissions, Agent runs wild. LLM hallucinates, parameters go wrong — blur the boundaries between the three roles and problems become much more likely.

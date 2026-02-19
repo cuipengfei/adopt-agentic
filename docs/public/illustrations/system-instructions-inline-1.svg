@@ -56,11 +56,11 @@
 
   <!-- Custom instruction pill (high leverage handle) -->
   <g transform="translate(60, 126)">
-    <rect class="pill" x="0" y="0" width="260" height="34" rx="17" fill="#ffffff" filter="url(#shadow-sm)"/>
+    <rect class="pill" x="0" y="0" width="400" height="34" rx="17" fill="#ffffff" filter="url(#shadow-sm)"/>
     <circle cx="18" cy="17" r="8" fill="#2563eb" opacity="0.18"/>
     <circle cx="18" cy="17" r="4" fill="#2563eb"/>
     <text x="34" y="22" class="label" fill="#2563eb">User custom instructions</text>
-    <text x="260" y="22" class="small" text-anchor="end">(highest leverage)</text>
+    <text x="390" y="22" class="small" text-anchor="end">(highest leverage)</text>
   </g>
 
   <!-- Two request envelopes -->
@@ -106,7 +106,7 @@
       <text class="small" x="14" y="62">Unchanged across rounds</text>
 
       <!-- Sync badge -->
-      <g transform="translate(400, 14)">
+      <g transform="translate(420, 2)">
         <circle cx="18" cy="18" r="16" fill="#2563eb" opacity="0.10"/>
         <path d="M12 18 a6 6 0 0 1 10 -4" stroke="#2563eb" stroke-width="2" fill="none" stroke-linecap="round"/>
         <path d="M22 14 l3 0 l0 -3" stroke="#2563eb" stroke-width="2" fill="none" stroke-linecap="round"/>

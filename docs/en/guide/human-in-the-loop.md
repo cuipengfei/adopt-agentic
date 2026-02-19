@@ -101,7 +101,7 @@ Mitigation:
 
 An Agent helps you do more. But if your understanding of the codebase falls behind, you won’t be able to catch problems in its output.
 
-## Three Things to Watch in Every Chapter
+## Key Takeaways
 
 - **Context flow**: Every decision you make (approve, reject, modify) is a context injection. The Agent’s output is your input for decision-making; your decision is the Agent’s input for its next reasoning round. This is the only bidirectional closed loop in the entire tutorial—human and Agent are each other’s context.
 - **Risk**: Danger in both directions. Over-trust leads to cognitive debt accumulation and loss of control; approval fatigue means you rubber-stamp the Agent’s requests without thinking—no different from not reviewing at all.

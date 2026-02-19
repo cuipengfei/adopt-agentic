@@ -175,7 +175,7 @@ You can use Sub Agents to implement sequential execution (one Sub Agent passes i
 
 Think of an orchestra conductor: the conductor doesn't play any instrument, but controls tempo, assigns sections, and coordinates all the parts. When you use parallel sessions + Sub Agents to handle complex tasks, you're playing the conductor—dispatching work, tracking progress, accepting deliverables. You're not writing the code, but the overall direction is yours to command.
 
-## Three Things to Watch in Every Chapter
+## Key Takeaways
 
 - **Context Flow**: Sequential mode is linear accumulation; parallel mode is splitting and merging; plan-and-execute is draft to final; iterative loop is spiral enrichment.
 - **Risk Advisory**: Parallel branches can lead to result conflicts, requiring well-designed merge logic. In the plan-and-execute phase, the agent might hallucinate in its plan, which needs your careful review. Iterative loops can get stuck in infinite cycles and need an exit mechanism.

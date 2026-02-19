@@ -8,7 +8,15 @@
 
 其中 `bash`（或 `shell`）是最万能的一个。理论上它能做任何事——读文件、装依赖、跑测试、查 Git 历史、curl 一个 API。那为什么还需要其他工具？因为专用工具更安全、更精确：`read_file` 比 `cat` 更可控，`edit_file` 比手动拼接文件内容更不容易出错。
 
-LLM 自己不能运行这些函数。它能做的是生成一个 JSON 请求，告诉 Agent "帮我执行这个操作"。Agent 执行后，把结果喂回给 LLM。这个循环就是 agentic 工作流的核心引擎。
+
+
+LLM 自己不能运行这些函数。它能做的是生成一个 JSON 对象，告诉 Agent "帮我执行这个操作"。
+
+这个操作就是一次工具调用（tool call）。
+
+Agent 在本地执行工具，然后把执行结果——成功或失败，连同输出——打包成新的消息，追加到对话历史里，再发给 LLM。LLM 看到结果，决定下一步是再次调用工具，还是回答用户问题。
+
+这个"生成工具调用 → 本地执行 → 返回结果 → 基于结果再推理"的闭环，就是 agentic 工作流的核心。
 
 ![Built-in Tools: LLM generates tool_calls JSON, Agent executes locally, results feed back as context — the action-perception loop powering agentic workflows](/illustrations/built-in-tools.svg)
 
@@ -80,7 +88,11 @@ Agent 把工具执行结果包装成 `tool` 角色消息，追加到对话历史
     {
       "role": "assistant",
       "tool_calls": [
-        { "id": "call_abc123", "name": "read_file", "arguments": { "filePath": "src/logger.js" } }
+        {
+          "id": "call_abc123",
+          "name": "read_file",
+          "arguments": { "filePath": "src/logger.js" }
+        }
       ]
     },
     {
@@ -114,20 +126,43 @@ LLM 的上下文中现在有了文件真实内容。它生成修改计划：
 
 Agent 再次在本地执行 `write_file`。一个完整的读取-修改-写入循环完成。
 
+````mermaid
+sequenceDiagram
+    participant User as 用户
+    participant Agent
+    participant LLM_API as LLM API
+
+    User->>Agent: "把 `log` 改名为 `logEvent`"
+    Agent->>LLM_API: POST /chat/completions (含工具定义)
+    LLM_API-->>Agent: SSE: `tool_calls` (调用 read_file)
+    Agent->>Agent: 本地执行: read_file('src/logger.js')
+    Note right of Agent: 读取文件内容
+    Agent->>LLM_API: POST /chat/completions (含文件内容)
+    LLM_API-->>Agent: SSE: `tool_calls` (调用 write_file)
+    Agent->>Agent: 本地执行: write_file(...)
+    Note right of Agent: 写入修改后的内容
+    Agent->>LLM_API: POST /chat/completions (含写入成功信息)
+    LLM_API-->>Agent: SSE: "操作完成"
+    Agent->>User: "已将 `log` 函数重命名为 `logEvent`。"
+````
+
 ## 工具如何塑造上下文
 
 走完这个流程，你会发现工具从两个方向塑造了 LLM 的上下文：
 
 1. **工具定义 → 静态上下文**：每次请求的 `system` 或 `tools` 字段里，都带着完整的工具清单。你的 Agent 有 15 个工具？那每一轮请求——不管用户问的是什么——都会把这 15 个工具的名称、描述、参数 schema 全部发给 LLM。这就是"静态"的含义：它不会因为对话内容而变化，但始终占用上下文窗口。LLM 靠它规划行动——不知道有哪些工具，就无法决定下一步。
-2. **工具返回值 → 动态上下文**：每次工具执行结果追加到 `messages`，成为下一轮推理的输入。`read_file` 让 LLM 看到代码，`bash` 让它知道当前 Git 分支。
-
-LLM 通过工具定义知道能做什么，通过返回值知道世界是什么样。
+2. **工具返回值 → 动态上下文**：每次工具执行结果追加到 `messages`，成为下一轮推理的输入。`read_file` 让 LLM 看到代码。
+   LLM 通过工具定义知道能做什么，通过返回值了解外部世界的当前状态。
 
 ![How tools shape context: static tool definitions vs dynamic tool results](/illustrations/built-in-tools-inline-1.svg)
 
-但工具返回值也是上下文膨胀最快的来源。一次未加限制的 `ls -R` 或读一个几万行的日志文件，直接撑爆大半个上下文窗口。聪明的做法是在工具层就裁剪：只取结构化数据的关键字段，长列表分页返回，大文件只读指定行范围。与其等上下文满了再想办法压缩，不如一开始就别让垃圾进来。
+但工具返回值也是上下文膨胀最快的来源。一次未加限制的 `ls -R` 或读一个几万行的日志文件，直接撑爆大半个上下文窗口。
 
-## 别骂它瞎跑
+聪明的做法是在工具层就裁剪。Agent 开发者通常会在工具的实现中加入保护机制，比如 `read_file` 默认只返回前 2000 行，`bash` 工具会截断过长的输出。用户不直接控制这些行为，它们是保证 Agent 稳定运行的必要限制。
+
+与其等上下文满了再想办法压缩，不如一开始就别让垃圾进来。
+
+## 看懂 Agent 的探索行为
 
 新手看到 Agent 连跑三次 `ls` 和 `grep` 就急了："你倒是直接改代码啊？"
 
@@ -157,7 +192,32 @@ Agent 会**真实执行** LLM 请求的操作。好的工具分两级信任：
 
 ![Tool trust boundary levels: allow read-only, review writes, confirm high-risk operations](/illustrations/built-in-tools-inline-2.svg)
 
-## 读每一节时，留意这三件事
+
+
+光说“工具”太抽象。不同 agent 的内置工具长什么样？看几个例子就明白了。下面是四个常见 AI 编码助手的工具集对比，让你对“内置”有个具体概念。
+
+### 工具分类对比
+
+| 工具类型 | Claude Code | Codex | Gemini CLI | OpenCode |
+| :--- | :--- | :--- | :--- | :--- |
+| **读取类** | `Read`, `Glob`, `Grep` | `—` (待核查) | `read_file`, `list_files` | `read`, `glob`, `grep` |
+| **写入类** | `Write`, `Edit` | `—` (待核查) | `write_file` | `edit`, `write`, `patch` |
+| **执行类** | `Bash` | 沙箱内执行 | `git`, shell 执行 | `bash` |
+| **搜索类** | `Grep`, `LSP` | `—` (待核查) | `grep`, `find_files`, `resolve_symbol` | `grep`, `lsp` |
+| **网络类** | `WebFetch`, `WebSearch` | 网络受限 | `—` | `webfetch`, `websearch` |
+
+### 权限控制对比
+
+| Agent | 权限模型 | 用户配置方式 |
+| :--- | :--- | :--- |
+| **Claude Code** | 分层权限 (default, acceptEdits, plan, dontAsk) | `allowedTools` 列表 + 交互式提示 |
+| **Codex** | 三档审批 (Auto, Read-only, Full Access) | CLI 启动参数 |
+| **Gemini CLI** | 交互式确认 | `settings` 文件 |
+| **OpenCode** | 每工具三档 (allow, ask, deny) | `opencode.json` 文件 |
+
+工具名和分类不同，但模式一样——读、写、执行、搜索，再加上权限分级控制。这套组合拳是 Agent 与世界互动的基石。
+
+## 本节小结
 
 - **上下文流动**：工具定义是静态上下文，每次请求都在；工具返回值是动态上下文，执行后追加。两者共同驱动 LLM 的行动-感知循环。
 - **风险**：`read_file` 读一个 10MB 的日志？上下文窗口瞬间爆掉，早期关键信息被截断。`bash` 自动执行 `rm -rf`？没有确认机制的 Agent 大概率会执行。

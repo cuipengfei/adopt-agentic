@@ -92,7 +92,7 @@ But every loaded Skill keeps occupying context. Before loading, ask: does this t
 
 After loading, watch for instruction conflicts. When the task ends, deactivate what's no longer needed to free space for the next job. Loading is easy; deactivating is the discipline. Skip it, and your context just gets noisier.
 
-## Three Things to Watch in Every Chapter
+## Key Takeaways
 
 - **Context flow**: Loading a Skill = its full content appended to System Instructions, continuously occupying context window until unloaded. It produces stable, reproducible domain-specific behavior patterns.
 - **Risk**: Too many Skills loaded will exhaust the context window. A subtler problem: different Skills' instructions may conflict — one demands detailed comments, another demands minimalism — and agent behavior becomes unpredictable.

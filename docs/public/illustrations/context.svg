@@ -48,7 +48,7 @@
     
     <!-- 1. The Request Loop (Blue) -->
     <!-- Path: Start(-400,-150) -> Write(-200,-150) -> Down to Actions Line(-150,-100) -> Across to Window(350,-100) -->
-    <path id="requestPath" d="M -400 -150 L -200 -150 L -150 -100 L 350 -100" 
+    <path id="requestPath" d="M -400 -180 L -220 -180 L -20 -180 L 350 -100" 
           fill="none" stroke="#3b82f6" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
     
     <!-- 2. The Response Loop (Green) -->
@@ -57,7 +57,7 @@
           fill="none" stroke="#10b981" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
           
     <!-- 3. The Isolate Siding (Purple) - Alternative path (animated flow) -->
-    <path id="isolatePath" d="M -150 -100 L -100 -50 L 50 -50 L 100 -100" 
+    <path id="isolatePath" d="M -220 -180 L -220 -20 L -20 -20 L -20 -180" 
           fill="none" stroke="#a855f7" stroke-width="6" stroke-dasharray="12,4">
       <animate attributeName="stroke-dashoffset" values="0;32" dur="2s" repeatCount="indefinite"/>
     </path>
@@ -65,7 +65,7 @@
     <!-- STATIONS & ZONES -->
     
     <!-- User Station (Start) -->
-    <g transform="translate(-400, -150)">
+    <g transform="translate(-400, -180)">
       <circle r="15" fill="white" stroke="#3b82f6" stroke-width="4">
         <animate attributeName="stroke-width" values="4; 8; 4" dur="2s" repeatCount="indefinite"/>
         <animate attributeName="stroke-opacity" values="1; 0.5; 1" dur="2s" repeatCount="indefinite"/>
@@ -74,7 +74,7 @@
     </g>
 
     <!-- Action 1: WRITE (Generation) -->
-    <g transform="translate(-200, -150)">
+    <g transform="translate(-220, -180)">
       <circle r="8" fill="none" stroke="#3b82f6" stroke-width="2" opacity="0.6">
         <animate attributeName="r" values="8; 16; 8" dur="2s" repeatCount="indefinite"/>
         <animate attributeName="opacity" values="0.6; 0; 0.6" dur="2s" repeatCount="indefinite"/>
@@ -85,17 +85,18 @@
     </g>
 
     <!-- Action 2: ISOLATE (Branch Point) -->
-    <g transform="translate(-150, -100)">
+    <g transform="translate(-220, -20)">
       <circle r="12" fill="none" stroke="#a855f7" stroke-width="2" opacity="0.6">
         <animate attributeName="r" values="12; 20; 12" dur="2s" begin="1s" repeatCount="indefinite"/>
         <animate attributeName="opacity" values="0.6; 0; 0.6" dur="2s" begin="1s" repeatCount="indefinite"/>
       </circle>
       <use href="#station-transfer"/>
-      <text x="-15" y="25" text-anchor="end" font-size="12" font-weight="bold" fill="#334155">ISOLATE</text>
+      <text x="0" y="25" text-anchor="middle" font-size="12" font-weight="bold" fill="#334155">ISOLATE</text>
+      <text x="0" y="40" text-anchor="middle" font-size="10" fill="#64748b">Separate</text>
     </g>
     
     <!-- Action 3: SELECT (Filter) -->
-    <g transform="translate(-50, -100)">
+    <g transform="translate(-20, -180)">
       <circle r="8" fill="none" stroke="#3b82f6" stroke-width="2" opacity="0.6">
         <animate attributeName="r" values="8; 16; 8" dur="2s" begin="0.5s" repeatCount="indefinite"/>
         <animate attributeName="opacity" values="0.6; 0; 0.6" dur="2s" begin="0.5s" repeatCount="indefinite"/>
@@ -106,8 +107,8 @@
     </g>
 
     <!-- Action 4: SQUEEZE (Compress) -->
-    <g transform="translate(100, -100)">
-      <circle r="8" fill="none" stroke="#3b82f6" stroke-width="2" opacity="0.6">
+    <g transform="translate(-20, -20)">
+      <circle r="8" fill="none" stroke="#a855f7" stroke-width="2" opacity="0.6">
         <animate attributeName="r" values="8; 16; 8" dur="2s" begin="0.75s" repeatCount="indefinite"/>
         <animate attributeName="opacity" values="0.6; 0; 0.6" dur="2s" begin="0.75s" repeatCount="indefinite"/>
       </circle>
@@ -187,16 +188,16 @@
     
     <!-- Train 1: Blue (Request) -->
     <circle r="6" fill="#2563eb">
-      <animateMotion dur="4s" repeatCount="indefinite" path="M -400 -150 L -200 -150 L -150 -100 L 350 -100"/>
+      <animateMotion dur="4s" repeatCount="indefinite" path="M -400 -180 L -220 -180 L -20 -180 L 350 -100"/>
     </circle>
     <!-- Train 1b: Blue staggered (Request 2nd packet) -->
     <circle r="4" fill="#3b82f6" opacity="0.6">
-      <animateMotion dur="4s" begin="1.5s" repeatCount="indefinite" path="M -400 -150 L -200 -150 L -150 -100 L 350 -100"/>
+      <animateMotion dur="4s" begin="1.5s" repeatCount="indefinite" path="M -400 -180 L -220 -180 L -20 -180 L 350 -100"/>
     </circle>
     
     <!-- Train 2: Purple (Isolate Branch) -->
     <circle r="4" fill="#9333ea">
-      <animateMotion dur="4s" begin="2s" repeatCount="indefinite" path="M -150 -100 L -100 -50 L 50 -50 L 100 -100"/>
+      <animateMotion dur="4s" begin="2s" repeatCount="indefinite" path="M -220 -180 L -220 -20 L -20 -20 L -20 -180"/>
     </circle>
 
     <!-- Train 3: Green (Response) -->

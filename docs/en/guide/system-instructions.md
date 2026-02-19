@@ -56,12 +56,17 @@ These turn a general-purpose LLM into your specialized tool.
 
 ## Who Writes It?
 
-System instructions come from two sources:
+System instructions come from three sources:
 
 1.  **The Agent's Developers**: They write the bulk of the base instructions, defining the agent's core capabilities and behavioral patterns. You mostly cannot change this part.
 2.  **You (The User)**: Most agentic tools provide an entry point for custom instructions, such as a `CLAUDE.md` file, an `AGENTS.md`, or a configuration option within the tool.
+3.  **The Agent Itself, During a Conversation**: The agent and LLM can also become authors. This typically happens in two scenarios:
+    -   The user gives a direct order: "Add this convention to our rules file."
+    -   The system instructions authorize the agent to update itself under certain conditions: "If you identify a new coding convention, append it to the instruction file."
+    
+    This transforms system instructions from a static configuration into a living document that evolves with the project.
 
-## Key Insight: User Customization is Your Most Effective Handle
+## User Customization is Your Most Effective Handle
 
 User-defined system instructions are the **most effective handle** you have to influence an agent's behavior.
 
@@ -148,7 +153,7 @@ One person maintaining an instruction file? Just iterate. A team maintaining the
 | Low change frequency (monthly/quarterly) | ✅ | |
 | High change frequency (daily/weekly) | | ✅ (frequently changing system prompts invite errors) |
 
-## Three Things to Watch in Every Chapter
+## Key Takeaways
 
 - **Context flow**: System instructions are the "static layer" of context — present unchanged in every request, providing a stable behavioral baseline for all dynamic context that follows (user inputs, tool results).
 - **Risk**: When base instructions and your custom instructions conflict, LLM behavior becomes unpredictable. Agent acting strange? Check for instruction conflicts first.

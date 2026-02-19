@@ -239,6 +239,16 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
 | `human-in-the-loop.svg` | 节点 14 HITL | 17 |
 | `peer-to-peer-agents.svg` | 节点 15 P2P Agents | 24 |
 
+**内容结构规则（Phase 3 审校提炼）**
+
+- **解释性缺口**：首次提到技术概念时，必须说清三件事——谁做的、怎么做的、为什么。不假设读者已知。
+- **标题准确性**：标题必须准确传达 section 内容。禁止纯口语化、模糊、或不恰当的标题（如"别骂它瞎跑"）。
+- **Section 连贯性**：同一 section 内段落必须有逻辑顺序和过渡句连接，不碎片化。
+- **交叉引用优先**：不同章节讲同一概念时，主讲章节展开，其他章节用 markdown 链接交叉引用，不重复。
+- **渲染验证**：mermaid 图和 SVG 修改后，必须用 `bun run docs:build` 验证渲染（文字截断、元素重叠、parse error）。
+- **Agent-agnostic 引用**：在 `docs/guide/` 中引用配置文件时，列举多工具格式（如"不同工具叫法不同——`AGENTS.md`、`.cursorrules`、`CLAUDE.md` 等"），不单独引用一个。
+- **内容归属**：每段内容应属于当前章节主题。如果像是实操建议放在概念章节，必须有引子解释为什么放在这里。
+
 **风格红线**
 
 - 读起来像学术论文或正式报告 → 改写。
@@ -273,6 +283,7 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
 - 举例可以多元（各种工具都可以提），但不能让某个产品成为主角。
 - 不分 persona、不分市场——讲通用概念，不区分谁在读。
 - **主内容产品名禁令**：`docs/guide/` 和 `docs/en/guide/` 中**禁止**出现 Cursor、Windsurf、GitHub Copilot 等具体产品名（含衍生名如 `.cursorrules`、`copilot-instructions.md`）。`materials/` 研究素材中可以提及。
+  - **例外**：`docs/guide/built-in-tools.md` 和 `docs/en/guide/built-in-tools.md` 中的工具对比示例表允许使用 Claude Code、Codex、Gemini CLI、OpenCode 四个产品名，作为对评论 #16 的特批。该表格用具体产品演示通用概念（内置工具差异和权限控制），属于"举例可以多元"的范畴。
 
 ### 内容选择标准（"它山之石可以攻玉"）
 

@@ -23,12 +23,14 @@ The agent sends a POST to the LLM API. The `messages` array in the request body 
 ```json
 // → REQUEST (agent → LLM API)
 {
-  "system": "You are an experienced developer. Follow the project's coding standards...",
+  "system": "You are an experienced developer. Follow the project's coding standards...\n\nProject structure:\nsrc/processOrder.ts\nsrc/utils/\ntests/\npackage.json",
   "messages": [
     { "role": "user", "content": "Refactor processOrder, extract the validation logic" }
   ]
 }
 ```
+
+Notice the system prompt already contains the project structure — the agent scanned the directory tree before sending the request. When the LLM returns an accurate file path later, it's reading from this context, not guessing.
 
 The LLM streams its response back via SSE (Server-Sent Events) — that character-by-character text appearing in your terminal is the SSE stream:
 
@@ -51,10 +53,10 @@ The agent **appends** the previous LLM response and the tool result to the `mess
 ```json
 // → REQUEST (agent → LLM API — notice messages is longer than Round 1)
 {
-  "system": "You are an experienced developer. Follow the project's coding standards...",
-  "messages": [
-    { "role": "user",
-      "content": "Refactor processOrder, extract the validation logic" },
+    "system": "You are an experienced developer. Follow the project's coding standards...\n\nProject structure:\nsrc/processOrder.ts\nsrc/utils/\ntests/\npackage.json",
+    "messages": [
+      { "role": "user",
+        "content": "Refactor processOrder, extract the validation logic" },
     { "role": "assistant",
       "content": "Let me read the current implementation...",
       "tool_calls": [{ "name": "read_file", "arguments": "..." }] },
@@ -76,8 +78,25 @@ See it? Round 2's request **re-sends everything from Round 1** — the user mess
 
 **This is the essence of context accumulation: each round, the `messages` array grows, then gets re-sent in full.**
 
+```mermaid
+sequenceDiagram
+    participant A as Agent
+    participant L as LLM API
+
+    A->>L: Round 1 request (system + user message ≈ 2K tokens)
+    L-->>A: tool_calls: read_file
+    Note right of A: Execute tool locally, get file contents
+    A->>L: Round 2 request (all of Round 1 + tool result ≈ 6K tokens)
+    L-->>A: tool_calls: write_file
+    Note right of A: Execute tool locally, write refactored code
+    A->>L: Round 3 request (all previous rounds + new result ≈ 10K tokens)
+    L-->>A: "Refactoring complete"
+```
+
 ::: tip Different APIs, Same Essence
 Anthropic's Messages API, OpenAI's Chat Completions API, Google's Gemini API — formats differ, but the core structure is identical: a message list, appended each turn, sent in full. Every agent tool you use is doing this under the hood.
+
+OpenAI later introduced the Responses API, which lets developers skip manually re-sending the full `messages` array each round — just pass a `previous_response_id` and the API server manages the history for you. But this is a transport-layer simplification, not a model-layer change. The model still sees the complete message list for every inference, and context window consumption remains the same.
 :::
 
 ## Why It's the First Principle
@@ -98,9 +117,9 @@ Bottom line — your project rules file might be beautifully written, but if the
 
 Every mechanism covered in subsequent chapters — System Instructions, tools, MCP, Commands, Skills — **is fundamentally answering the same set of questions: what information to put in, when to put it in, and how to get it into context.**
 
-## The Limits of Context
+## Managing Context
 
-More context is not always better.
+More context is not always better. The window has a hard ceiling, signal-to-noise ratio determines reasoning quality, and long conversations degrade naturally. Three problems, each unpacked below.
 
 ### The Window Is Finite
 
@@ -113,14 +132,14 @@ Every LLM has a context window limit. 128K, 200K tokens — sounds like a lot, b
 What happens when the window fills up? Earlier messages get truncated or compressed. The agent **literally forgets** what you discussed at the start — you think it still knows, but those messages are no longer in the `messages` array.
 
 ```mermaid
-graph LR
-    A["🟢 Round 1<br/>system + user message<br/>~10% of window"] --> B["🟡 Round 10<br/>system + 10 turns of history + tool results<br/>~60% of window"]
-    B --> C["🔴 Round 30<br/>early messages truncated ❌<br/>100% of window"]
+graph TB
+    A["🟢 Round 1 — ~10%<br/>system + user message"] --> B["🟡 Round 10 — ~60%<br/>10 turns of history + tool results"]
+    B --> C["🔴 Round 30 — 100%<br/>early messages truncated ❌"]
 ```
 
 ### Noise Drowns Signal
 
-Stuffing an entire codebase into context is tempting, and disastrous.
+The window size is a hard limit. But even when you're nowhere near it, the quality of what's inside matters just as much.
 
 Good context management means "retrieving the right few dozen key facts," not "dumping all text in at once." The goal is to **include only what the LLM actually needs to make its decision**—just enough, not one wasted sentence.
 
@@ -149,6 +168,8 @@ Context management boils down to four actions:
 - **Isolate** — give different tasks different context slices
 
 Every tool and mechanism in subsequent chapters helps you do these four things.
+
+Write, Select, Compress, Isolate — these four actions help you manage context at the **single-step** level. But in **multi-step long conversations**, there's a subtler problem.
 
 ![Context management distilled: raw project data flows through Select, Write, Compress, and Isolate modules before entering the finite Context Window](/illustrations/context.svg)
 
@@ -206,7 +227,7 @@ Your project rules file takes effect in every new conversation. Coding conventio
 | Maintained by | Agent automatically | You lead, tools assist |
 | Typical contents | Chat history, tool results | Project standards, architecture decisions, coding conventions |
 
-For example: you ask the agent to read `package.json` during a conversation — that's session state, gone when the conversation ends. You write a `CLAUDE.md` in your project root specifying "all functions must have JSDoc comments" — that's persistent context, loaded by the agent at the start of every new conversation.
+For example: you ask the agent to read `package.json` during a conversation — that's session state, gone when the conversation ends. You place an instruction file in your project root (different tools call it different things — `AGENTS.md`, `.cursorrules`, `CLAUDE.md`, etc.), specifying "all functions must have JSDoc comments" — that's persistent context, loaded by the agent at the start of every new conversation.
 
 ### Context Has a Shelf Life
 
@@ -294,7 +315,7 @@ mindmap
       Hooks & Plugins
 ```
 
-## Three Things to Watch in Every Chapter
+## Key Takeaways
 
 - **Context flow:** This chapter's context starts with the system prompt. Every subsequent chapter adds more — different injection methods, but it all ends up in the `messages` array.
 - **Risk:** Get the context boundary wrong and errors snowball — from this step to every step after it.

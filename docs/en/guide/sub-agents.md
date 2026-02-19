@@ -142,7 +142,7 @@ A Sub Agent’s performance depends on two things:
 
 What you can do: give the main Agent clear instructions and sufficient background. The better the raw material the main Agent has, the better the prompt it constructs for the Sub Agent.
 
-## Three Things to Watch in Every Chapter
+## Key Takeaways
 
 - **Context flow**: The main Agent extracts information from its own context to construct the initial prompt → Sub Agent executes independently in isolated context → returns a summary that gets injected back into the main Agent’s context. Runtime isolation and full logging coexist—they don’t conflict.
 - **Risk**: Isolation is a double-edged sword. If the main Agent omits a key constraint when constructing the prompt, the Sub Agent works without critical information and may produce non-compliant code. Over-splitting also has costs—each Sub Agent needs to rebuild context from scratch, and coordination overhead accumulates.

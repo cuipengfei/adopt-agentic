@@ -103,7 +103,7 @@ Structured output means: **fewer parsing errors, more precise information extrac
 
 CLI tools are the **simplest, most universal, and most mature** way for an agent to interact with the outside world. If you're building a tool for agents, CLI-first is usually the safest bet — it forces you to expose core functionality in the purest, most composable way.
 
-## Three Things to Watch in Every Chapter
+## Key Takeaways
 
 - **Context flow**: CLI stdout/stderr is captured and injected directly into the next round's context. Exit codes serve as success/failure signals. Oversized output gets truncated by the agent — mind your output volume.
 - **Risk**: CLI tools directly manipulate the OS; the risk of `rm -rf /` is real. An agent might incorrectly construct a destructive command. Some command outputs may contain sensitive information (environment variables, API keys, private keys).

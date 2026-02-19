@@ -57,7 +57,7 @@ Commands aren't just plain text. A well-designed command can bundle multiple ele
 
 System instructions define how the agent behaves *by default*. Commands define what it does *this time*. When the two conflict — say, system instructions demand "operate cautiously" while `/force-push` demands "overwrite forcefully" — the LLM receives contradictory signals and behavior becomes unpredictable.
 
-## Three Things to Watch in Every Chapter
+## Key Takeaways
 
 - **Context flow**: User types `/command` → agent expands it into a prompt → injects into `messages` → LLM consumes and responds. Command-injected content is task-level — it doesn't persist across subsequent sessions.
 - **Risk**: Commands can conflict with system instructions. Also, commands containing dangerous operations (like `/deploy` or `/force-push`) should have confirmation gates — not every shortcut should be fire-and-forget.

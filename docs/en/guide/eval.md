@@ -190,7 +190,7 @@ Your job is to keep step 3 intact. Tests ran but results weren't fed back? That'
 
 **Fix**: Verification density must keep up with generation speed. Agent modified code? Immediately run tests, lint, type checking. For things automated verification can't catch (naming, design intent, architectural consistency), do manual reviews at key checkpoints. Not every time—but spot-check every few tasks.
 
-## Three Things to Watch in Every Chapter
+## Key Takeaways
 
 - **Context flow**: Each verification layer produces signals (exit codes, test reports, metrics) that get injected back into context, becoming the basis for the Agent’s next decision. Verification isn’t a post-mortem—it’s real-time navigation.
 - **Risk**: Insufficient verification is the root cause of runaway Agent projects. A small tool-level error, if not caught early, gets amplified through subsequent steps—leading to catastrophic task failure.

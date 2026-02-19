@@ -117,7 +117,7 @@ Frankly, P2P Agent collaboration is a recognized frontier, but the ecosystem is 
 
 For you, understanding how P2P works has one practical payoff: when you encounter a problem that truly needs multiple perspectives, you can **manually role-play multiple viewpoints** in your conversation with the Agent—"If you were a backend engineer, how would you evaluate this API design?"—which is effectively simulating P2P collaboration.
 
-## Three Things to Watch in Every Chapter
+## Key Takeaways
 
 - **Context flow**: From one-way (hierarchical) to two-way (peer), context is no longer a linear "inject → produce" path but a web-like exchange among peers. Every Agent's output is simultaneously input for the others.
 - **Risk**: Coordination overhead grows quadratically (O(n²)). One Agent's hallucination can cascade through the message chain to other Agents, causing collective deviation. Root cause analysis in complex interaction histories is extremely difficult—a classic distributed systems pain point.

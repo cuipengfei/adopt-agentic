@@ -8,7 +8,13 @@ Built-in tools are that ability. They're functions pre-written by agent develope
 
 Of these, `bash` (or `shell`) is the most versatile. In theory it can do anything — read files, install dependencies, run tests, check Git history, curl an API. So why have other tools at all? Because specialized tools are safer and more precise: `read_file` is more controllable than `cat`, `edit_file` is less error-prone than manually splicing file contents.
 
-The LLM can't run these functions itself. What it can do is generate a JSON request telling the agent "execute this operation for me." The agent executes it, feeds the result back. This loop is the core engine of agentic workflows.
+The LLM can't run these functions itself. What it can do is generate a JSON object telling the agent, "execute this operation for me."
+
+This operation is a tool call.
+
+The agent executes the tool locally, then packages the result—success or failure, along with any output—into a new message. It appends this message to the conversation history and sends it back to the LLM. Seeing the result, the LLM decides whether to call another tool or to answer the user's question.
+
+This closed loop of "generate tool call → execute locally → return result → reason based on result" is the core engine of agentic workflows.
 
 ![Built-in Tools: LLM generates tool_calls JSON, Agent executes locally, results feed back as context — the action-perception loop powering agentic workflows](/illustrations/built-in-tools.svg)
 
@@ -114,6 +120,26 @@ The LLM's context now includes the actual file content. It generates the modific
 
 The agent executes `write_file` locally again. A complete "read-modify-write" cycle is done.
 
+````mermaid
+sequenceDiagram
+    participant User
+    participant Agent
+    participant LLM_API
+
+    User->>Agent: "Rename `log` to `logEvent`"
+    Agent->>LLM_API: POST /chat/completions (with tool definitions)
+    LLM_API-->>Agent: SSE: `tool_calls` (to call read_file)
+    Agent->>Agent: Local execution: read_file('src/logger.js')
+    Note right of Agent: Read file content
+    Agent->>LLM_API: POST /chat/completions (with file content)
+    LLM_API-->>Agent: SSE: `tool_calls` (to call write_file)
+    Agent->>Agent: Local execution: write_file(...)
+    Note right of Agent: Write modified content
+    Agent->>LLM_API: POST /chat/completions (with write success message)
+    LLM_API-->>Agent: SSE: "Operation complete"
+    Agent->>User: "I have renamed the `log` function to `logEvent`."
+````
+
 ## How Tools Shape Context
 
 After walking through this flow, you can see tools shape the LLM's context from two directions:
@@ -121,13 +147,17 @@ After walking through this flow, you can see tools shape the LLM's context from 
 1. **Tool definitions → static context**: Every request's `system` or `tools` field carries the full tool manifest. Your agent has 15 tools? Then every single request — regardless of what the user asked — sends all 15 tool names, descriptions, and parameter schemas to the LLM. That's what "static" means: it doesn't change based on conversation content, but it always occupies context window. The LLM relies on it to plan actions — without knowing what tools are available, it can't decide what to do next.
 2. **Tool return values → dynamic context**: Each tool execution result is appended to `messages`, becoming input for the next round of reasoning. `read_file` lets the LLM see the code; `bash` output tells it the current Git branch.
 
-The LLM knows "what it can do" from tool definitions, and "what the world looks like" from return values.
+The LLM knows "what it can do" from tool definitions, and learns "what the current state of the outside world is" from return values.
 
 ![How tools shape context: static tool definitions vs dynamic tool results](/illustrations/built-in-tools-inline-1.svg)
 
-But tool return values are also the fastest source of context bloat. One unrestricted `ls -R` or reading a log file with tens of thousands of lines can blow through most of the context window in a single call. The smart move is to trim at the tool layer: pull only key fields from structured data, paginate long lists, read large files by line range. Instead of waiting for the context to overflow and then scrambling to compress, don't let the junk in to begin with.
+But tool return values are also the fastest source of context bloat. One unrestricted `ls -R` or reading a log file with tens of thousands of lines can blow through most of the context window in a single call.
 
-## Don't scold it for running around
+The smart move is to trim at the tool layer. Agent developers typically build in safeguards, like a `read_file` tool that only returns the first 2000 lines, or a `bash` tool that truncates long outputs. Users don't control these behaviors directly; they are necessary limits to keep the agent running stably.
+
+Instead of waiting for the context to overflow and then scrambling to compress, don't let the junk in to begin with.
+
+## Understanding the Agent's Exploratory Actions
 
 When you see the agent run `ls` and `grep` for the third time, you might get impatient. "Why don't you just fix the code?"
 
@@ -157,7 +187,30 @@ You need to know the extent of your agent's permissions and consciously supervis
 
 ![Tool trust boundary levels: allow read-only, review writes, confirm high-risk operations](/illustrations/built-in-tools-inline-2.svg)
 
-## Three Things to Watch in Every Chapter
+Just saying "tools" is too abstract. What do the built-in tools of different agents actually look like? A few examples make it clear. Here’s a comparison of the toolsets for four common AI coding assistants to give you a concrete idea of what "built-in" means.
+
+### Tool Category Comparison
+
+| Tool Type | Claude Code | Codex | Gemini CLI | OpenCode |
+| :--- | :--- | :--- | :--- | :--- |
+| **Read** | `Read`, `Glob`, `Grep` | `—` (TBD) | `read_file`, `list_files` | `read`, `glob`, `grep` |
+| **Write** | `Write`, `Edit` | `—` (TBD) | `write_file` | `edit`, `write`, `patch` |
+| **Execute** | `Bash` | Sandboxed execution | `git`, shell execution | `bash` |
+| **Search** | `Grep`, `LSP` | `—` (TBD) | `grep`, `find_files`, `resolve_symbol` | `grep`, `lsp` |
+| **Network** | `WebFetch`, `WebSearch` | Network limited | `—` | `webfetch`, `websearch` |
+
+### Permission Control Comparison
+
+| Agent | Permission Model | User Configuration |
+| :--- | :--- | :--- |
+| **Claude Code** | Tiered permissions (default, acceptEdits, plan, dontAsk) | `allowedTools` list + interactive prompts |
+| **Codex** | Three approval modes (Auto, Read-only, Full Access) | CLI launch parameters |
+| **Gemini CLI** | Interactive confirmation | `settings` file |
+| **OpenCode** | Per-tool modes (allow, ask, deny) | `opencode.json` file |
+
+The tool names and categories differ, but the pattern is the same: read, write, execute, and search, plus tiered permission controls. This combination is the foundation of how an agent interacts with the world.
+
+## Key Takeaways
 
 - **Context flow**: Tool definitions are static context, present in every request; tool return values are dynamic context, appended after execution. Together they drive the LLM's "act-perceive" loop.
 - **Risk**: `read_file` on a 10MB log? Context window instantly blown, critical early information truncated. `bash` auto-executing `rm -rf`? An agent without confirmation will likely do it.
