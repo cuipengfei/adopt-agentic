@@ -52,7 +52,7 @@ This is the core value of a hook: a programmable firewall between the agent and 
 
 ### Lifecycle Events
 
-Different agent tools support different event sets and naming, but the core types are consistent:
+Different agent tools support different event sets and naming. Below are representative types — **before/after tool calls** and **agent stop** are the most universal; session start, prompt submit, system prompt transform, and session compaction vary by tool:
 
 | Event Type | When | What You Can Do |
 | --- | --- | --- |
@@ -66,7 +66,7 @@ Different agent tools support different event sets and naming, but the core type
 
 Note "system prompt transform" and "session compaction"—hooks in these categories **directly modify context content**. So hooks aren't just "side-channel interception"—they can also "put things into context."
 
-The "session compaction" hook deserves special attention. When agents automatically compress early history in long conversations, your core constraints may get compressed away—the agent "forgets" rules in the second half, not because it's stupid, but because that rule is simply no longer in the context. A compaction hook lets you solve this at the mechanism level: specify which information must be preserved verbatim, and which can be summarized. Far more reliable than manually restating constraints every few turns.
+The "session compaction" hook is one of the less universal types — not all tools support it, but if yours does, it's worth using well. When agents automatically compress early history in long conversations, your core constraints may get compressed away—the agent "forgets" rules in the second half, not because it's stupid, but because that rule is simply no longer in the context. A compaction hook lets you solve this at the mechanism level: specify which information must be preserved verbatim, and which can be summarized. Far more reliable than manually restating constraints every few turns.
 
 The difference between Skills and Hooks isn't about "who can modify context," but about:
 
@@ -121,8 +121,8 @@ A plugin's capability far exceeds "a collection of hooks." A single plugin can s
 
 - Mount multiple **Hooks** (lifecycle event handling)
 - Register new **Tools** (extend the agent's available toolset)
-- Provide **Slash Commands** (shortcut commands)
-- Inject **Skills** (domain knowledge)
+- Provide **Slash Commands** (shortcut commands, supported by some tools)
+- Inject **Skills** (domain knowledge, supported by some tools)
 - Provide authentication flows, output styles, configuration modifications, etc.
 
 A plugin is a programmable extension point for the agent—what it can do depends on which interfaces the agent tool exposes.

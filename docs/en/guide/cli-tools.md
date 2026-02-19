@@ -92,6 +92,30 @@ Traditional CLIs output plain text that the LLM has to parse on its own. But mor
 
 Structured output means: **fewer parsing errors, more precise information extraction, more reliable subsequent actions.** If the CLI you're calling supports a `--json` flag, prefer it.
 
+## More Common Patterns
+
+CLI tools go far beyond `git`. A few patterns agents commonly use:
+
+**Code Quality**
+
+- `tsc --noEmit` — type checking; exit code is the signal. No noise, the agent just reads whether it's 0 or non-zero.
+- `eslint --format json` — code quality issues, structured by file, line number, and rule name. Precise.
+
+**Dependency Management**
+
+- `ncu --jsonUpgraded` — check which packages have updates; JSON output lets the agent reason directly about upgrade strategy.
+
+**CLI Tools Designed for AI Workflows**
+
+The tools above are "incidentally agent-friendly" — plain text interface, predictable, with structured output options. Some tools go further: **actively designed for AI workflows**. `openspec` is one example:
+
+```bash
+openspec list          # What changes are in progress
+openspec show <name>   # Show spec, task list, and proposal for a change
+```
+
+When an agent calls these, the output isn't raw code or system state — it's **structured task context**: what this feature should do, what the constraints are, where things stand. This points to a direction: CLI tools not just for executing operations or querying state, but as active task context injection points for agents.
+
 ## Differences from Built-in Tools and MCP
 
 |                | Built-in Tools | MCP | CLI Tools |

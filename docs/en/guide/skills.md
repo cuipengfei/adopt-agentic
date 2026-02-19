@@ -2,7 +2,7 @@
 
 > **Context Perspective**: Skills are on-demand system instruction snippets — bringing domain knowledge into the context modularly.
 
-The previous chapter's Commands and this chapter's Skills do the same thing under the hood — inject extra prompt into the context. There's no difference in persistence: once something enters the context, it's carried in every subsequent request (recall [Chapter 1](./context.md) — LLMs are stateless; everything is resent every turn).
+The previous chapter's Commands and this chapter's Skills do the same thing under the hood — inject extra prompt into the context. There's no difference in persistence: once something enters the context, it's carried in every subsequent request (recall the [Context](./context.md) chapter — LLMs are stateless; everything is resent every turn).
 
 The real differences are:
 
@@ -94,14 +94,6 @@ Both share the same underlying mechanism — injecting extra prompt into the con
 
 Different agent tools use different syntax for loading Skills, but the flow is the same: **inject metadata at startup → LLM loads full content on demand → included in every subsequent request.**
 
-## When to Use What
-
-Commands, Skills, and [Sub Agents](./sub-agents.md) all inject content into the context. The difference is granularity and isolation:
-
-- **Repetitive single-step operation?** → Command. One-click trigger, fire and forget.
-- **Persistent standards or knowledge?** → Skill. Load once, active every turn.
-- **Worried about context getting noisy?** → [Sub Agent](./sub-agents.md). Works in an isolated context, returns a summary.
-- **Not sure?** → Start with a Command. If you keep repeating it, upgrade to a Skill.
 
 ## Ecosystem: Reusable Behavior Patterns
 

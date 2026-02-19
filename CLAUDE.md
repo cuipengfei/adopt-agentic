@@ -155,6 +155,7 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
 | 几千行 / 5000 行 | "大量"、"thousands of lines" |
 | 几十分钟 / 上百次 | "很长时间"、"频繁调用" |
 | 卸载 | "停用"、"移除加载"、直接描述操作（如"从加载列表中移除"） |
+| 节点 X（如"节点 1"、"第 X 节"） | 章节名称（如"[上下文](./context.md)一节"）；英文同理（Chapter X → "the [Context](./context.md) chapter"）——这是内部索引，对外部读者没有意义 |
 
 - **AI filler 词密度控制**：中文"本质上"、英文 essentially / fundamentally / basically / actually / in essence——同一篇文档中不超过 2 处。超出的一律替换为"说白了"/"就是"/"其实"/"说到底"，或直接删掉（英文删掉通常不影响语义）。这些词是 AI 生成文本的高频指纹。
 - **同一节内术语必须统一**：选定一个词后贯穿到底。同一节内不要在同义词之间来回切换。常见漂移对（选一个贯穿到底）：

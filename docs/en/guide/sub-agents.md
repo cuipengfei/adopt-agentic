@@ -14,6 +14,8 @@ The longer a conversation goes, the longer the `messages` array gets. Early expl
 
 You need a clean room.
 
+That said — not every task needs one. A single [Command](./commands.md) trigger enough? Use that — simpler. A [Skill](./skills.md) loads once and stays active. Sub-task is independent with a clear goal? Spawn a Sub Agent right away — no need to wait until the context gets noisy.
+
 ## Spawning a Sub Agent
 
 A Sub Agent is that clean room.
