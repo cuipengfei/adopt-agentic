@@ -21,6 +21,12 @@ The Unix philosophy, established decades ago, unintentionally paved the way for 
 
 An agent doesn't need to understand the position of buttons in a GUI. It just needs to construct a command string and parse the returned text.
 
+Look at it from a different angle. GUIs are designed for human visual cognition — icons, buttons, drag-and-drop. APIs are designed for programs to call — function signatures, parameter types, return values. CLIs are designed for text processing — text in, text out.
+
+What is an LLM? A reasoning engine that takes text in and produces text out. CLI and LLM speak the same language natively.
+
+There's one more advantage that's easy to overlook: self-discovery. The first time an agent encounters an unfamiliar CLI tool, one call is enough — the tool returns its help output, listing what it can do, how to use it, and what flags are available, all injected directly into context. From then on, the agent knows how to use it. No need to pre-load full documentation into context — fetch on demand, take only what you need.
+
 ## Output Is Context
 
 When an agent needs to understand project history, it doesn't "open a Git client." It executes a command.
