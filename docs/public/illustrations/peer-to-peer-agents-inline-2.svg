@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">Fire-and-forget messaging between peers</title>
+  <desc id="desc">Diagram illustrating fire-and-forget peer messaging: sender does not wait for ACK, receiver may be offline, and delivery/processing cannot be assumed.</desc>
+
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0a1227"/>
+      <stop offset="1" stop-color="#091a18"/>
+    </linearGradient>
+
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#34d399"/>
+    </marker>
+    <marker id="arrowMuted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8" fill-opacity="0.85"/>
+    </marker>
+  </defs>
+
+  <style>
+    .panel { fill: url(#bg2); }
+    .card { fill: rgba(15, 23, 42, 0.92); stroke: rgba(148, 163, 184, 0.22); stroke-width: 2; }
+
+    .title { font: 800 24px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: #e2e8f0; }
+    .subtitle { font: 500 14px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: rgba(226, 232, 240, 0.78); }
+    .label { font: 700 13px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: rgba(226, 232, 240, 0.92); }
+    .hint { font: 500 12px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: rgba(148, 163, 184, 0.92); }
+    .mono { font: 600 12px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; fill: rgba(226, 232, 240, 0.88); }
+
+    .lane { stroke: rgba(148, 163, 184, 0.35); stroke-width: 2; stroke-dasharray: 4 8; }
+
+    .msg { stroke: rgba(52, 211, 153, 0.95); stroke-width: 4; stroke-dasharray: 10 10; marker-end: url(#arrow); }
+    .ack { stroke: rgba(148, 163, 184, 0.70); stroke-width: 3; stroke-dasharray: 6 8; marker-end: url(#arrowMuted); }
+
+    .nodeA { fill: rgba(52, 211, 153, 0.12); stroke: rgba(52, 211, 153, 0.95); stroke-width: 2; }
+    .nodeB { fill: rgba(99, 102, 241, 0.14); stroke: rgba(99, 102, 241, 0.95); stroke-width: 2; }
+    .tag { fill: rgba(15, 23, 42, 0.85); stroke: rgba(148, 163, 184, 0.22); stroke-width: 1.5; }
+  </style>
+
+  <rect class="panel" x="0" y="0" width="1200" height="420" rx="24"/>
+
+  <!-- Header -->
+  <text class="title" x="600" y="54" text-anchor="middle">Fire-and-Forget Peer Messaging</text>
+  <text class="subtitle" x="600" y="82" text-anchor="middle">Send without waiting for ACK • Receiver may be offline • You cannot assume every message was processed</text>
+
+  <!-- Diagram cards -->
+  <rect class="card" x="60" y="108" width="1080" height="254" rx="18"/>
+
+  <!-- Column headers -->
+  <g>
+    <rect class="tag" x="110" y="132" width="260" height="44" rx="12"/>
+    <text class="label" x="240" y="160" text-anchor="middle">Agent A (Sender)</text>
+
+    <rect class="tag" x="470" y="132" width="260" height="44" rx="12"/>
+    <text class="label" x="600" y="160" text-anchor="middle">Delivery Layer</text>
+
+    <rect class="tag" x="830" y="132" width="260" height="44" rx="12"/>
+    <text class="label" x="960" y="160" text-anchor="middle">Agent B (Receiver)</text>
+  </g>
+
+  <!-- Lifelines -->
+  <line class="lane" x1="240" y1="184" x2="240" y2="338"/>
+  <line class="lane" x1="600" y1="184" x2="600" y2="338"/>
+  <line class="lane" x1="960" y1="184" x2="960" y2="338"/>
+
+  <!-- Agents -->
+  <g>
+    <circle class="nodeA" cx="240" cy="210" r="16"/>
+    <text class="mono" x="240" y="215" text-anchor="middle">A</text>
+
+    <circle class="nodeB" cx="960" cy="210" r="16"/>
+    <text class="mono" x="960" y="215" text-anchor="middle">B</text>
+  </g>
+
+  <!-- Fire-and-forget message -->
+  <g>
+    <path class="msg" d="M 260 238 C 390 238, 420 238, 540 238 C 650 238, 720 238, 940 238">
+      <animate attributeName="stroke-dashoffset" values="0;-200" dur="3.2s" repeatCount="indefinite"/>
+    </path>
+    <text class="label" x="600" y="224" text-anchor="middle">fire-and-forget message</text>
+    <text class="hint" x="600" y="256" text-anchor="middle">sender continues immediately</text>
+  </g>
+
+  <!-- Optional ACK -->
+  <g opacity="0.85">
+    <path class="ack" d="M 940 276 C 820 276, 760 276, 660 276 C 540 276, 420 276, 260 276">
+      <animate attributeName="stroke-dashoffset" values="0;220" dur="5.2s" repeatCount="indefinite"/>
+    </path>
+    <text class="hint" x="600" y="300" text-anchor="middle">optional ACK (often absent)</text>
+  </g>
+
+  <!-- Callouts -->
+  <g>
+    <rect class="tag" x="96" y="312" width="320" height="40" rx="12"/>
+    <text class="hint" x="256" y="338" text-anchor="middle">No blocking: do not wait for delivery</text>
+
+    <rect class="tag" x="440" y="312" width="320" height="40" rx="12"/>
+    <text class="hint" x="600" y="338" text-anchor="middle">Best-effort: delivery can be delayed or dropped</text>
+
+    <rect class="tag" x="784" y="312" width="320" height="40" rx="12"/>
+    <text class="hint" x="944" y="338" text-anchor="middle">Receiver may be offline (no sender error)</text>
+  </g>
+
+  <!-- Footer note -->
+  <text class="hint" x="600" y="398" text-anchor="middle">Key point: a sent message does not imply it was processed.</text>
+</svg>

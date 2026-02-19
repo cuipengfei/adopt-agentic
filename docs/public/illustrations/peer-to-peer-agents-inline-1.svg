@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="480" viewBox="0 0 1200 480" role="img" aria-labelledby="title desc">
+  <title id="title">Hierarchy vs P2P: communication channels</title>
+  <desc id="desc">Side-by-side comparison: hierarchical delegation uses a hub-and-spokes pattern with channels that scale as N-1, while peer-to-peer mesh requires N(N-1)/2 direct channels (O(N^2)). Includes N=5 example.</desc>
+
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1020"/>
+      <stop offset="1" stop-color="#0a1227"/>
+    </linearGradient>
+  </defs>
+
+  <style>
+    .panel { fill: url(#bg); }
+    .card { fill: rgba(15, 23, 42, 0.92); stroke: rgba(148, 163, 184, 0.22); stroke-width: 2; }
+    .cardTitle { font: 700 18px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: #e2e8f0; letter-spacing: 0.2px; }
+    .title { font: 800 26px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: #e2e8f0; }
+    .subtitle { font: 500 14px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: rgba(226, 232, 240, 0.78); }
+    .muted { font: 500 13px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: rgba(148, 163, 184, 0.92); }
+    .mono { font: 600 13px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; fill: rgba(226, 232, 240, 0.9); }
+    .hint { font: 500 12px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: rgba(148, 163, 184, 0.88); }
+
+    .nodeText { font: 700 12px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: rgba(226, 232, 240, 0.92); }
+    .nodeA { fill: rgba(56, 189, 248, 0.12); stroke: rgba(56, 189, 248, 0.95); stroke-width: 2; }
+    .nodeB { fill: rgba(244, 114, 182, 0.12); stroke: rgba(244, 114, 182, 0.95); stroke-width: 2; }
+
+    .edgeA { stroke: rgba(56, 189, 248, 0.75); stroke-width: 2.5; }
+    .edgeB { stroke: rgba(244, 114, 182, 0.40); stroke-width: 2; stroke-dasharray: 7 7; }
+  </style>
+
+  <!-- Background -->
+  <rect class="panel" x="0" y="0" width="1200" height="480" rx="24"/>
+
+  <!-- Header -->
+  <text class="title" x="600" y="56" text-anchor="middle">Hierarchy vs P2P: Communication Channels</text>
+  <text class="subtitle" x="600" y="86" text-anchor="middle">Hierarchy scales ~O(N) channels • P2P mesh scales O(N²) channels</text>
+  <text class="muted" x="600" y="112" text-anchor="middle">Mesh examples: N=3 → 3 channels • N=5 → 10 channels • N=10 → 45 channels</text>
+
+  <!-- Cards -->
+  <rect class="card" x="60" y="140" width="520" height="300" rx="18"/>
+  <rect class="card" x="620" y="140" width="520" height="300" rx="18"/>
+
+  <!-- Left: Hierarchy -->
+  <text class="cardTitle" x="86" y="176">Hierarchical Delegation</text>
+  <text class="mono" x="86" y="202">channels ≈ N - 1</text>
+  <text class="hint" x="86" y="224">(hub &amp; spokes)</text>
+
+  <!-- Hierarchy edges -->
+  <line class="edgeA" x1="320" y1="250" x2="200" y2="372"/>
+  <line class="edgeA" x1="320" y1="250" x2="280" y2="372"/>
+  <line class="edgeA" x1="320" y1="250" x2="360" y2="372"/>
+  <line class="edgeA" x1="320" y1="250" x2="440" y2="372"/>
+
+  <!-- Hierarchy nodes -->
+  <g>
+    <circle class="nodeA" cx="320" cy="250" r="18"/>
+    <circle class="nodeA" cx="320" cy="250" r="18" opacity="0.0">
+      <animate attributeName="opacity" values="0;0.35;0" dur="2.8s" repeatCount="indefinite"/>
+      <animate attributeName="r" values="18;26;18" dur="2.8s" repeatCount="indefinite"/>
+    </circle>
+    <text class="nodeText" x="320" y="255" text-anchor="middle">Lead</text>
+
+    <circle class="nodeA" cx="200" cy="372" r="15"/>
+    <text class="nodeText" x="200" y="377" text-anchor="middle">A</text>
+
+    <circle class="nodeA" cx="280" cy="372" r="15"/>
+    <text class="nodeText" x="280" y="377" text-anchor="middle">B</text>
+
+    <circle class="nodeA" cx="360" cy="372" r="15"/>
+    <text class="nodeText" x="360" y="377" text-anchor="middle">C</text>
+
+    <circle class="nodeA" cx="440" cy="372" r="15"/>
+    <text class="nodeText" x="440" y="377" text-anchor="middle">D</text>
+  </g>
+
+  <text class="muted" x="86" y="422">Example:</text>
+  <text class="mono" x="156" y="422">N=5 → 4 channels</text>
+
+  <!-- Right: P2P mesh -->
+  <text class="cardTitle" x="646" y="176">Peer-to-Peer Mesh</text>
+  <text class="mono" x="646" y="202">channels = N(N-1)/2</text>
+  <text class="hint" x="646" y="224">(all-to-all, direct)</text>
+
+  <!-- Mesh edges (10 for N=5) -->
+  <g>
+    <line class="edgeB" x1="880" y1="242" x2="990" y2="302"><animate attributeName="stroke-dashoffset" values="0;-98" dur="6s" repeatCount="indefinite"/></line>
+    <line class="edgeB" x1="880" y1="242" x2="945" y2="402"><animate attributeName="stroke-dashoffset" values="0;-98" dur="6s" repeatCount="indefinite"/></line>
+    <line class="edgeB" x1="880" y1="242" x2="815" y2="402"><animate attributeName="stroke-dashoffset" values="0;-98" dur="6s" repeatCount="indefinite"/></line>
+    <line class="edgeB" x1="880" y1="242" x2="770" y2="302"><animate attributeName="stroke-dashoffset" values="0;-98" dur="6s" repeatCount="indefinite"/></line>
+
+    <line class="edgeB" x1="990" y1="302" x2="945" y2="402"><animate attributeName="stroke-dashoffset" values="0;-98" dur="6s" repeatCount="indefinite"/></line>
+    <line class="edgeB" x1="990" y1="302" x2="815" y2="402"><animate attributeName="stroke-dashoffset" values="0;-98" dur="6s" repeatCount="indefinite"/></line>
+    <line class="edgeB" x1="990" y1="302" x2="770" y2="302"><animate attributeName="stroke-dashoffset" values="0;-98" dur="6s" repeatCount="indefinite"/></line>
+
+    <line class="edgeB" x1="945" y1="402" x2="815" y2="402"><animate attributeName="stroke-dashoffset" values="0;-98" dur="6s" repeatCount="indefinite"/></line>
+    <line class="edgeB" x1="945" y1="402" x2="770" y2="302"><animate attributeName="stroke-dashoffset" values="0;-98" dur="6s" repeatCount="indefinite"/></line>
+    <line class="edgeB" x1="815" y1="402" x2="770" y2="302"><animate attributeName="stroke-dashoffset" values="0;-98" dur="6s" repeatCount="indefinite"/></line>
+  </g>
+
+  <!-- Mesh nodes -->
+  <g>
+    <circle class="nodeB" cx="880" cy="242" r="16"/>
+    <text class="nodeText" x="880" y="247" text-anchor="middle">A</text>
+
+    <circle class="nodeB" cx="990" cy="302" r="16"/>
+    <text class="nodeText" x="990" y="307" text-anchor="middle">B</text>
+
+    <circle class="nodeB" cx="945" cy="402" r="16"/>
+    <text class="nodeText" x="945" y="407" text-anchor="middle">C</text>
+
+    <circle class="nodeB" cx="815" cy="402" r="16"/>
+    <text class="nodeText" x="815" y="407" text-anchor="middle">D</text>
+
+    <circle class="nodeB" cx="770" cy="302" r="16"/>
+    <text class="nodeText" x="770" y="307" text-anchor="middle">E</text>
+  </g>
+
+  <text class="muted" x="646" y="422">Example:</text>
+  <text class="mono" x="716" y="422">N=5 → 10 channels</text>
+
+  <!-- Footer note -->
+  <text class="hint" x="600" y="462" text-anchor="middle">More channels → more context exchange to coordinate (and more places for drift and timing races).</text>
+</svg>

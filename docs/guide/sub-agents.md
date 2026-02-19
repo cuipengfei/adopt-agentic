@@ -45,6 +45,8 @@ flowchart TD
 
 其余历史不要。倾倒上下文是偷懒，Sub Agent 会在噪声中迷失。
 
+![Handoff note vs context dump — what to send to a Sub Agent](/illustrations/sub-agents-inline-1.svg)
+
 ## 工作方式
 
 主 Agent 委派任务给 Sub Agent，可以看作三步：
@@ -124,6 +126,8 @@ Sub Agent 内部可能经历十几轮工具调用——读规范、写代码、�
 Sub Agent 完成后，返回一份**摘要**给主 Agent——不是几十条完整消息历史，而是压缩后的结果。这就像 `git stash`：暂存当前复杂上下文，在干净分支上做完一个原子任务，带着产出切回来。
 
 主 Agent 拿到的只是："测试已创建，覆盖 201 和 400，文件在 `tests/integration/createUser.test.ts`"。至于 Sub Agent 中间经历了什么挣扎，主 Agent 不需要知道。
+
+![Isolation boundary: inherited rules, isolated history, returned summary, and audit trail](/illustrations/sub-agents-inline-2.svg)
 
 ## 回扣第一原则
 

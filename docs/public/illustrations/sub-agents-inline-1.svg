@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">Handoff note vs context dump</title>
+  <desc id="desc">Two side-by-side cards. Left: a recommended handoff note with goal, constraints, and key context. Right: an anti-pattern dumping the full transcript. Both feed a Sub Agent, but with very different signal-to-noise.</desc>
+
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.10" />
+    </filter>
+    <filter id="shadow-sm" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.08" />
+    </filter>
+
+    <marker id="arrow-good" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto">
+      <polygon points="0 0, 12 5, 0 10" fill="#14b8a6" />
+    </marker>
+    <marker id="arrow-bad" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto">
+      <polygon points="0 0, 12 5, 0 10" fill="#f472b6" />
+    </marker>
+  </defs>
+
+  <style><![CDATA[
+    .bg { fill: #f8fafc; }
+    .panel { fill: #ffffff; stroke: #e2e8f0; stroke-width: 1; }
+    .divider { stroke: #e2e8f0; stroke-width: 2; }
+
+    .title { font: 800 20px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: #0f172a; }
+    .subtitle { font: 500 13px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: #64748b; }
+    .kicker { font: 800 12px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; letter-spacing: 0.7px; fill: #64748b; }
+    .label { font: 800 11px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; letter-spacing: 0.6px; fill: #334155; }
+    .text { font: 600 12px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: #0f172a; }
+    .muted { font: 500 11px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: #64748b; }
+
+    .card { fill: #ffffff; stroke: #e2e8f0; stroke-width: 1; }
+    .cardHeadGood { fill: #ecfdf5; }
+    .cardHeadBad { fill: #fdf2f8; }
+    .headGood { fill: #0f766e; }
+    .headBad { fill: #be185d; }
+
+    .field { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1; }
+    .fieldGood { stroke: rgba(20, 184, 166, 0.75); }
+    .fieldBad { stroke: rgba(244, 114, 182, 0.75); }
+
+    .agentGood { fill: rgba(20, 184, 166, 0.10); stroke: rgba(20, 184, 166, 0.95); stroke-width: 2; }
+    .agentBad { fill: rgba(244, 114, 182, 0.10); stroke: rgba(244, 114, 182, 0.95); stroke-width: 2; }
+    .agentTextGood { font: 800 12px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: #0f766e; }
+    .agentTextBad { font: 800 12px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: #be185d; }
+
+    .arrowGood { fill: none; stroke: #14b8a6; stroke-width: 3; marker-end: url(#arrow-good); }
+    .arrowBad { fill: none; stroke: #f472b6; stroke-width: 3; stroke-dasharray: 8 10; marker-end: url(#arrow-bad); animation: dash 1.6s linear infinite; }
+
+    @keyframes dash { to { stroke-dashoffset: -36; } }
+    @media (prefers-reduced-motion: reduce) {
+      .arrowBad { animation: none; }
+    }
+  ]]></style>
+
+  <!-- Background + panel -->
+  <rect class="bg" x="0" y="0" width="1200" height="420" />
+  <rect class="panel" x="24" y="24" width="1152" height="372" rx="16" filter="url(#shadow)" />
+
+  <!-- Header -->
+  <text class="title" x="48" y="62">Handoff Note vs Context Dump</text>
+  <text class="subtitle" x="48" y="86">Send a self-contained note • Keep signal high and noise low</text>
+  <line class="divider" x1="48" y1="102" x2="1152" y2="102" />
+
+  <!-- Left: Recommended -->
+  <g transform="translate(48, 126)">
+    <rect class="card" x="0" y="0" width="540" height="250" rx="16" filter="url(#shadow-sm)" />
+    <path d="M 0 16 A 16 16 0 0 1 16 0 L 524 0 A 16 16 0 0 1 540 16 L 540 54 L 0 54 Z" class="cardHeadGood" />
+    <text class="kicker headGood" x="20" y="34">RECOMMENDED: HANDOFF NOTE</text>
+
+    <!-- Fields -->
+    <g transform="translate(20, 74)">
+      <rect class="field fieldGood" x="0" y="0" width="330" height="46" rx="10" />
+      <text class="label" x="14" y="18">GOAL</text>
+      <text class="text" x="14" y="36">Fix login bug (auth module)</text>
+
+      <rect class="field fieldGood" x="0" y="56" width="330" height="46" rx="10" />
+      <text class="label" x="14" y="74">CONSTRAINTS</text>
+      <text class="text" x="14" y="92">No DB schema changes • No new deps</text>
+
+      <rect class="field fieldGood" x="0" y="112" width="330" height="46" rx="10" />
+      <text class="label" x="14" y="130">KEY CONTEXT</text>
+      <text class="text" x="14" y="148">Files: auth/* • Logs: server.log</text>
+    </g>
+
+    <!-- Sub Agent -->
+    <g transform="translate(400, 118)">
+      <circle class="agentGood" cx="70" cy="82" r="44" />
+      <circle cx="70" cy="82" r="44" fill="none" stroke="rgba(20,184,166,0.35)" stroke-width="2" opacity="0.0">
+        <animate attributeName="opacity" values="0;0.35;0" dur="2.6s" repeatCount="indefinite" />
+        <animate attributeName="r" values="44;54;44" dur="2.6s" repeatCount="indefinite" />
+      </circle>
+      <text class="agentTextGood" x="70" y="78" text-anchor="middle">Sub</text>
+      <text class="agentTextGood" x="70" y="96" text-anchor="middle">Agent</text>
+      <text class="muted" x="70" y="120" text-anchor="middle">clean room</text>
+    </g>
+
+    <!-- Arrow + animated packet -->
+    <line class="arrowGood" x1="350" y1="200" x2="416" y2="200" />
+    <circle cx="350" cy="200" r="4" fill="#14b8a6" opacity="0">
+      <animate attributeName="cx" values="350;416" dur="1.4s" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.85;1" dur="1.4s" repeatCount="indefinite" />
+    </circle>
+
+    <text class="muted" x="20" y="240">Outcome: focused execution, usable summary</text>
+  </g>
+
+  <!-- Right: Anti-pattern -->
+  <g transform="translate(612, 126)">
+    <rect class="card" x="0" y="0" width="540" height="250" rx="16" filter="url(#shadow-sm)" />
+    <path d="M 0 16 A 16 16 0 0 1 16 0 L 524 0 A 16 16 0 0 1 540 16 L 540 54 L 0 54 Z" class="cardHeadBad" />
+    <text class="kicker headBad" x="20" y="34">ANTI-PATTERN: CONTEXT DUMP</text>
+
+    <!-- Dump box -->
+    <g transform="translate(20, 74)">
+      <rect class="field fieldBad" x="0" y="0" width="330" height="158" rx="10" fill="#ffffff" />
+      <text class="label" x="14" y="22">WHAT YOU SEND</text>
+      <text class="text" x="14" y="46">• Full transcript (200+ messages)</text>
+      <text class="text" x="14" y="68">• Rejected experiments and forks</text>
+      <text class="text" x="14" y="90">• Irrelevant tool output</text>
+      <text class="text" x="14" y="112">• Outdated assumptions</text>
+      <text class="muted" x="14" y="138">(high noise, weak boundaries)</text>
+    </g>
+
+    <!-- Sub Agent -->
+    <g transform="translate(400, 118)">
+      <circle class="agentBad" cx="70" cy="82" r="44" />
+      <circle cx="70" cy="82" r="44" fill="none" stroke="rgba(244,114,182,0.35)" stroke-width="2" opacity="0.0">
+        <animate attributeName="opacity" values="0;0.35;0" dur="2.6s" repeatCount="indefinite" />
+        <animate attributeName="r" values="44;54;44" dur="2.6s" repeatCount="indefinite" />
+      </circle>
+      <text class="agentTextBad" x="70" y="78" text-anchor="middle">Sub</text>
+      <text class="agentTextBad" x="70" y="96" text-anchor="middle">Agent</text>
+      <text class="muted" x="70" y="120" text-anchor="middle">clean room</text>
+    </g>
+
+    <!-- Arrow + animated packet -->
+    <line class="arrowBad" x1="350" y1="200" x2="416" y2="200" />
+    <circle cx="350" cy="200" r="4" fill="#f472b6" opacity="0">
+      <animate attributeName="cx" values="350;416" dur="1.1s" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.85;1" dur="1.1s" repeatCount="indefinite" />
+    </circle>
+
+    <text class="muted" x="20" y="240">Outcome: diluted attention, drift, wasted tokens</text>
+  </g>
+
+  <!-- Footer note -->
+  <text class="muted" x="600" y="410" text-anchor="middle">Rule: send only the minimum that makes the task executable.</text>
+</svg>

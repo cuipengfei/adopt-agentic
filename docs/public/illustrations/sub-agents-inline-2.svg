@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 480" role="img" aria-labelledby="title desc">
+  <title id="title">Isolation boundary: inherited rules, isolated history, returned summary</title>
+  <desc id="desc">Diagram of what crosses the boundary when spawning a Sub Agent. System instructions are inherited, conversation history is isolated, and only a summary is returned. A full audit trail is kept for drill-down.</desc>
+
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.10" />
+    </filter>
+    <filter id="shadow-sm" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.08" />
+    </filter>
+
+    <marker id="arrow" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto">
+      <polygon points="0 0, 12 5, 0 10" fill="#64748b" />
+    </marker>
+    <marker id="arrow-indigo" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto">
+      <polygon points="0 0, 12 5, 0 10" fill="#4338ca" />
+    </marker>
+    <marker id="arrow-teal" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto">
+      <polygon points="0 0, 12 5, 0 10" fill="#14b8a6" />
+    </marker>
+    <marker id="arrow-amber" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto">
+      <polygon points="0 0, 12 5, 0 10" fill="#f59e0b" />
+    </marker>
+  </defs>
+
+  <style><![CDATA[
+    .bg { fill: #f8fafc; }
+    .panel { fill: #ffffff; stroke: #e2e8f0; stroke-width: 1; }
+    .divider { stroke: #e2e8f0; stroke-width: 2; }
+
+    .title { font: 800 20px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: #0f172a; }
+    .subtitle { font: 500 13px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: #64748b; }
+    .kicker { font: 800 12px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; letter-spacing: 0.7px; fill: #64748b; }
+    .label { font: 800 11px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; letter-spacing: 0.6px; fill: #334155; }
+    .text { font: 600 12px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: #0f172a; }
+    .muted { font: 500 11px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: #64748b; }
+    .mono { font: 600 11px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; fill: #334155; }
+
+    .box { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1; }
+    .mainHead { fill: #eef2ff; stroke: #c7d2fe; }
+    .subHead { fill: #f0fdfa; stroke: #99f6e4; }
+
+    .boundary { stroke: rgba(15, 23, 42, 0.18); stroke-width: 2; stroke-dasharray: 7 8; }
+
+    .arrowNeutral { fill: none; stroke: #64748b; stroke-width: 2.6; marker-end: url(#arrow); }
+    .arrowIndigo { fill: none; stroke: #4338ca; stroke-width: 3; marker-end: url(#arrow-indigo); }
+    .arrowTeal { fill: none; stroke: #14b8a6; stroke-width: 3; marker-end: url(#arrow-teal); }
+    .arrowAmber { fill: none; stroke: #f59e0b; stroke-width: 3; stroke-dasharray: 8 10; marker-end: url(#arrow-amber); animation: dash 1.7s linear infinite; }
+    @keyframes dash { to { stroke-dashoffset: -36; } }
+    @media (prefers-reduced-motion: reduce) { .arrowAmber { animation: none; } }
+
+    .pill { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1; }
+    .pillOk { fill: #ecfdf5; stroke: rgba(20, 184, 166, 0.55); }
+    .pillNo { fill: #fef2f2; stroke: rgba(248, 113, 113, 0.55); }
+  ]]></style>
+
+  <!-- Background + panel -->
+  <rect class="bg" x="0" y="0" width="1200" height="480" />
+  <rect class="panel" x="24" y="24" width="1152" height="432" rx="16" filter="url(#shadow)" />
+
+  <!-- Header -->
+  <text class="title" x="48" y="62">Isolation Boundary (Sub Agents)</text>
+  <text class="subtitle" x="48" y="86">Inherited: rules • Isolated: chat history • Returned: summary • Stored: full audit trail</text>
+  <line class="divider" x1="48" y1="102" x2="1152" y2="102" />
+
+  <!-- Main Agent box -->
+  <g transform="translate(48, 126)">
+    <rect class="box" x="0" y="0" width="500" height="260" rx="16" filter="url(#shadow-sm)" />
+    <rect class="mainHead" x="0" y="0" width="500" height="54" rx="16" />
+    <text class="kicker" x="18" y="34" fill="#4338ca">MAIN AGENT (PARENT CONTEXT)</text>
+
+    <g transform="translate(18, 78)">
+      <rect class="pill" x="0" y="0" width="464" height="56" rx="12" />
+      <text class="label" x="14" y="20">SYSTEM INSTRUCTIONS</text>
+      <text class="mono" x="14" y="40">project rules • safety rails • conventions</text>
+
+      <rect class="pill" x="0" y="70" width="464" height="72" rx="12" />
+      <text class="label" x="14" y="92">CONVERSATION HISTORY</text>
+      <text class="mono" x="14" y="112">messages[] grows over time</text>
+      <text class="muted" x="14" y="134">exploration • rejects • irrelevant tool output</text>
+
+      <rect class="pill" x="0" y="156" width="464" height="56" rx="12" />
+      <text class="label" x="14" y="176">ORCHESTRATION</text>
+      <text class="mono" x="14" y="196">decide: spawn? handoff note? verify?</text>
+    </g>
+  </g>
+
+  <!-- Sub Agent box -->
+  <g transform="translate(652, 126)">
+    <rect class="box" x="0" y="0" width="500" height="260" rx="16" filter="url(#shadow-sm)" />
+    <rect class="subHead" x="0" y="0" width="500" height="54" rx="16" />
+    <text class="kicker" x="18" y="34" fill="#0f766e">SUB AGENT (ISOLATED CONTEXT)</text>
+
+    <g transform="translate(18, 78)">
+      <rect class="pill" x="0" y="0" width="464" height="56" rx="12" />
+      <text class="label" x="14" y="20">SYSTEM (INHERITED)</text>
+      <text class="mono" x="14" y="40">same rules as the parent</text>
+
+      <rect class="pill" x="0" y="70" width="464" height="56" rx="12" />
+      <text class="label" x="14" y="90">MESSAGES[] (FRESH)</text>
+      <text class="mono" x="14" y="110">starts from zero</text>
+
+      <rect class="pill" x="0" y="140" width="464" height="72" rx="12" />
+      <text class="label" x="14" y="162">INTERNAL WORK</text>
+      <text class="mono" x="14" y="182">tool calls • retries • failures</text>
+      <text class="muted" x="14" y="198">kept in the session log (do not erase evidence)</text>
+    </g>
+  </g>
+
+  <!-- Boundary -->
+  <line class="boundary" x1="600" y1="140" x2="600" y2="392" />
+  <text class="muted" x="600" y="132" text-anchor="middle">context boundary</text>
+
+  <!-- Cross-boundary flows -->
+  <!-- Inherited rules -->
+  <path class="arrowTeal" d="M 548 214 L 652 214" />
+  <text class="muted" x="600" y="200" text-anchor="middle" fill="#0f766e">inherited</text>
+
+  <!-- Handoff note -->
+  <path class="arrowIndigo" d="M 548 292 L 652 292" />
+  <text class="muted" x="600" y="278" text-anchor="middle" fill="#4338ca">handoff note</text>
+  <g transform="translate(560, 300)">
+    <rect class="pillOk" x="0" y="0" width="80" height="22" rx="11" />
+    <text class="label" x="40" y="15" text-anchor="middle" fill="#0f766e">GOAL</text>
+  </g>
+  <g transform="translate(644, 300)">
+    <rect class="pillOk" x="0" y="0" width="118" height="22" rx="11" />
+    <text class="label" x="59" y="15" text-anchor="middle" fill="#0f766e">CONSTRAINTS</text>
+  </g>
+  <g transform="translate(766, 300)">
+    <rect class="pillOk" x="0" y="0" width="116" height="22" rx="11" />
+    <text class="label" x="58" y="15" text-anchor="middle" fill="#0f766e">KEY CONTEXT</text>
+  </g>
+
+  <!-- Not shared: raw history -->
+  <path class="arrowAmber" d="M 548 258 L 600 258" />
+  <g transform="translate(604, 245)">
+    <rect class="pillNo" x="0" y="0" width="92" height="26" rx="13" />
+    <text class="label" x="46" y="17" text-anchor="middle" fill="#b91c1c">NOT SHARED</text>
+  </g>
+  <text class="muted" x="652" y="262" fill="#b91c1c">raw transcript</text>
+
+  <!-- Return: summary -->
+  <path class="arrowNeutral" d="M 652 366 C 640 404 560 404 548 366" />
+  <text class="muted" x="600" y="430" text-anchor="middle">returned: summary (compressed)</text>
+
+  <!-- Audit trail bar -->
+  <g transform="translate(48, 404)">
+    <rect class="box" x="0" y="0" width="1104" height="44" rx="12" />
+    <text class="kicker" x="16" y="28" fill="#0f172a">AUDIT TRAIL</text>
+    <text class="muted" x="122" y="28">full session log: tool outputs, intermediate steps, failures • drill down when summary looks wrong</text>
+  </g>
+
+  <!-- Animated packets (simple) -->
+  <circle r="4" fill="#14b8a6" opacity="0.85">
+    <animateMotion path="M 548 214 L 652 214" dur="1.6s" repeatCount="indefinite" />
+  </circle>
+  <circle r="4" fill="#4338ca" opacity="0.85">
+    <animateMotion path="M 548 292 L 652 292" dur="1.9s" repeatCount="indefinite" />
+  </circle>
+  <circle r="4" fill="#64748b" opacity="0.7">
+    <animateMotion path="M 652 366 C 640 404 560 404 548 366" dur="2.6s" repeatCount="indefinite" />
+  </circle>
+</svg>

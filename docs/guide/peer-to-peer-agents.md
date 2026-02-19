@@ -24,7 +24,11 @@ P2P 模型打破层级。多个 Agent 平级协作，没有绝对的指挥者，
 
 `N` 个 Agent 的团队，潜在通信渠道是 `N × (N-1) / 2`。3 个 Agent 是 3 条信道，5 个就是 10 条，10 个是 45 条。协调成本呈二次增长（quadratic, O(n²)），不是线性的。
 
+![Hierarchy vs P2P: channel count grows O(N) vs O(N²)](/illustrations/peer-to-peer-agents-inline-1.svg)
+
 而且实际运行中通信类型远不止 A ↔ B 一种。peer 之间的直接对话、协调者广播、共享任务状态——两个 Agent 就有这么多信道。消息模型通常是 fire-and-forget：发出不等 ACK，接收方已关闭也不报错。你不能假设每条消息都被处理了。
+
+![Fire-and-forget messaging: no ACK wait, receiver may be offline](/illustrations/peer-to-peer-agents-inline-2.svg)
 
 具体的代价：
 

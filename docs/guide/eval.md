@@ -115,6 +115,8 @@ Agent 会犯错。关键是它能不能自己爬起来。
 
 当然，这不意味着永远不清理——上下文窗口终究有限。关键是区分"已过时的噪声"和"仍有参考价值的失败记录"。
 
+![Inline diagram: Evidence-driven recovery moves](/illustrations/eval-inline-1.svg)
+
 **回滚**：任务级验证失败时，回到最近的已知好状态。比如代码重构破坏了测试，Agent 用 `git checkout` 撤销修改，换个思路重来。核心是在动手前建立回滚点——这是 Agent 自己应该做的事，好的 Agent 会在大改之前先确认 git 状态干净。
 
 **死循环识别**：如果 Agent 反复尝试同一个方法但持续失败（达到重试阈值），它应该停下来换思路，而不是继续撞墙。你看到 Agent 说"我似乎卡住了"——这是好事，说明它识别了死循环。
@@ -165,6 +167,8 @@ Agent 搞砸了，下一步怎么办？不同的错误需要不同的处理方�
 你要盯住第 3 步别断。验证跑了但结果没喂回去，等于没验证。
 
 ## 常见反模式
+
+![Inline diagram: Anti-patterns, signals, fixes](/illustrations/eval-inline-2.svg)
 
 ### 假完成
 

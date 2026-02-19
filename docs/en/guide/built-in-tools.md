@@ -123,6 +123,8 @@ After walking through this flow, you can see tools shape the LLM's context from 
 
 The LLM knows "what it can do" from tool definitions, and "what the world looks like" from return values.
 
+![How tools shape context: static tool definitions vs dynamic tool results](/illustrations/built-in-tools-inline-1.svg)
+
 But tool return values are also the fastest source of context bloat. One unrestricted `ls -R` or reading a log file with tens of thousands of lines can blow through most of the context window in a single call. The smart move is to trim at the tool layer: pull only key fields from structured data, paginate long lists, read large files by line range. Instead of waiting for the context to overflow and then scrambling to compress, don't let the junk in to begin with.
 
 ## Don't scold it for running around
@@ -152,6 +154,8 @@ The agent will **actually execute** whatever the LLM requests. Good tools split 
 Watch one thing: did it read before writing? An agent that calls `write_file` without ever running `read_file` should be stopped, even if the fix looks right. That's a hallucination that got lucky.
 
 You need to know the extent of your agent's permissions and consciously supervise high-risk operations.
+
+![Tool trust boundary levels: allow read-only, review writes, confirm high-risk operations](/illustrations/built-in-tools-inline-2.svg)
 
 ## Three Things to Watch in Every Chapter
 

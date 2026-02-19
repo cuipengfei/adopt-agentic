@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <title id="title">Instructions as assets: write positive, govern changes</title>
+  <desc id="desc">Two panels. Left: write instructions as positive invariants (conditions + checks) rather than broad negative bans. Right: treat the instruction file like code—version it in Git, review changes via PR, and iterate based on runtime feedback.</desc>
+
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+    <filter id="shadow-sm" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.10"/>
+    </filter>
+
+    <marker id="arrow" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto">
+      <path d="M0,0 L12,5 L0,10 Z" fill="#64748b"/>
+    </marker>
+    <marker id="arrow-indigo" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto">
+      <path d="M0,0 L12,5 L0,10 Z" fill="#4338ca"/>
+    </marker>
+    <marker id="arrow-teal" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto">
+      <path d="M0,0 L12,5 L0,10 Z" fill="#14b8a6"/>
+    </marker>
+  </defs>
+
+  <style><![CDATA[
+    .bg { fill: #f8fafc; }
+    .panel { fill: #ffffff; stroke: #e2e8f0; stroke-width: 1; }
+
+    .title { font-size: 22px; font-weight: 900; fill: #0f172a; letter-spacing: 0.2px; }
+    .subtitle { font-size: 13px; font-weight: 600; fill: #64748b; }
+    .kicker { font-size: 11px; font-weight: 900; letter-spacing: 0.9px; fill: #64748b; }
+
+    .card { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1; }
+    .row { fill: #ffffff; stroke: #e2e8f0; stroke-width: 1; }
+    .rowGood { fill: #ecfdf5; stroke: #86efac; }
+    .rowBest { fill: #eef2ff; stroke: #c7d2fe; }
+    .rowBad { fill: #fef2f2; stroke: #fecaca; }
+
+    .label { font-size: 12px; font-weight: 900; fill: #334155; }
+    .small { font-size: 11px; fill: #64748b; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 11px; fill: #334155; }
+
+    .ok { fill: #16a34a; }
+    .warn { fill: #dc2626; }
+    .indigo { fill: #4338ca; }
+    .teal { fill: #14b8a6; }
+
+    .flow { fill: none; stroke: #4338ca; stroke-width: 3; stroke-dasharray: 10 10; marker-end: url(#arrow-indigo); animation: dash 1.6s linear infinite; }
+    .flow2 { fill: none; stroke: #14b8a6; stroke-width: 3; stroke-dasharray: 10 10; marker-end: url(#arrow-teal); animation: dash 1.6s linear infinite; }
+    .flowMuted { fill: none; stroke: #94a3b8; stroke-width: 2.6; stroke-dasharray: 8 10; marker-end: url(#arrow); animation: dash 2.0s linear infinite; }
+
+    @keyframes dash { to { stroke-dashoffset: -40; } }
+  ]]></style>
+
+  <!-- Background + outer panel -->
+  <rect class="bg" x="0" y="0" width="1200" height="420"/>
+  <rect class="panel" x="24" y="24" width="1152" height="372" rx="18" filter="url(#shadow)"/>
+
+  <!-- Header -->
+  <text class="title" x="48" y="64">Instructions are a maintainable asset</text>
+  <text class="subtitle" x="48" y="90">Write positive invariants • Version changes • Review like code • Iterate from runtime feedback</text>
+  <line x1="48" y1="110" x2="1152" y2="110" stroke="#e2e8f0" stroke-width="2"/>
+
+  <!-- Left card: writing style -->
+  <g transform="translate(48, 132)">
+    <rect class="card" x="0" y="0" width="540" height="260" rx="16" filter="url(#shadow-sm)"/>
+    <text class="kicker" x="20" y="28">WRITE: POSITIVE INVARIANTS</text>
+    <text class="small" x="20" y="50">Make constraints conditional and testable (avoid broad negations).</text>
+
+    <!-- Rows -->
+    <g transform="translate(20, 70)">
+      <rect class="rowBad" x="0" y="0" width="500" height="54" rx="12"/>
+      <circle cx="22" cy="27" r="12" class="warn" opacity="0.18"/>
+      <path d="M16 21 L28 33 M28 21 L16 33" stroke="#dc2626" stroke-width="2.6" stroke-linecap="round"/>
+      <text class="label" x="48" y="22" fill="#b91c1c">Negative ban</text>
+      <text class="mono" x="48" y="40" fill="#7f1d1d">"Don't do X."</text>
+    </g>
+
+    <g transform="translate(20, 134)">
+      <rect class="rowGood" x="0" y="0" width="500" height="54" rx="12"/>
+      <circle cx="22" cy="27" r="12" class="ok" opacity="0.18"/>
+      <path d="M15 28 L20 33 L30 21" stroke="#16a34a" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <text class="label" x="48" y="22" fill="#15803d">Positive invariant</text>
+      <text class="mono" x="48" y="40" fill="#14532d">"Only do X when condition Y."</text>
+    </g>
+
+    <g transform="translate(20, 198)">
+      <rect class="rowBest" x="0" y="0" width="500" height="54" rx="12"/>
+      <circle cx="22" cy="27" class="indigo" r="12" opacity="0.18"/>
+      <path d="M15 28 L20 33 L30 21" stroke="#4338ca" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <text class="label" x="48" y="22" fill="#4338ca">Best: write it as a check</text>
+      <text class="mono" x="48" y="40" fill="#312e81">if not Y → refuse; else → proceed</text>
+    </g>
+  </g>
+
+  <!-- Right card: governance pipeline -->
+  <g transform="translate(612, 132)">
+    <rect class="card" x="0" y="0" width="564" height="260" rx="16" filter="url(#shadow-sm)"/>
+    <text class="kicker" x="20" y="28">GOVERN: VERSION + REVIEW + ITERATE</text>
+    <text class="small" x="20" y="50">Team-level changes should be traceable and reviewable.</text>
+
+    <!-- Pipeline boxes -->
+    <g transform="translate(20, 80)">
+      <rect x="0" y="0" width="150" height="54" rx="12" fill="#eef2ff" stroke="#c7d2fe" stroke-width="2"/>
+      <text class="label" x="16" y="22" fill="#4338ca">Git</text>
+      <text class="small" x="16" y="40">versioned file</text>
+
+      <rect x="190" y="0" width="150" height="54" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+      <text class="label" x="206" y="22">PR review</text>
+      <text class="small" x="206" y="40">who is affected?</text>
+
+      <rect x="380" y="0" width="150" height="54" rx="12" fill="#ecfdf5" stroke="#86efac" stroke-width="2"/>
+      <text class="label" x="396" y="22" fill="#15803d">Merge</text>
+      <text class="small" x="396" y="40">new baseline</text>
+
+      <!-- Flow arrows -->
+      <path class="flow" d="M 150 27 L 190 27"/>
+      <path class="flow" d="M 340 27 L 380 27"/>
+
+      <!-- PR highlight pulse -->
+      <rect x="190" y="0" width="150" height="54" rx="12" fill="none" stroke="#4338ca" stroke-width="2" opacity="0.0">
+        <animate attributeName="opacity" values="0;0.55;0" dur="2.4s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+
+    <!-- Feedback loop -->
+    <g transform="translate(20, 168)">
+      <rect x="0" y="0" width="200" height="60" rx="14" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="2"/>
+      <text class="label" x="16" y="24">Runtime feedback</text>
+      <text class="small" x="16" y="44">drift, conflicts, incidents</text>
+
+      <rect x="280" y="0" width="250" height="60" rx="14" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+      <text class="label" x="296" y="24">Update instructions</text>
+      <text class="small" x="296" y="44">add rule + rationale</text>
+
+      <path class="flow2" d="M 200 30 L 280 30"/>
+      <path class="flowMuted" d="M 500 60 C 520 110 80 110 90 60"/>
+      <text class="small" x="302" y="92" fill="#64748b">repeat</text>
+
+      <!-- Moving dot along the loop -->
+      <circle r="4" fill="#94a3b8" opacity="0.85">
+        <animateMotion path="M 500 60 C 520 110 80 110 90 60" dur="3.2s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+  </g>
+</svg>

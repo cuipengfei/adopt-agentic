@@ -28,6 +28,8 @@ Sequential is 1 ball, stable but slow. Parallel is 10 balls, fast but hard to ca
 
 Rule of thumb: maximize parallelism for read tasks (search, research). Be conservative for write tasks (editing code). Reads rarely conflict. Writes often do.
 
+![Control and concurrency: one driver, one wheel; parallelize reads, serialize writes](/illustrations/orchestration-inline-1.svg)
+
 ## Common Patterns
 
 An agent's orchestration patterns are like a circuit board: series, parallel, or more complex combinations. We don't care how the underlying framework implements them, only the behavioral patterns they present to you.
@@ -116,6 +118,8 @@ The context here spirals upward, with each loop carrying the "lessons" from the 
 Parallel branches are easy to understand. **Governance** is the hard part.
 
 One person runs three sessions modifying the same project simultaneously—this isn't a parallel branch pattern; it's **parallel sessions**. Each session has its own context, blind to what the others are doing. Without coordination, collisions become highly likely.
+
+![Parallel session governance playbook: partition, sync, converge, accept](/illustrations/orchestration-inline-2.svg)
 
 ### Task Partitioning
 

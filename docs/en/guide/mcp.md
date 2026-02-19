@@ -18,6 +18,8 @@ MCP is an open protocol. It defines a standard that allows anyone to develop too
 
 The agent dynamically discovers and loads these external tools at runtime. You just configure it — no code required.
 
+![MCP overview: client/server and transport options](/illustrations/mcp-inline-1.svg)
+
 ## Server and Client
 
 These two terms trip people up. Let's clear up a common misconception: **an MCP Server is not necessarily a remote server.**
@@ -117,6 +119,8 @@ After the MCP Server returns results, the agent wraps them into a `tool`-role me
 The LLM only cares that it got search results. It doesn't know or need to know whether they came from the local machine or a remote server.
 
 One-line summary: **LLM layer — fully equivalent. Agent execution layer — different paths.**
+
+![Context cost: tool schemas vs messages](/illustrations/mcp-inline-2.svg)
 
 But flexibility has a hidden cost. Each connected MCP Server injects all of its tool definitions into every request. Enable ten Servers at once, and dozens of tool definitions permanently occupy the context window—squeezing out space for your instructions, conversation history, and tool return values. In practice: create different MCP profiles for different task types—one set for coding, another for data work. The principle: off by default, on when needed.
 

@@ -24,7 +24,11 @@ The answer: **coordination overhead.**
 
 A team of `N` Agents has `N × (N-1) / 2` potential communication channels. 3 Agents = 3 channels, 5 = 10, 10 = 45. Coordination cost grows quadratically (O(n²)), not linearly.
 
+![Hierarchy vs P2P: channel count grows O(N) vs O(N²)](/illustrations/peer-to-peer-agents-inline-1.svg)
+
 And in practice, the communication types go well beyond A ↔ B. Direct peer conversations, coordinator broadcasts, shared task state—just two Agents already generate this many channels. The messaging model is typically fire-and-forget: sent without waiting for ACK, no error if the receiver has already shut down. You cannot assume every message was processed.
+
+![Fire-and-forget messaging: no ACK wait, receiver may be offline](/illustrations/peer-to-peer-agents-inline-2.svg)
 
 The specific costs:
 

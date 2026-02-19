@@ -123,6 +123,8 @@ Agent 再次在本地执行 `write_file`。一个完整的读取-修改-写入�
 
 LLM 通过工具定义知道能做什么，通过返回值知道世界是什么样。
 
+![How tools shape context: static tool definitions vs dynamic tool results](/illustrations/built-in-tools-inline-1.svg)
+
 但工具返回值也是上下文膨胀最快的来源。一次未加限制的 `ls -R` 或读一个几万行的日志文件，直接撑爆大半个上下文窗口。聪明的做法是在工具层就裁剪：只取结构化数据的关键字段，长列表分页返回，大文件只读指定行范围。与其等上下文满了再想办法压缩，不如一开始就别让垃圾进来。
 
 ## 别骂它瞎跑
@@ -152,6 +154,8 @@ Agent 会**真实执行** LLM 请求的操作。好的工具分两级信任：
 盯一件事：有没有先读后改。Agent 没跑过 `read_file` 就直接 `write_file`？哪怕改对了也拒绝。那是幻觉碰运气。
 
 你需要清楚你的 Agent 有多大权限，并有意识地监督高风险操作。
+
+![Tool trust boundary levels: allow read-only, review writes, confirm high-risk operations](/illustrations/built-in-tools-inline-2.svg)
 
 ## 读每一节时，留意这三件事
 

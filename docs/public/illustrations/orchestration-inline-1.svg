@@ -1,0 +1,165 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc" font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <title id="title">Control and concurrency: one driver, one wheel</title>
+  <desc id="desc">Two panels. Left: keep one instruction stream while the Agent is executing. Right: rule of thumb—parallelize reads, serialize writes unless partitioned.</desc>
+
+  <defs>
+    <filter id="card-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#64748B" flood-opacity="0.14"/>
+    </filter>
+
+    <marker id="arrow-indigo" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto">
+      <path d="M 0 0 L 12 6 L 0 12 z" fill="#4338CA"/>
+    </marker>
+    <marker id="arrow-teal" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto">
+      <path d="M 0 0 L 12 6 L 0 12 z" fill="#14B8A6"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="420" rx="24" fill="#F8FAFC"/>
+
+  <!-- Header -->
+  <g transform="translate(40, 34)">
+    <text x="0" y="0" font-size="26" font-weight="900" fill="#1E293B">CONTROL &amp; CONCURRENCY</text>
+    <text x="0" y="34" font-size="14" font-weight="600" fill="#64748B">One driver, one wheel • Parallelize reads, serialize writes</text>
+  </g>
+
+  <!-- Card: Control -->
+  <g transform="translate(40, 90)">
+    <rect width="540" height="300" rx="16" fill="#FFFFFF" filter="url(#card-shadow)"/>
+    <path d="M 0 16 A 16 16 0 0 1 16 0 L 524 0 A 16 16 0 0 1 540 16 L 540 56 L 0 56 Z" fill="#FFFBEB"/>
+    <text x="24" y="36" font-size="16" font-weight="900" fill="#D97706">ONE DRIVER, ONE WHEEL</text>
+
+    <!-- Steering wheel (subtle wiggle) -->
+    <g transform="translate(505, 30)">
+      <g>
+        <circle cx="0" cy="0" r="16" fill="#FFFFFF" stroke="#1E293B" stroke-width="2"/>
+        <circle cx="0" cy="0" r="6" fill="#FBBF24" stroke="#1E293B" stroke-width="2"/>
+        <line x1="0" y1="-16" x2="0" y2="-6" stroke="#1E293B" stroke-width="2" stroke-linecap="round"/>
+        <line x1="14" y1="8" x2="5" y2="3" stroke="#1E293B" stroke-width="2" stroke-linecap="round"/>
+        <line x1="-14" y1="8" x2="-5" y2="3" stroke="#1E293B" stroke-width="2" stroke-linecap="round"/>
+        <animateTransform attributeName="transform" type="rotate" values="-8 0 0;8 0 0;-8 0 0" dur="3.2s" repeatCount="indefinite"/>
+      </g>
+    </g>
+
+    <!-- User / Agent boxes -->
+    <g transform="translate(24, 78)">
+      <rect x="0" y="0" width="220" height="92" rx="12" fill="#EEF2FF" stroke="#4338CA" stroke-width="2"/>
+      <text x="16" y="26" font-size="14" font-weight="800" fill="#4338CA">USER</text>
+      <text x="16" y="50" font-size="12" font-weight="600" fill="#1E293B">Set goal + constraints</text>
+      <text x="16" y="70" font-size="12" fill="#64748B">Avoid mid-flight edits</text>
+
+      <rect x="272" y="0" width="220" height="92" rx="12" fill="#F0FDFA" stroke="#14B8A6" stroke-width="2"/>
+      <text x="288" y="26" font-size="14" font-weight="800" fill="#0F766E">AGENT</text>
+      <text x="288" y="50" font-size="12" font-weight="600" fill="#1E293B">Execute steps on disk</text>
+      <text x="288" y="70" font-size="12" fill="#64748B">Keep context aligned</text>
+
+      <!-- Instruction stream arrow (animated packet) -->
+      <line x1="220" y1="46" x2="272" y2="46" stroke="#4338CA" stroke-width="3" marker-end="url(#arrow-indigo)"/>
+      <circle cx="220" cy="46" r="4" fill="#4338CA" opacity="0">
+        <animate attributeName="cx" values="220;272" dur="1.4s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.85;1" dur="1.4s" repeatCount="indefinite"/>
+      </circle>
+      <text x="246" y="70" font-size="11" font-weight="700" fill="#64748B" text-anchor="middle">single instruction stream</text>
+
+      <!-- Do / Avoid -->
+      <g transform="translate(0, 118)">
+        <rect x="0" y="0" width="246" height="82" rx="12" fill="#ECFDF5" stroke="#14B8A6" stroke-width="2"/>
+        <circle cx="22" cy="26" r="12" fill="#14B8A6"/>
+        <text x="22" y="31" font-size="14" font-weight="900" fill="#FFFFFF" text-anchor="middle">✓</text>
+        <text x="44" y="30" font-size="12" font-weight="800" fill="#0F766E">DO</text>
+        <text x="44" y="52" font-size="12" fill="#1E293B">Wait for completion</text>
+        <text x="44" y="70" font-size="12" fill="#1E293B">or cancel/take over</text>
+
+        <rect x="270" y="0" width="246" height="82" rx="12" fill="#FDF2F8" stroke="#F472B6" stroke-width="2"/>
+        <circle cx="292" cy="26" r="12" fill="#F472B6"/>
+        <text x="292" y="31" font-size="14" font-weight="900" fill="#FFFFFF" text-anchor="middle">×</text>
+        <text x="314" y="30" font-size="12" font-weight="800" fill="#BE185D">AVOID</text>
+        <text x="314" y="52" font-size="12" fill="#1E293B">Competing edits</text>
+        <text x="314" y="70" font-size="12" fill="#1E293B">while execution runs</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Card: Concurrency -->
+  <g transform="translate(620, 90)">
+    <rect width="540" height="300" rx="16" fill="#FFFFFF" filter="url(#card-shadow)"/>
+    <path d="M 0 16 A 16 16 0 0 1 16 0 L 524 0 A 16 16 0 0 1 540 16 L 540 56 L 0 56 Z" fill="#EEF2FF"/>
+    <text x="24" y="36" font-size="16" font-weight="900" fill="#4338CA">RULE OF THUMB</text>
+    <text x="175" y="36" font-size="12" font-weight="700" fill="#64748B">parallelize reads • serialize writes</text>
+
+    <!-- READ: parallel branches -->
+    <g transform="translate(24, 82)">
+      <text x="0" y="0" font-size="12" font-weight="900" fill="#0F766E">READ TASKS</text>
+      <text x="92" y="0" font-size="12" fill="#64748B">search / research</text>
+
+      <circle cx="40" cy="52" r="16" fill="#CCFBF1" stroke="#14B8A6" stroke-width="2"/>
+      <text x="40" y="56" font-size="12" font-weight="900" fill="#0F766E" text-anchor="middle">R</text>
+
+      <!-- Branch nodes -->
+      <rect x="190" y="18" width="120" height="30" rx="10" fill="#FFFFFF" stroke="#14B8A6" stroke-width="2"/>
+      <text x="250" y="38" font-size="12" font-weight="800" fill="#0F766E" text-anchor="middle">Branch A</text>
+
+      <rect x="190" y="52" width="120" height="30" rx="10" fill="#FFFFFF" stroke="#14B8A6" stroke-width="2"/>
+      <text x="250" y="72" font-size="12" font-weight="800" fill="#0F766E" text-anchor="middle">Branch B</text>
+
+      <rect x="190" y="86" width="120" height="30" rx="10" fill="#FFFFFF" stroke="#14B8A6" stroke-width="2"/>
+      <text x="250" y="106" font-size="12" font-weight="800" fill="#0F766E" text-anchor="middle">Branch C</text>
+
+      <circle cx="390" cy="52" r="16" fill="#CCFBF1" stroke="#14B8A6" stroke-width="2"/>
+      <text x="390" y="56" font-size="12" font-weight="900" fill="#0F766E" text-anchor="middle">Σ</text>
+
+      <rect x="425" y="38" width="90" height="28" rx="10" fill="#14B8A6"/>
+      <text x="470" y="56" font-size="12" font-weight="900" fill="#FFFFFF" text-anchor="middle">Summary</text>
+
+      <!-- Arrows (animated dash flow) -->
+      <g fill="none" stroke="#14B8A6" stroke-width="3" stroke-linecap="round" stroke-dasharray="8 10">
+        <path d="M 56 52 C 92 52 116 33 190 33" marker-end="url(#arrow-teal)">
+          <animate attributeName="stroke-dashoffset" values="0;18" dur="1.2s" repeatCount="indefinite"/>
+        </path>
+        <path d="M 56 52 L 190 67" marker-end="url(#arrow-teal)">
+          <animate attributeName="stroke-dashoffset" values="0;18" dur="1.2s" begin="0.1s" repeatCount="indefinite"/>
+        </path>
+        <path d="M 56 52 C 92 52 116 101 190 101" marker-end="url(#arrow-teal)">
+          <animate attributeName="stroke-dashoffset" values="0;18" dur="1.2s" begin="0.2s" repeatCount="indefinite"/>
+        </path>
+        <path d="M 310 33 C 346 33 360 52 374 52" marker-end="url(#arrow-teal)">
+          <animate attributeName="stroke-dashoffset" values="0;18" dur="1.2s" repeatCount="indefinite"/>
+        </path>
+        <path d="M 310 67 L 374 52" marker-end="url(#arrow-teal)">
+          <animate attributeName="stroke-dashoffset" values="0;18" dur="1.2s" begin="0.1s" repeatCount="indefinite"/>
+        </path>
+        <path d="M 310 101 C 346 101 360 52 374 52" marker-end="url(#arrow-teal)">
+          <animate attributeName="stroke-dashoffset" values="0;18" dur="1.2s" begin="0.2s" repeatCount="indefinite"/>
+        </path>
+        <path d="M 406 52 L 425 52" marker-end="url(#arrow-teal)">
+          <animate attributeName="stroke-dashoffset" values="0;18" dur="1.2s" repeatCount="indefinite"/>
+        </path>
+      </g>
+    </g>
+
+    <!-- WRITE: serialized path -->
+    <g transform="translate(24, 214)">
+      <text x="0" y="0" font-size="12" font-weight="900" fill="#4338CA">WRITE TASKS</text>
+      <text x="98" y="0" font-size="12" fill="#64748B">edit code</text>
+
+      <rect x="0" y="18" width="124" height="30" rx="10" fill="#FFFFFF" stroke="#4338CA" stroke-width="2"/>
+      <text x="62" y="38" font-size="12" font-weight="800" fill="#4338CA" text-anchor="middle">Change</text>
+
+      <rect x="170" y="18" width="124" height="30" rx="10" fill="#FFFFFF" stroke="#4338CA" stroke-width="2"/>
+      <text x="232" y="38" font-size="12" font-weight="800" fill="#4338CA" text-anchor="middle">Verify</text>
+
+      <rect x="340" y="18" width="124" height="30" rx="10" fill="#FFFFFF" stroke="#4338CA" stroke-width="2"/>
+      <text x="402" y="38" font-size="12" font-weight="800" fill="#4338CA" text-anchor="middle">Integrate</text>
+
+      <path d="M 124 33 L 170 33" fill="none" stroke="#4338CA" stroke-width="3" stroke-linecap="round" stroke-dasharray="8 10" marker-end="url(#arrow-indigo)">
+        <animate attributeName="stroke-dashoffset" values="0;18" dur="1.3s" repeatCount="indefinite"/>
+      </path>
+      <path d="M 294 33 L 340 33" fill="none" stroke="#4338CA" stroke-width="3" stroke-linecap="round" stroke-dasharray="8 10" marker-end="url(#arrow-indigo)">
+        <animate attributeName="stroke-dashoffset" values="0;18" dur="1.3s" begin="0.15s" repeatCount="indefinite"/>
+      </path>
+
+      <text x="0" y="72" font-size="11" fill="#64748B">Parallelize writes only with clean partitioning (e.g., by files/modules).</text>
+    </g>
+  </g>
+</svg>

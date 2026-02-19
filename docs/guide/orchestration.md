@@ -30,6 +30,8 @@
 
 经验法则：**读操作（搜索、研究）尽管并行，写操作（改代码）谨慎并行**。读很少冲突，写经常会。
 
+![Control and concurrency: one driver, one wheel; parallelize reads, serialize writes](/illustrations/orchestration-inline-1.svg)
+
 ## 常见模式
 
 Agent 的编排模式就像电路板：串联、并联、或者更复杂的组合。我们不关心底层框架怎么实现，只关心它呈现给你的行为模式。
@@ -118,6 +120,8 @@ Plan-and-Execute 在动手前纠偏，迭代循环在动手后纠偏。Agent 执
 并行分支好理解，开几个独立的 Sub Agent 就行。难的是治理。
 
 同时开三个会话改同一个项目，每个会话都有自己的上下文，互相看不见。没人协调，很容易变成一场灾难。
+
+![Parallel session governance playbook: partition, sync, converge, accept](/illustrations/orchestration-inline-2.svg)
 
 **切干净**
 并行的前提是任务能切干净。每个会话负责一个独立区域——不同的文件、不同的模块。如果要改同一个文件，就别并行。按文件边界切，通常更稳妥。

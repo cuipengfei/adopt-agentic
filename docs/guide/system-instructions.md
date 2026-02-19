@@ -71,6 +71,8 @@
 
 用自然语言写清楚你的规则和期望，就能全局改变 Agent 的行为。
 
+![System instructions in the request: injected first, unchanged every round](/illustrations/system-instructions-inline-1.svg)
+
 想让它遵循团队独特的代码风格？写进系统指令。
 想让它避免接触某个敏感模块？写进系统指令。
 想让它在每次提交前都执行特定检查？写进系统指令。
@@ -125,6 +127,8 @@
 你可以把项目级指令文件理解成"组织教训库"——每一条规则背后都是一次真实的踩坑教训。
 
 但指令文件不只是踩坑记录。那些经过反复验证、沉淀下来的成功做法——同样写在里面。
+
+![Instructions as assets: positive invariants + Git versioning + PR review + iteration](/illustrations/system-instructions-inline-2.svg)
 
 **踩坑教训告诉 Agent 什么路走不通，验证过的好做法告诉它应该怎么走。** 两者合起来，才是完整的团队智慧。
 

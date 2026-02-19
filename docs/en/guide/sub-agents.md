@@ -45,6 +45,8 @@ Write a handoff note instead. It needs just three things:
 
 Dumping context is lazy. The Sub Agent will get lost in the noise.
 
+![Handoff note vs context dump — what to send to a Sub Agent](/illustrations/sub-agents-inline-1.svg)
+
 ## How It Works
 
 The main Agent delegating to a Sub Agent boils down to three steps:
@@ -124,6 +126,8 @@ The Sub Agent might go through a dozen rounds of tool calls internally—reading
 When the Sub Agent finishes, it returns a **summary** to the main Agent—not dozens of raw messages, but a compressed result. Think of it like `git stash`: stash your current complex context, do an atomic task on a clean branch, then switch back with the output.
 
 What the main Agent receives is just: "Tests created, covering 201 and 400, file at `tests/integration/createUser.test.ts`." Whatever struggles the Sub Agent went through in between—the main Agent doesn’t need to know.
+
+![Isolation boundary: inherited rules, isolated history, returned summary, and audit trail](/illustrations/sub-agents-inline-2.svg)
 
 ## Connecting Back to the First Principle
 
