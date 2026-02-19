@@ -192,6 +192,8 @@ Your job is to keep step 3 intact. Tests ran but results weren't fed back? That'
 
 All three anti-patterns share the same root cause: Agents are amplifiers—they faithfully replicate patterns already in your codebase, including the bad ones. Three inconsistent error-handling styles? The Agent picks one at random. Stale comments? The Agent references them when writing new code. It amplifies everything, good and bad. Verification isn't a one-time sweep—it's ongoing maintenance.
 
+One more degradation worth watching for, though it's not quite an anti-pattern: in long tasks, codebase coherence quietly erodes. Architectural patterns established early get drifted from later; different modules develop contradictory styles. The Agent hasn't gotten dumber—it's a physical limitation of the context window: the longer the task runs, the higher the probability that early constraints get pushed out of the window. Periodically reviewing overall codebase consistency is the most direct defense.
+
 ## Key Takeaways
 
 - **Context flow**: Each verification layer produces signals (exit codes, test reports, metrics) that get injected back into context, becoming the basis for the Agent’s next decision. Verification isn’t a post-mortem—it’s real-time navigation.

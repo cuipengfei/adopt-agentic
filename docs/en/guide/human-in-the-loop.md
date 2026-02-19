@@ -93,6 +93,8 @@ How to tell if you’re accumulating cognitive debt? A few symptoms:
 - Your code review time keeps shrinking—because you can’t really follow the code anymore, so you just trust the Agent
 - When something breaks, your first instinct isn’t to debug it yourself, but to ask the Agent to diagnose
 
+This gets worse in teams. Each person delegates different modules to their own Agent. After a while, it becomes hard for anyone to explain the full picture of the system. The code isn't lost—it's all in git. What's lost is the team's shared understanding of the codebase.
+
 Mitigation:
 
 - **Seriously review the Agent’s commits**—the same way you’d review a colleague’s code
@@ -100,6 +102,8 @@ Mitigation:
 - **Regularly draw architecture diagrams**—the Agent can generate them, but you must understand and confirm them
 
 An Agent helps you do more. But if your understanding of the codebase falls behind, you won’t be able to catch problems in its output.
+
+There's an equally dangerous slide in the opposite direction: approval fatigue. The Agent pauses for your confirmation before every high-risk operation. When confirmations pop up repeatedly, your attention gives out before your willingness does—you go from "carefully reviewing the diff" to "reflexively clicking approve." The fix mirrors the "Letting Go vs. Stepping In" section above: don't prompt for low-risk ops. Save your approval budget for decisions that genuinely need your judgment.
 
 ## Key Takeaways
 

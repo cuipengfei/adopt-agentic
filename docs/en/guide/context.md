@@ -206,6 +206,8 @@ Roll back to the last clean checkpoint. Throttle at the source—only feed the a
 
 The most effective move is starting a new session. But don't copy-paste the chat history. Distill what's worth keeping: confirmed facts, finalized decisions, acceptance criteria. Compress that into a clean input and carry only that forward. Leave the detours in the old session.
 
+Why bother distilling yourself? Most tools' auto-compression is opaque—you don't know what was kept and what was dropped. Some tools offer [compaction hooks](./hooks-and-plugins.md) that let you control retention, which helps. But manual distillation has a benefit auto-compression can't provide: the process itself forces you to organize your thinking.
+
 Addition decides what the agent sees. Subtraction decides what doesn't drown it.
 
 One more actionable principle: put your most important constraints at the beginning and end of the conversation.
