@@ -63,4 +63,4 @@ System instructions define how the agent behaves *by default*. Commands define w
 - **Risk**: Commands can conflict with system instructions. Also, commands containing dangerous operations (like `/deploy` or `/force-push`) should have confirmation gates — not every shortcut should be fire-and-forget.
 - **Auditability**: Agent logs should record which command triggered subsequent actions. When something goes wrong, tracing back to the source command definition is the key to troubleshooting.
 
-Next chapter: Skills — commands are injected once and stay in the conversation, Skills are automatically included in every turn.
+Next chapter: Skills — commands are triggered manually by the user and expand to full text immediately; Skills are loaded on demand by the LLM, starting as metadata at launch.

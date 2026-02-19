@@ -2,14 +2,16 @@
 
 > **上下文视角**：Skills 是按需加载的系统指令片段——让领域知识以模块形式进入上下文。
 
-上一节的 Command 和这一节的 Skill，底层做的是同一件事——把额外 prompt 注入上下文。区别在两点：
+上一节的 Command 和这一节的 Skill，底层做的是同一件事——把额外 prompt 注入上下文。持续性上二者没有区别：一旦进入上下文，后续每轮请求都跟着（回忆[节点 1](./context.md)——LLM 无状态，每次重发全部）。
 
-- **谁触发**：Command 是你手动输入 `/` 触发，Skill 由 agent 根据任务需求按需加载。
-- **持续多久**：Command 注入一次，留在当前对话中；Skill 的内容被塞进每一轮发给 LLM 的请求里，后续**每一轮**都自动包含。
+真正的区别在两点：
+
+- **谁触发**：Command 是你手动输入 `/` 触发；Skill 由 LLM 根据任务判断，通过工具调用按需加载。
+- **怎么进入**：Command 触发即全文展开；Skill 先以名称和简短描述的形式出现在上下文中，LLM 判断需要时再加载完整内容。
 
 Command 是"这次做什么"，Skill 是"从现在起怎么做"。
 
-![Skills: on-demand system instruction modules — load domain knowledge that persists across every request until unloaded](/illustrations/skills.svg)
+![Skills: on-demand system instruction modules — LLM discovers available skills via metadata, loads full content when needed](/illustrations/skills.svg)
 
 ## 加载前后的行为差异
 
@@ -47,18 +49,50 @@ Agent 生成：`feat(auth): add JWT token refresh endpoint`，附上详细的 bo
 
 LLM 没有"学会"新知识。它只是看到了更丰富的指令，并据此行动。加载 Skill 就是把它的内容塞进发给 LLM 的请求里——具体注入到哪个位置（system 字段还是 messages 里）因工具而异，但效果相同：Skill 的规则在后续每轮请求中持续生效。
 
+### 先发现，后加载
+
+上面的例子简化了加载过程。实际上，Skill 进入上下文分两步。
+
+**第一步：启动时，Agent 把所有可用 Skill 的元数据注入上下文。**
+
+```json
+// → REQUEST（启动时，部分）
+{
+  "system": "...\n\n## Available Skills\n- git-master: Git 操作专家，遵循 conventional commit 规范\n- frontend-ui-ux: 前端设计与 UI/UX 最佳实践\n- ..."
+}
+```
+
+LLM 看到的是一份清单——名称和简短描述，不是完整内容。上下文成本极低。
+
+**第二步：LLM 判断当前任务需要某个 Skill 时，主动调用工具加载全文。**
+
+```json
+// ← RESPONSE（LLM 决定加载 skill）
+{
+  "tool_calls": [{
+    "name": "load_skill",
+    "arguments": { "name": "git-master" }
+  }]
+}
+```
+
+Agent 读取 Skill 文件的完整内容，注入到后续请求中。从这一刻起，Skill 的规则才真正占用上下文。
+
+这就是渐进式披露（progressive disclosure）——不用的 Skill 只占一行元数据的空间；用到了才展开全文。主流开源工具（Codex、Gemini CLI、OpenCode）都采用了这个模式，只是触发工具的名称各异。
+
 ## Skills vs. Commands
 
 二者底层机制相同——都是把额外 prompt 注入上下文。差异在以下几点：
 
 | 特性         | Slash Commands                    | Skills                                                     |
 | ------------ | --------------------------------- | ---------------------------------------------------------- |
-| **触发方式** | 用户手动 `/` 触发                 | Agent 按需加载（你给个提示，agent 自己决定加载）            |
-| **持续时间** | 注入一次，留在当前对话中          | 塞进每轮请求，自动包含直到手动停用或会话结束                 |
+| **触发方式** | 用户手动 `/` 触发                 | LLM 根据任务判断，通过工具调用加载                          |
+| **进入方式** | 触发即全文展开，作为 user message 进入对话历史 | 启动时只有元数据（名称+描述）；LLM 按需加载全文   |
+| **持续性**   | 进入后每轮请求都带（随对话历史）  | 进入后每轮请求都带（部分工具支持中途停用）                   |
 | **粒度**     | "这次做什么"                      | "从现在起怎么做"                                           |
 | **举例**     | `/review`                         | 加载 `git-master`                                          |
 
-不同 agent 工具加载 Skill 的语法各异，但底层做的事情相同：**读取 Skill 文件内容 → 注入到请求中 → 后续每轮都带上。**
+不同工具加载 Skill 的语法各异，但流程相同：**启动时注入元数据 → LLM 按需加载全文 → 注入后每轮请求都带上。**
 
 ## 和 Sub Agent 怎么选
 
@@ -81,11 +115,11 @@ Agent 的能力边界不再只由开发者决定，而是可以被生态扩展�
 
 但每个加载的 Skill 都持续占着上下文。加载前问一句：这次任务真的需要它吗？"以防万一"就是主动往上下文灌噪声。
 
-加载后注意指令冲突。任务结束后把不再需要的 Skill 停用，给下一个任务腾空间。加载容易停用难，但不停的后果是上下文越来越吵。
+加载后注意指令冲突。有的工具支持中途停用 Skill，有的不支持——不支持的，加载了就到会话结束。所以加载前的判断比加载后的管理更重要。
 
 ## 本节小结
 
-- **上下文流动**：加载 Skill = 其内容注入到每轮请求中，持续占用上下文窗口直到手动停用或会话结束。它产生的是稳定的、可复现的领域行为模式。
+- **上下文流动**：加载 Skill = 其内容注入到每轮请求中，持续占用上下文窗口。部分工具支持中途停用释放空间，其余到会话结束。它产生的是稳定的、可复现的领域行为模式。
 - **风险**：加载过多 Skill 会撑爆上下文窗口。更隐蔽的问题：不同 Skill 的指令可能冲突——一个要求注释详尽，另一个要求极简——Agent 行为变得不可预测。
 - **可审计性**：Agent 日志应记录哪个 Skill 在何时被加载或停用。Agent 行为异常？先查当前加载的 Skill 列表和它们的内容。
 

@@ -17,7 +17,7 @@ Agent 的能力上限 = 它拥有的高质量上下文。LLM 自带的通用知�
 | 路径 | 核心机制 | 注入时机 | 上下文落点 | 持久性 | 适用场景 |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **规则层** | System Instructions | 会话开始，自动加载 | system prompt | 默认存在 | 项目规范、编码约定、安全护栏 |
-| **能力层** | Skills | 任务需要时，按需加载 | system prompt（动态追加） | 任务级 | 特定领域工作流、最佳实践 |
+| **能力层** | Skills | 任务需要时，按需加载 | system 或 messages（视工具实现） | 会话内持续（部分工具支持停用） | 特定领域工作流、最佳实践 |
 | **项目层** | 代码库 + 文档结构 | Agent 读取文件时 | user/assistant messages | 按需 | 项目结构、README、注释、llms.txt |
 
 ![Three knowledge feeding paths: Rule Layer (always-on), Capability Layer (on-demand injection), and Project Layer (just-in-time file reads) flow into the Agent's Context Window](/illustrations/knowledge-feeding.svg)
@@ -44,7 +44,7 @@ Agent 的能力上限 = 它拥有的高质量上下文。LLM 自带的通用知�
 
 加载一个 Skill——比如一个专门处理 git 操作的 skill，或一个专注前端设计的 skill——就是把一整套领域知识动态注入 system prompt。Agent 瞬间从"什么都懂一点"变成"这个领域的专家"。
 
-关键区别：**按需加载，用完可卸**。不需要时不占上下文。
+关键区别：**按需加载**。启动时只有名称和简短描述进入上下文，LLM 判断需要时才加载全文。不需要时几乎不占上下文。
 
 写一个好的 Skill，等于写一份给 Agent 看的领域手册。它包含：决策流程、最佳实践、常用命令、常见陷阱。这些知识只在特定任务场景下需要——不值得塞进全局规则，但在需要时必须完整呈现。
 

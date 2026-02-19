@@ -17,7 +17,7 @@ But context is like milk: nutritious when fresh, spoils over time, and you can o
 | Path | Core Mechanism | Injection Timing | Context Landing | Persistence | Use Case |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Rule Layer** | System Instructions | Session start, auto-loaded | system prompt | Always-on | Project standards, coding conventions, safety rails |
-| **Capability Layer** | Skills | On task demand, loaded as needed | system prompt (dynamic append) | Task-scoped | Domain-specific workflows, best practices |
+| **Capability Layer** | Skills | On task demand, loaded as needed | system or messages (varies by tool) | Persists within session (some tools support deactivation) | Domain-specific workflows, best practices |
 | **Project Layer** | Codebase + doc structure | When Agent reads files | user/assistant messages | On-demand | Project structure, README, comments, llms.txt |
 
 ![Three knowledge feeding paths: Rule Layer (always-on), Capability Layer (on-demand injection), and Project Layer (just-in-time file reads) flow into the Agent's Context Window](/illustrations/knowledge-feeding.svg)
@@ -44,7 +44,7 @@ The rule layer tells the Agent "what to do and not do." The capability layer tel
 
 Loading a Skill—say, one specialized in git operations, or one focused on frontend design—injects an entire body of domain knowledge into the system prompt. The Agent instantly goes from "knows a bit of everything" to "expert in this domain."
 
-The key difference: **loaded on demand, unloaded when done.** No context cost when not needed.
+The key difference: **loaded on demand.** At startup, only the name and a short description enter the context; the LLM loads the full content only when it determines the task needs it. Almost no context cost when not in use.
 
 Writing a good Skill is like writing a domain handbook for the Agent. It contains: decision flows, best practices, common commands, common pitfalls. This knowledge is only needed in specific task scenarios—not worth stuffing into global rules, but must be fully present when called upon.
 
