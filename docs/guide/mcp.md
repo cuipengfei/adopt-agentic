@@ -2,7 +2,7 @@
 
 > **上下文视角**：MCP 工具的定义和返回值与内置工具一样进入上下文，LLM 不区分来源。
 
-上一节的内置工具都在本地执行——读文件、跑命令，Agent 直接搞定。但如果你想让 Agent 查 Jira ticket、搜 Slack 消息、调公司内部 API 呢？
+上一节的内置工具都在本地执行——读文件、跑命令，Agent 直接搞定。但如果你想让 Agent 抓网页、搜 Slack 消息、调公司内部 API 呢？
 
 等 Agent 开发者更新？不现实。自己改源码？更不现实。
 
@@ -39,13 +39,37 @@ MCP 支持两种连接方式：
 
 对你来说，区别只在配置方式。对 LLM 来说，完全不知道也不关心。
 
+两种方式的交互流程对比：
+
+```mermaid
+sequenceDiagram
+    participant A as Agent
+    participant S as stdio Server
+    participant H as HTTP Server
+
+    rect rgb(219, 234, 254)
+    Note over A,S: stdio — 本地子进程
+    A->>S: spawn 子进程
+    A->>S: stdin → {"method": "tools/call"}
+    S-->>A: stdout → {"result": {...}}
+    A->>S: 结束时 kill 进程
+    end
+
+    rect rgb(220, 252, 231)
+    Note over A,H: Streamable HTTP — 远程服务
+    A->>H: POST → {"method": "tools/call"}
+    H-->>A: HTTP Response → {"result": {...}}
+    Note right of H: 服务独立运行，可多 Agent 共享
+    end
+```
+
 ## 功能等价，来源不同
 
 这是关键：对 LLM 来说，内置工具和 MCP 工具**毫无区别**。
 
 **── 第 1 轮 ──**
 
-假设有一个通过 MCP 接入的 `search_jira` 工具。用户提问时，Agent 把**所有可用工具**（内置 + MCP）的定义一起放进上下文：
+假设有一个通过 MCP 接入的 `scrape_url` 工具。用户提问时，Agent 把**所有可用工具**（内置 + MCP）的定义一起放进上下文：
 
 ```json
 // → REQUEST（agent → LLM API）
@@ -58,12 +82,12 @@ MCP 支持两种连接方式：
       "input_schema": { "...": "..." }
     },
     {
-      "name": "search_jira",
-      "description": "根据关键词搜索 Jira issue",
+      "name": "scrape_url",
+      "description": "抓取指定 URL 的网页内容并返回 markdown",
       "input_schema": { "...": "..." }
     }
   ],
-  "messages": [{ "role": "user", "content": "查一下"数据库性能"相关的 ticket" }]
+  "messages": [{ "role": "user", "content": "帮我看一下 https://example.com/docs/api 这个页面写了什么" }]
 }
 ```
 
@@ -73,9 +97,13 @@ LLM 选择最合适的工具：
 // ← RESPONSE（LLM API → agent，SSE 流）
 {
   "role": "assistant",
-  "content": "好的，正在搜索 Jira...",
+  "content": "好的，正在抓取页面内容...",
   "tool_calls": [
-    { "id": "call_xyz789", "name": "search_jira", "arguments": { "query": "数据库性能" } }
+    {
+      "id": "call_xyz789",
+      "name": "scrape_url",
+      "arguments": { "url": "https://example.com/docs/api" }
+    }
   ]
 }
 ```
@@ -87,7 +115,7 @@ Agent 视角：执行路径不同。
 ```mermaid
 flowchart LR
   A[Agent] -->|本地执行| B["read_file — 直接读文件系统"]
-  A -->|转发请求| C["MCP Server — 执行 search_jira"]
+  A -->|转发请求| C["MCP Server — 执行 scrape_url"]
 ```
 
 **── 第 2 轮 ──**
@@ -102,7 +130,7 @@ MCP Server 返回结果后，Agent 把它包装成 `tool` 角色消息，追加�
     {
       "role": "tool",
       "tool_call_id": "call_xyz789",
-      "content": "[{\"id\": \"PROJ-123\", \"title\": \"优化数据库索引\"}, {\"id\": \"PROJ-456\", \"title\": \"慢查询排查\"}]"
+      "content": "# API Reference\n\n## Authentication\nAll requests require a Bearer token...\n\n## Endpoints\n- GET /users — List all users\n- POST /users — Create a new user\n..."
     }
   ]
 }
@@ -112,11 +140,11 @@ MCP Server 返回结果后，Agent 把它包装成 `tool` 角色消息，追加�
 // ← RESPONSE（LLM API → agent，SSE 流）
 {
   "role": "assistant",
-  "content": "找到两个相关 ticket：\n1. PROJ-123 — 优化数据库索引\n2. PROJ-456 — 慢查询排查\n\n需要我查看某个 ticket 的详情吗？"
+  "content": "这个页面是 API 文档，主要内容：\n1. 认证方式：Bearer token\n2. 两个端点：GET /users（获取用户列表）和 POST /users（创建用户）\n\n需要我看具体哪个端点的细节吗？"
 }
 ```
 
-LLM 只关心拿到了搜索结果。它不知道也不需要知道这个结果来自本地还是远端。
+LLM 只关心拿到了网页内容。它不知道也不需要知道这个结果来自本地还是远端。
 
 一句话总结：**LLM 层完全等价，Agent 执行层路径不同。**
 
@@ -128,7 +156,7 @@ LLM 只关心拿到了搜索结果。它不知道也不需要知道这个结果�
 
 MCP 的价值不在"又多了一个协议"，而在于**解除你对 Agent 开发者的依赖**：
 
-- **不等官方更新**：想接 Jira？装个 MCP Server 就行，不需要等 Agent 下个版本。
+- **不等官方更新**：想接搜索引擎？装个 MCP Server 就行，不需要等 Agent 下个版本。
 - **快接内部系统**：公司内部 API 大概率不会被 Agent 官方支持，但你可以自己写（或找现成的）MCP Server。
 - **跨 Agent 复用**：一个 MCP Server 理论上能被任何支持该协议的 Agent 使用——不绑定特定工具。
 

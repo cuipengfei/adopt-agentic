@@ -50,8 +50,8 @@ Commands aren't just plain text. A well-designed command can bundle multiple ele
 
 | Feature | System Instructions | Slash Commands |
 | :--- | :--- | :--- |
-| **Presence** | **Present by default**, throughout the entire session | **Triggered on demand**, one-time injection |
-| **Scope** | Global, affecting every response | Task-level, locally scoped, not persistent |
+| **Presence** | **Present by default**, automatically included every turn | **Triggered on demand**, injected when user types `/` |
+| **Scope** | Global, affecting every response | Injected once, stays in the current conversation |
 | **Role** | The agent's behavioral code | A specific task list for one job |
 | **Example** | "You are a Python expert. Code must adhere to PEP8." | `/test` |
 
@@ -59,8 +59,8 @@ System instructions define how the agent behaves *by default*. Commands define w
 
 ## Key Takeaways
 
-- **Context flow**: User types `/command` → agent expands it into a prompt → injects into `messages` → LLM consumes and responds. Command-injected content is task-level — it doesn't persist across subsequent sessions.
+- **Context flow**: User types `/command` → agent expands it into a prompt → injects into `messages` → LLM consumes and responds. Command-injected content stays in the current conversation but doesn't persist across sessions.
 - **Risk**: Commands can conflict with system instructions. Also, commands containing dangerous operations (like `/deploy` or `/force-push`) should have confirmation gates — not every shortcut should be fire-and-forget.
 - **Auditability**: Agent logs should record which command triggered subsequent actions. When something goes wrong, tracing back to the source command definition is the key to troubleshooting.
 
-Next chapter: Skills — commands are one-time injections, Skills are persistent behavior configurations.
+Next chapter: Skills — commands are injected once and stay in the conversation, Skills are automatically included in every turn.

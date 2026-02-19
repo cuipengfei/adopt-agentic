@@ -2,9 +2,10 @@
 
 > **Context Perspective**: Skills are on-demand system instruction snippets — bringing domain knowledge into the context modularly.
 
-The previous chapter's commands are one-time injections — trigger once, gone. But some knowledge needs to **persist**: Git commit conventions, code style requirements, framework-specific best practices. You don't want to remind the agent manually every time.
+The previous chapter's Commands and this chapter's Skills do the same thing under the hood — inject extra prompt into the context. The difference is two-fold:
 
-Skills solve this. A Skill is a loadable instruction set. Once loaded, its content is appended to the agent's System Instructions and sent to the LLM in **every subsequent request**.
+- **Who triggers it**: A Command is triggered manually when you type `/`. A Skill is loaded by the agent on demand, based on task requirements.
+- **How long it lasts**: A Command is injected once and stays in the current conversation. A Skill's content is included in every request sent to the LLM, automatically present in **every subsequent turn**.
 
 Commands are "what to do this time." Skills are "how to behave from now on."
 
@@ -44,45 +45,35 @@ Same request: "Commit these changes."
 
 Agent generates: `feat(auth): add JWT token refresh endpoint`, with a detailed body explaining why the change is needed.
 
-The LLM hasn't "learned" anything new. It simply saw richer system instructions and acted accordingly. Loading a Skill = dynamically extending System Instructions.
+The LLM hasn't "learned" anything new. It simply saw richer instructions and acted accordingly. Loading a Skill means injecting its content into the request sent to the LLM — the exact injection point (the `system` field vs. `messages`) varies by tool, but the effect is the same: the Skill's rules persist in every subsequent request.
 
 ## Skills vs. Commands
 
+Both share the same underlying mechanism — injecting extra prompt into the context. The differences are:
+
 | Feature | Slash Commands | Skills |
 | --- | --- | --- |
-| **Essence** | User-side context **injection** | Dynamically modifies **System Instructions** |
-| **Granularity** | Task-level injection — "what to do this time" | Behavior-level configuration — "how to behave from now on" |
-| **Lifecycle** | Trigger once, fire-and-forget | Remains active after loading until unloaded |
-| **Example** | `/review` | Load `ui-ux-pro-max` |
+| **Trigger** | User manually types `/` | Agent loads on demand (you give a hint, agent decides to load) |
+| **Duration** | Injected once, stays in the current conversation | Included in every request, automatically present every turn until manually deactivated or session ends |
+| **Granularity** | "What to do this time" | "How to behave from now on" |
+| **Example** | `/review` | Load `git-master` |
 
-Different agent tools may use different syntax for loading Skills, but the underlying mechanism is the same: **read the Skill file → append to System Instructions → include in every subsequent request.**
+Different agent tools use different syntax for loading Skills, but they all do the same thing under the hood: **read the Skill file → inject into the request → include in every subsequent turn.**
 
-## Commands, Skills, and Sub Agents
+## When to Use What
 
-Commands, Skills, and [Sub Agents](./sub-agents.md) control agent behavior at different levels.
+Commands, Skills, and [Sub Agents](./sub-agents.md) all inject content into the context. The difference is granularity and isolation:
 
-| | Commands | Skills | Sub Agent |
-| --- | --- | --- | --- |
-| **Essence** | One-shot prompt injection | Persistent system instruction extension | Isolated context environment |
-| **Granularity** | Task-level: "what to do this time" | Behavior-level: "how to behave from now on" | Sub-task-level: "hand this to a specialist" |
-| **Lifecycle** | Fire and forget | Active until manually unloaded | Destroyed after task completion |
-| **Context impact** | Appended to current conversation | Appended to System Instructions | Creates a fresh, independent context |
-| **Typical use** | `/review`, `/commit` | Loading Git conventions, code style | Complex sub-tasks needing a clean environment |
-
-### When to Use Which
-
-| Scenario | Recommendation | Rationale |
-|----------|---------------|-----------|
-| Repetitive, single-step operations | Command | One-click trigger, fire and forget. |
-| Persistent standards or knowledge | Skill | Load once, active in every turn. |
-| Sub-task requiring a clean slate | Sub Agent | Avoids noise from the main conversation. |
-| Not sure which to use | Start with a Command. If you repeat it, upgrade to a Skill. | Start simple, escalate as needed. |
+- **Repetitive single-step operation?** → Command. One-click trigger, fire and forget.
+- **Persistent standards or knowledge?** → Skill. Load once, active every turn.
+- **Worried about context getting noisy?** → [Sub Agent](./sub-agents.md). Works in an isolated context, returns a summary.
+- **Not sure?** → Start with a Command. If you keep repeating it, upgrade to a Skill.
 
 ## Ecosystem: Reusable Behavior Patterns
 
-The core value of Skills is shareability:
+Both Commands and Skills can be packaged into files, committed to a repository, and shared across teams. There's no difference in distribution and reuse. Skills are better suited for ecosystem-level sharing because of **persistence** — load once and it takes effect automatically, no need to manually trigger each time:
 
-- **Individuals**: Encapsulate your workflows and best practices into a private Skill.
+- **Individuals**: Encapsulate your workflows and best practices into a Skill file.
 - **Teams**: Create shared Skills for your project to ensure everyone (including agents) follows uniform standards.
 - **Communities**: Publish public Skills for specific tech stacks — React component design principles, Go error handling patterns, Terraform module structure.
 
@@ -94,8 +85,8 @@ After loading, watch for instruction conflicts. When the task ends, deactivate w
 
 ## Key Takeaways
 
-- **Context flow**: Loading a Skill = its full content appended to System Instructions, continuously occupying context window until unloaded. It produces stable, reproducible domain-specific behavior patterns.
+- **Context flow**: Loading a Skill = its content injected into every request sent to the LLM, continuously occupying context window until manually deactivated or the session ends. It produces stable, reproducible domain-specific behavior patterns.
 - **Risk**: Too many Skills loaded will exhaust the context window. A subtler problem: different Skills' instructions may conflict — one demands detailed comments, another demands minimalism — and agent behavior becomes unpredictable.
-- **Auditability**: Agent logs should record when each Skill was loaded or unloaded. Agent behaving strangely? Check the currently loaded Skill list and their contents first.
+- **Auditability**: Agent logs should record when each Skill was loaded or deactivated. Agent behaving strangely? Check the currently loaded Skill list and their contents first.
 
 Next chapter: Agent-Native CLI Tools — Skills inject behavioral knowledge into the agent, CLI tools give it executable capabilities.

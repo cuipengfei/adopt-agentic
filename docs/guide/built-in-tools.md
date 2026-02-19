@@ -200,20 +200,20 @@ Agent 会**真实执行** LLM 请求的操作。好的工具分两级信任：
 
 | 工具类型 | Claude Code | Codex | Gemini CLI | OpenCode |
 | :--- | :--- | :--- | :--- | :--- |
-| **读取类** | `Read`, `Glob`, `Grep` | `—` (待核查) | `read_file`, `list_files` | `read`, `glob`, `grep` |
-| **写入类** | `Write`, `Edit` | `—` (待核查) | `write_file` | `edit`, `write`, `patch` |
-| **执行类** | `Bash` | 沙箱内执行 | `git`, shell 执行 | `bash` |
-| **搜索类** | `Grep`, `LSP` | `—` (待核查) | `grep`, `find_files`, `resolve_symbol` | `grep`, `lsp` |
-| **网络类** | `WebFetch`, `WebSearch` | 网络受限 | `—` | `webfetch`, `websearch` |
+| **读取类** | `Read`, `Glob`, `Grep` | `read_file`, `list_dir` | `read_file`, `list_directory`, `glob` | `read`, `glob`, `grep` |
+| **写入类** | `Write`, `Edit` | `apply_patch` | `write_file`, `replace` | `edit`, `write` |
+| **执行类** | `Bash` | `shell`（沙箱内） | `run_shell_command` | `bash` |
+| **搜索类** | `Grep`, `Glob` | `grep_files` | `search_file_content`, `glob` | `grep`, `lsp` |
+| **网络类** | `WebFetch`, `WebSearch` | `web_search` | `web_fetch`, `google_web_search` | `webfetch` |
 
 ### 权限控制对比
 
 | Agent | 权限模型 | 用户配置方式 |
 | :--- | :--- | :--- |
-| **Claude Code** | 分层权限 (default, acceptEdits, plan, dontAsk) | `allowedTools` 列表 + 交互式提示 |
-| **Codex** | 三档审批 (Auto, Read-only, Full Access) | CLI 启动参数 |
-| **Gemini CLI** | 交互式确认 | `settings` 文件 |
-| **OpenCode** | 每工具三档 (allow, ask, deny) | `opencode.json` 文件 |
+| **Claude Code** | 分层权限（default, acceptEdits, plan, dontAsk） | `allowedTools` 列表 + 交互式提示 |
+| **Codex** | 沙箱 + 审批策略（Auto / Read-only / Full Access 预设） | CLI 参数 + `~/.codex/config.toml` |
+| **Gemini CLI** | 交互式确认 + Trusted Folders + Sandbox | `~/.gemini/settings.json` |
+| **OpenCode** | 每工具三档（allow, ask, deny） | `opencode.json` 文件 |
 
 工具名和分类不同，但模式一样——读、写、执行、搜索，再加上权限分级控制。这套组合拳是 Agent 与世界互动的基石。
 

@@ -2,7 +2,7 @@
 
 > **Context Perspective**: The definitions and return values of MCP tools enter the context just like built-in tools. The LLM does not distinguish their origins.
 
-The previous chapter's built-in tools all execute locally — reading files, running commands, the agent handles it directly. But what if you want the agent to search Jira tickets, query Slack messages, or call a company-internal API?
+The previous chapter's built-in tools all execute locally — reading files, running commands, the agent handles it directly. But what if you want the agent to scrape a webpage, query Slack messages, or call a company-internal API?
 
 Wait for the agent developer to add it? Impractical. Modify the agent's source code yourself? Even less realistic.
 
@@ -39,13 +39,37 @@ MCP supports two ways to connect to a Server:
 
 For you, the difference is just configuration. For the LLM, it doesn't know and doesn't care.
 
+A side-by-side comparison of how both transport modes work:
+
+```mermaid
+sequenceDiagram
+    participant A as Agent
+    participant S as stdio Server
+    participant H as HTTP Server
+
+    rect rgb(219, 234, 254)
+    Note over A,S: stdio — local child process
+    A->>S: spawn child process
+    A->>S: stdin → {"method": "tools/call"}
+    S-->>A: stdout → {"result": {...}}
+    A->>S: kill process on session end
+    end
+
+    rect rgb(220, 252, 231)
+    Note over A,H: Streamable HTTP — remote service
+    A->>H: POST → {"method": "tools/call"}
+    H-->>A: HTTP Response → {"result": {...}}
+    Note right of H: Runs independently, shareable across agents
+    end
+```
+
 ## Functionally Equivalent, Different Origin
 
 Here's the key: to the LLM, built-in tools and MCP tools are **indistinguishable**.
 
 **── Round 1 ──**
 
-Say we have a `search_jira` tool accessed via MCP. When the user asks a question, the agent places **all available tools** (built-in + MCP) into the context together:
+Say we have a `scrape_url` tool accessed via MCP. When the user asks a question, the agent places **all available tools** (built-in + MCP) into the context together:
 
 ```json
 // → REQUEST (agent → LLM API)
@@ -58,12 +82,12 @@ Say we have a `search_jira` tool accessed via MCP. When the user asks a question
       "input_schema": { "...": "..." }
     },
     {
-      "name": "search_jira",
-      "description": "Searches for Jira issues by keyword",
+      "name": "scrape_url",
+      "description": "Scrapes the content of a URL and returns markdown",
       "input_schema": { "...": "..." }
     }
   ],
-  "messages": [{ "role": "user", "content": "Look up tickets related to 'database performance'" }]
+  "messages": [{ "role": "user", "content": "What does the page at https://example.com/docs/api say?" }]
 }
 ```
 
@@ -73,9 +97,9 @@ The LLM picks the most appropriate tool:
 // ← RESPONSE (LLM API → agent, SSE stream)
 {
   "role": "assistant",
-  "content": "Okay, searching Jira...",
+  "content": "Okay, scraping the page...",
   "tool_calls": [
-    { "id": "call_xyz789", "name": "search_jira", "arguments": { "query": "database performance" } }
+    { "id": "call_xyz789", "name": "scrape_url", "arguments": { "url": "https://example.com/docs/api" } }
   ]
 }
 ```
@@ -87,7 +111,7 @@ Agent's perspective: different execution path.
 ```mermaid
 flowchart LR
   A[Agent] -->|Execute locally| B["read_file — Direct filesystem access"]
-  A -->|Forward request| C["MCP Server — Execute search_jira"]
+  A -->|Forward request| C["MCP Server — Execute scrape_url"]
 ```
 
 **── Round 2 ──**
@@ -102,7 +126,7 @@ After the MCP Server returns results, the agent wraps them into a `tool`-role me
     {
       "role": "tool",
       "tool_call_id": "call_xyz789",
-      "content": "[{\"id\": \"PROJ-123\", \"title\": \"Optimize database indexes\"}, {\"id\": \"PROJ-456\", \"title\": \"Slow query investigation\"}]"
+      "content": "# API Reference\n\n## Authentication\nAll requests require a Bearer token...\n\n## Endpoints\n- GET /users — List all users\n- POST /users — Create a new user\n..."
     }
   ]
 }
@@ -112,11 +136,11 @@ After the MCP Server returns results, the agent wraps them into a `tool`-role me
 // ← RESPONSE (LLM API → agent, SSE stream)
 {
   "role": "assistant",
-  "content": "Found two related tickets:\n1. PROJ-123 — Optimize database indexes\n2. PROJ-456 — Slow query investigation\n\nWant me to look into either of these in detail?"
+  "content": "This page is API documentation. Key points:\n1. Authentication: Bearer token required\n2. Two endpoints: GET /users (list users) and POST /users (create user)\n\nWant me to dig into a specific endpoint?"
 }
 ```
 
-The LLM only cares that it got search results. It doesn't know or need to know whether they came from the local machine or a remote server.
+The LLM only cares that it got the page content. It doesn't know or need to know whether they came from the local machine or a remote server.
 
 One-line summary: **LLM layer — fully equivalent. Agent execution layer — different paths.**
 
@@ -128,7 +152,7 @@ But flexibility has a hidden cost. Each connected MCP Server injects all of its 
 
 MCP's value isn't "yet another protocol." Its value is **freeing you from depending on the agent developer**:
 
-- **Don't wait for updates**: Want Jira integration? Install an MCP Server. No need to wait for the next agent release.
+- **Don't wait for updates**: Want a search engine integration? Install an MCP Server. No need to wait for the next agent release.
 - **Connect internal systems**: Your company's internal API will most likely never get official agent support, but you can write (or find) an MCP Server for it.
 - **Reuse across agents**: An MCP Server can theoretically be used by any agent that supports the protocol — not locked to a specific tool.
 

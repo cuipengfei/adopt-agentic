@@ -90,9 +90,9 @@ git diff --cached   # 也检查已暂存的修改
 
 ## 注意事项
 
-- **必须加载配套 Skills**——审校 `docs/` 下教程内容时，必须同时加载 `humanizer-zh`（去 AI 痕迹）和 `adopt-agentic-writer`（十人混血儿写作风格 + HTTP/SSE 模式）。主 agent 亲自编辑时遵循这两个 skill 的规则；委托 sub-agent 时通过 `load_skills` 传入
+- **文本编辑必须由主 agent（Opus 4.6）亲自执行**——这是最高优先级规则。Sub-agent 在风格一致性上无法达标，所有 `docs/` 下教程内容的文字修改（措辞调整、段落重写、表格修正、新增内容）都由主 agent 直接用 Edit/Write 工具完成。不允许委托 sub-agent 做文本编辑。
+- **Sub-agent 只用于辅助工作**——可以委托的事项：全局术语扫描（grep/explore）、事实核查（librarian 查官方文档）、SVG/插图生成或修复（artistry/quick）、Mermaid 图表配色方案调研。**绝不包括**写或改教程文字。
+- **必须加载配套 Skills**——审校 `docs/` 下教程内容时，必须同时加载 `humanizer-zh`（去 AI 痕迹）和 `adopt-agentic-writer`（十人混血儿写作风格 + HTTP/SSE 模式）。主 agent 亲自编辑时遵循这两个 skill 的规则；委托 sub-agent 做辅助工作时通过 `load_skills` 传入相关 skill。
 - **不要擅自修改用户没评论的地方**——只改评论指出的问题 + 新规则涉及的全局问题
 - **评论是反馈不是指令**——需要理解评论背后的意图，不是机械执行
 - **保持写作风格**——所有修改必须遵循 CLAUDE.md 中的"十人混血儿"写作风格
-- **不要用 sub-agent 做文本编辑**——风格一致性要求主 agent 亲自操刀
-- **可以用 sub-agent 做辅助工作**——全局术语扫描、视觉设计等可以委托

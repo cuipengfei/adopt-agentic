@@ -168,3 +168,11 @@ h1, h2, h3, h4, h5, h6, .title {
     min-height: auto;
   }
 }
+
+/* Code block soft wrapping — avoid horizontal scrolling */
+.vp-doc div[class*='language-'] pre,
+.vp-doc div[class*='language-'] code {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}

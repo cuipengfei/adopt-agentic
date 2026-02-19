@@ -193,19 +193,19 @@ Just saying "tools" is too abstract. What do the built-in tools of different age
 
 | Tool Type | Claude Code | Codex | Gemini CLI | OpenCode |
 | :--- | :--- | :--- | :--- | :--- |
-| **Read** | `Read`, `Glob`, `Grep` | `—` (TBD) | `read_file`, `list_files` | `read`, `glob`, `grep` |
-| **Write** | `Write`, `Edit` | `—` (TBD) | `write_file` | `edit`, `write`, `patch` |
-| **Execute** | `Bash` | Sandboxed execution | `git`, shell execution | `bash` |
-| **Search** | `Grep`, `LSP` | `—` (TBD) | `grep`, `find_files`, `resolve_symbol` | `grep`, `lsp` |
-| **Network** | `WebFetch`, `WebSearch` | Network limited | `—` | `webfetch`, `websearch` |
+| **Read** | `Read`, `Glob`, `Grep` | `read_file`, `list_dir` | `read_file`, `list_directory`, `glob` | `read`, `glob`, `grep` |
+| **Write** | `Write`, `Edit` | `apply_patch` | `write_file`, `replace` | `edit`, `write` |
+| **Execute** | `Bash` | `shell` (sandboxed) | `run_shell_command` | `bash` |
+| **Search** | `Grep`, `Glob` | `grep_files` | `search_file_content`, `glob` | `grep`, `lsp` |
+| **Network** | `WebFetch`, `WebSearch` | `web_search` | `web_fetch`, `google_web_search` | `webfetch` |
 
 ### Permission Control Comparison
 
 | Agent | Permission Model | User Configuration |
 | :--- | :--- | :--- |
 | **Claude Code** | Tiered permissions (default, acceptEdits, plan, dontAsk) | `allowedTools` list + interactive prompts |
-| **Codex** | Three approval modes (Auto, Read-only, Full Access) | CLI launch parameters |
-| **Gemini CLI** | Interactive confirmation | `settings` file |
+| **Codex** | Sandbox + approval policy (Auto / Read-only / Full Access presets) | CLI parameters + `~/.codex/config.toml` |
+| **Gemini CLI** | Interactive confirmation + Trusted Folders + Sandbox | `~/.gemini/settings.json` |
 | **OpenCode** | Per-tool modes (allow, ask, deny) | `opencode.json` file |
 
 The tool names and categories differ, but the pattern is the same: read, write, execute, and search, plus tiered permission controls. This combination is the foundation of how an agent interacts with the world.
