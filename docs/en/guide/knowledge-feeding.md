@@ -1,4 +1,4 @@
-# Knowledge Feeding: Installing Your Brain into the Agent
+# Knowledge Feeding
 
 > **Context Perspective**: No matter which path you use to inject knowledge, it all ends up as information in the context—the difference is **when it enters, how much, and how long it stays**.
 
@@ -8,7 +8,7 @@ This chapter flips the perspective: **you're on the supply side. You have projec
 
 ## Context Is Like Milk
 
-An Agent's capability ceiling = the quality of its context. The LLM's built-in general knowledge is the public internet; what you feed it is your company intranet. Without the latter, it can't do the actual work.
+An Agent's capability ceiling = the quality of its context. The LLM has general knowledge built in, but it doesn't know what framework your project uses, how your code is organized, or what conventions your team follows. Without that project-level knowledge, it can only give generic advice.
 
 But context is like milk: nutritious when fresh, spoils over time, and you can only fit so much in the fridge. Knowledge feeding is building a supply chain—delivering the right dose of fresh milk through the right pipes at the right time.
 
@@ -38,7 +38,7 @@ These rules are two kinds of distilled experience: **hard-learned lessons**—ev
 
 The cost is equally clear: it permanently occupies context window space. Cram in too many rules and you leave less room for actual work.
 
-### 2. Capability Layer: Hiring a Tutor
+### 2. Capability Layer: Loading Domain Knowledge On Demand
 
 The rule layer tells the Agent "what to do and not do." The capability layer tells it "how to do it."
 
@@ -58,7 +58,7 @@ This is the core idea of the project layer: **your codebase itself is the Agent'
 
 How:
 
-- **Knowledge entry files**: `CLAUDE.md`, `AGENTS.md`, `llms.txt`—tell the Agent "start here to understand this project." Like an onboarding doc for a new hire.
+- **Knowledge entry files**: `CLAUDE.md`, `AGENTS.md`, and `llms.txt` (supported by some frameworks and documentation sites)—tell the Agent "start here to understand this project." Like an onboarding doc for a new hire.
 - **Clear project structure**: Semantically named directories, clean module boundaries. Agents infer context from file paths—`src/utils/helpers.js` conveys almost nothing; `src/auth/jwt-validator.ts` is instantly understood.
 - **Code as documentation**: Meaningful variable and function names, comments on critical logic. Agents read code the same way you do—clear code is clear to them too.
 - **Keep READMEs and API docs up to date**: Stale documentation is worse than no documentation—the Agent will make decisions based on wrong information.
@@ -87,7 +87,7 @@ The dictionary (`llms.txt`, API docs, schema) is for looking things up, not for 
 
 The grammar (`AGENTS.md`, Skills) is for obeying, not for reading. It's rules. It's instructions. Put it in the Agent's core prompt, where it's enforced.
 
-Putting thousands of lines of API definitions in `AGENTS.md` is like making a developer memorize a dictionary. Putting a critical rule like "never use eval" in some forgotten document is like hanging the "no drunk driving" sign in the bar's bathroom. Both are useless.
+API definitions don't belong in instruction files—they're reference material, meant for the agent to look up when needed. Critical rules don't belong in some forgotten corner document—put them where the agent reads on every startup, or they might as well not exist.
 
 ## How to Choose
 

@@ -4,7 +4,7 @@
 
 Previous sections covered various ways to "put things into context": System Instructions inject rules, MCP injects tools, Skills inject knowledge, CLI Tools inject capabilities.
 
-But some needs can't be solved by "declaratively putting things in":
+But some needs can't be solved by writing files or configs—static approaches hit their limit:
 
 - Before the agent executes `rm -rf`, you want to **automatically block it**.
 - After the agent finishes a task, you want a **desktop notification**.
@@ -12,7 +12,7 @@ But some needs can't be solved by "declaratively putting things in":
 - When building the system prompt, you want to **dynamically append rules** based on runtime state.
 - On every tool call, you want to **log** to an external system.
 
-These need a new mechanism: not declaratively placing content, but **programmatically intervening in the context flow**.
+These need a new mechanism: not statically placing content, but **programmatically intervening in the context flow**.
 
 ## Hooks — Event-Driven Behavior Control
 
@@ -37,13 +37,15 @@ Tool execution completes
 Agent continues reasoning
 ```
 
+The flow above shows the most intuitive hook scenario—intercepting tool calls. But hooks do far more than that: desktop notifications, token counting, compaction control, dynamic rule injection are all hooks. Interception is just one use case.
+
 ## The gatekeeper pattern
 
-An agent is a hard-working intern who might go off track at any moment.
-You need a calm doorman to stop it before it does something stupid, like deleting the production database.
+An agent is capable and fast—but it has no instinct for "this operation is risky, I should ask first."
+You need a gatekeeper to stop it before it executes a high-risk operation.
 
 - **Read-only** (`ls`, `cat`): Let it look.
-- **Low-risk write** (`npm install`): Probably fine, but it’s better to check things silently, like making sure `package-lock.json` is unchanged before running `npm install`.
+- **Low-risk write** (`npm install`): Probably fine, but it's better to check things silently, like making sure `package-lock.json` is unchanged before running `npm install`.
 - **High-risk write** (`rm -rf`, `git push --force`): Must be stopped. A popup should ask, "Are you sure?"
 
 This is the core value of a hook: a programmable firewall between the agent and the real world.
@@ -67,14 +69,6 @@ Different agent tools support different event sets and naming. Below are represe
 Note "system prompt transform" and "session compaction"—hooks in these categories **directly modify context content**. So hooks aren't just "side-channel interception"—they can also "put things into context."
 
 The "session compaction" hook is one of the less universal types — not all tools support it, but if yours does, it's worth using well. When agents automatically compress early history in long conversations, your core constraints may get compressed away—the agent "forgets" rules in the second half, not because it's stupid, but because that rule is simply no longer in the context. A compaction hook lets you solve this at the mechanism level: specify which information must be preserved verbatim, and which can be summarized. Far more reliable than manually restating constraints every few turns.
-
-The difference between Skills and Hooks isn't about "who can modify context," but about:
-
-| | Skills | Hooks |
-| --- | --- | --- |
-| **Approach** | Declarative—write a document, content injected as-is | Programmatic—write code, dynamically decide based on logic |
-| **Flexibility** | Static text, unchanged after loading | Can read runtime state, apply conditional logic |
-| **Capability boundary** | Can only inject knowledge | Intercept, modify, log, register tools—anything code can do |
 
 ### Event Processing Pattern
 

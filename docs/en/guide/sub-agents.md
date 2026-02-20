@@ -33,13 +33,13 @@ flowchart TD
     messages array"] -.->|"❌ Isolated"| B
 ```
 
-One more thing that’s easy to miss: **the Sub Agent’s initial prompt is constructed by the main Agent, not written by you directly.** You give the main Agent a big task. The main Agent analyzes it, decides "this sub-task needs isolated handling," and constructs an initial prompt for the Sub Agent. You influence the Sub Agent’s quality indirectly through clear instructions to the main Agent—the more precise your input, the better the prompt it constructs.
+One more thing that’s easy to miss: **the Sub Agent’s initial prompt is usually constructed by the main Agent automatically.** You give the main Agent a big task. The main Agent analyzes it, decides "this sub-task needs isolated handling," and constructs an initial prompt for the Sub Agent. You can guide this through System Instructions—for example, "when delegating, always include file paths and constraints." The more precise your instructions, the better the prompt it constructs.
 
-## The Handoff Note
+## What a Good Initial Prompt Looks Like
 
 The most common mistake when delegating to a Sub Agent is dumping the entire chat history.
 
-Write a handoff note instead. It needs just three things:
+The right approach — a focused task description with just three things:
 
 1.  **Goal:** Be specific. "Fix the login bug in the auth module."
 2.  **Constraints:** State the boundaries. "Do not touch the DB schema. Do not add new dependencies."
@@ -53,34 +53,7 @@ Dumping context is lazy. The Sub Agent will get lost in the noise.
 
 The main Agent delegating to a Sub Agent boils down to three steps:
 
-```typescript
-// Main Agent’s orchestration logic (local scheduling, not an LLM API call)
-function mainWorkflow() {
-  // ... The main Agent has had many rounds with the user, context is long ...
-
-  const taskDescription = `
-    You are a QA Engineer.
-    Here is the API schema file:
-    ${await readFile(‘src/api/v2/schema.json’)}
-
-    Write an integration test for the ‘createUser’ endpoint.
-    - Use the Vitest framework.
-    - Cover both 201 Created and 400 Bad Request.
-    - Write to ‘tests/integration/createUser.test.ts’.
-  `;
-
-  // 1. Create Sub Agent with a clear, self-contained task description
-  const subAgent = createSubAgent(taskDescription);
-
-  // 2. Sub Agent executes independently in isolated context (invisible to main Agent)
-  const result = await subAgent.run();
-
-  // 3. Inject result summary into main Agent’s context
-  appendToContext(result.summary);
-
-  // ... Main Agent continues based on the summary ...
-}
-```
+![Sub Agent Workflow: 1. Task Description -> 2. Execution -> 3. Summary](/illustrations/sub-agents-inline-3.svg)
 
 **── Inside the Sub Agent ──**
 

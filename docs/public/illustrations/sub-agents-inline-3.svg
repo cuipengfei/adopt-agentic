@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 480" role="img" aria-labelledby="title desc">
+  <title id="title">Sub Agent Workflow: Delegate, Execute, Return</title>
+  <desc id="desc">Three-step workflow showing the main Agent delegating a task to a Sub Agent, the Sub Agent executing independently with tool calls, and returning a compressed summary back to the main Agent.</desc>
+
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.10"/>
+    </filter>
+    <filter id="shadow-sm" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <filter id="glow-indigo" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-color="#4338ca" flood-opacity="0.3"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-teal" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-color="#14b8a6" flood-opacity="0.3"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <marker id="arrow-indigo" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto">
+      <polygon points="0 0, 12 5, 0 10" fill="#4338ca"/>
+    </marker>
+    <marker id="arrow-teal" markerWidth="12" markerHeight="10" refX="10" refY="5" orient="auto">
+      <polygon points="0 0, 12 5, 0 10" fill="#14b8a6"/>
+    </marker>
+  </defs>
+
+  <style><![CDATA[
+    .bg { fill: #f8fafc; }
+    .panel { fill: #ffffff; stroke: #e2e8f0; stroke-width: 1; }
+    .divider { stroke: #e2e8f0; stroke-width: 2; }
+    .title { font: 800 20px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: #0f172a; }
+    .subtitle { font: 500 13px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: #64748b; }
+    .kicker { font: 800 12px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; letter-spacing: 0.7px; }
+    .label { font: 800 11px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; letter-spacing: 0.6px; fill: #334155; }
+    .text { font: 600 12px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: #0f172a; }
+    .muted { font: 500 11px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; fill: #64748b; }
+    .mono { font: 600 11px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace; fill: #334155; }
+    .box { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1; }
+    .mainHead { fill: #eef2ff; stroke: #c7d2fe; }
+    .subHead { fill: #f0fdfa; stroke: #99f6e4; }
+    .pill { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1; }
+    .pillOk { fill: #ecfdf5; stroke: rgba(20, 184, 166, 0.55); }
+    .arrowIndigo { fill: none; stroke: #4338ca; stroke-width: 3; stroke-dasharray: 8 6; marker-end: url(#arrow-indigo); }
+    .arrowTeal { fill: none; stroke: #14b8a6; stroke-width: 3; stroke-dasharray: 8 6; marker-end: url(#arrow-teal); }
+  ]]></style>
+
+  <!-- Background -->
+  <rect class="bg" x="0" y="0" width="1200" height="480"/>
+  <rect class="panel" x="24" y="24" width="1152" height="432" rx="16" filter="url(#shadow)"/>
+
+  <!-- Header -->
+  <text class="title" x="48" y="62">Sub Agent Workflow</text>
+  <text class="subtitle" x="48" y="86">Delegate with a focused prompt | Execute independently | Return compressed summary</text>
+  <line class="divider" x1="48" y1="102" x2="1152" y2="102"/>
+
+  <!-- ===== MAIN AGENT (Left) ===== -->
+  <g transform="translate(48, 120)">
+    <rect class="box" x="0" y="0" width="320" height="320" rx="16" filter="url(#shadow-sm)"/>
+    <rect class="mainHead" x="0" y="0" width="320" height="50" rx="16"/>
+    <rect class="mainHead" x="0" y="34" width="320" height="16"/>
+    <text class="kicker" x="18" y="32" fill="#4338ca">MAIN AGENT</text>
+
+    <!-- Long context history (faded lines) -->
+    <g transform="translate(18, 68)">
+      <text class="label" x="0" y="0">CONVERSATION HISTORY</text>
+      <rect x="0" y="14" width="220" height="5" rx="3" fill="#cbd5e1" opacity="0.35"/>
+      <rect x="0" y="26" width="270" height="5" rx="3" fill="#cbd5e1" opacity="0.3"/>
+      <rect x="0" y="38" width="180" height="5" rx="3" fill="#cbd5e1" opacity="0.25"/>
+      <rect x="0" y="50" width="250" height="5" rx="3" fill="#cbd5e1" opacity="0.2"/>
+      <rect x="0" y="62" width="200" height="5" rx="3" fill="#cbd5e1" opacity="0.15"/>
+      <text class="muted" x="0" y="86">noise accumulates...</text>
+    </g>
+
+    <!-- Orchestration decision -->
+    <g transform="translate(18, 178)">
+      <rect class="pill" x="0" y="0" width="284" height="42" rx="10"/>
+      <text class="label" x="14" y="16">ORCHESTRATION</text>
+      <text class="mono" x="14" y="34">decision: spawn sub agent</text>
+    </g>
+
+    <!-- Received summary (step 3 destination) -->
+    <g transform="translate(18, 240)">
+      <rect class="pillOk" x="0" y="0" width="284" height="56" rx="10"/>
+      <text class="label" x="14" y="18" fill="#0f766e">STEP 3: RECEIVED SUMMARY</text>
+      <text class="mono" x="14" y="36" fill="#0f766e">tests created, 201 + 400 covered</text>
+      <text class="muted" x="14" y="50" fill="#0f766e">file: tests/integration/createUser.test.ts</text>
+      <!-- Summary arrival pulse -->
+      <rect x="0" y="0" width="284" height="56" rx="10" fill="none" stroke="#14b8a6" stroke-width="2" opacity="0">
+        <animate attributeName="opacity" values="0;0.4;0" dur="3.2s" begin="2s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+  </g>
+
+  <!-- ===== SUB AGENT (Right) ===== -->
+  <g transform="translate(660, 120)">
+    <rect class="box" x="0" y="0" width="500" height="320" rx="16" filter="url(#shadow-sm)"/>
+    <rect class="subHead" x="0" y="0" width="500" height="50" rx="16"/>
+    <rect class="subHead" x="0" y="34" width="500" height="16"/>
+    <text class="kicker" x="18" y="32" fill="#0f766e">SUB AGENT (ISOLATED CONTEXT)</text>
+
+    <!-- Step 1: Task received -->
+    <g transform="translate(18, 68)">
+      <rect x="0" y="0" width="464" height="50" rx="10" fill="#eef2ff" stroke="#c7d2fe"/>
+      <text class="label" x="14" y="18" fill="#4338ca">STEP 1: TASK RECEIVED</text>
+      <text class="mono" x="14" y="38">goal + constraints + key context</text>
+      <!-- Pulse ring on task received -->
+      <rect x="0" y="0" width="464" height="50" rx="10" fill="none" stroke="#4338ca" stroke-width="2" opacity="0">
+        <animate attributeName="opacity" values="0;0.4;0" dur="3s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+
+    <!-- Step 2: Execution loop -->
+    <g transform="translate(18, 136)">
+      <text class="label" x="0" y="0">STEP 2: INDEPENDENT EXECUTION</text>
+      <rect x="0" y="14" width="464" height="150" rx="10" fill="#fafafa" stroke="#e2e8f0" stroke-dasharray="4 4"/>
+
+      <!-- Tool call rows with activity animations -->
+      <g transform="translate(14, 30)">
+        <circle cx="8" cy="8" r="6" fill="#ecfdf5" stroke="#14b8a6"/>
+        <text class="mono" x="24" y="12">read_file(schema.json)</text>
+        <rect x="280" y="0" width="50" height="16" rx="8" fill="#ecfdf5" stroke="#99f6e4"/>
+        <text class="muted" x="305" y="12" text-anchor="middle" fill="#0f766e">done</text>
+        <circle cx="8" cy="8" r="6" fill="none" stroke="#14b8a6" opacity="0">
+          <animate attributeName="r" values="6;14;6" dur="2.4s" begin="0s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;0.35;0" dur="2.4s" begin="0s" repeatCount="indefinite"/>
+        </circle>
+      </g>
+
+      <g transform="translate(14, 60)">
+        <circle cx="8" cy="8" r="6" fill="#eef2ff" stroke="#4338ca"/>
+        <text class="mono" x="24" y="12">write_file(createUser.test.ts)</text>
+        <rect x="280" y="0" width="50" height="16" rx="8" fill="#eef2ff" stroke="#c7d2fe"/>
+        <text class="muted" x="305" y="12" text-anchor="middle" fill="#4338ca">done</text>
+        <circle cx="8" cy="8" r="6" fill="none" stroke="#4338ca" opacity="0">
+          <animate attributeName="r" values="6;14;6" dur="2.4s" begin="0.6s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;0.35;0" dur="2.4s" begin="0.6s" repeatCount="indefinite"/>
+        </circle>
+      </g>
+
+      <g transform="translate(14, 90)">
+        <circle cx="8" cy="8" r="6" fill="#fef2f2" stroke="#f87171"/>
+        <text class="mono" x="24" y="12">run_test  FAIL  expected 201...</text>
+        <rect x="280" y="0" width="50" height="16" rx="8" fill="#fef2f2" stroke="#fca5a5"/>
+        <text class="muted" x="305" y="12" text-anchor="middle" fill="#b91c1c">retry</text>
+        <circle cx="8" cy="8" r="6" fill="none" stroke="#f87171" opacity="0">
+          <animate attributeName="r" values="6;14;6" dur="2.4s" begin="1.2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;0.35;0" dur="2.4s" begin="1.2s" repeatCount="indefinite"/>
+        </circle>
+      </g>
+
+      <g transform="translate(14, 120)">
+        <circle cx="8" cy="8" r="6" fill="#ecfdf5" stroke="#14b8a6"/>
+        <text class="mono" x="24" y="12">run_test  PASS  2 tests passed</text>
+        <rect x="280" y="0" width="50" height="16" rx="8" fill="#ecfdf5" stroke="#99f6e4"/>
+        <text class="muted" x="305" y="12" text-anchor="middle" fill="#0f766e">done</text>
+        <circle cx="8" cy="8" r="6" fill="none" stroke="#14b8a6" opacity="0">
+          <animate attributeName="r" values="6;14;6" dur="2.4s" begin="1.8s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;0.35;0" dur="2.4s" begin="1.8s" repeatCount="indefinite"/>
+        </circle>
+      </g>
+
+      <!-- Scanning progress bar -->
+      <rect x="14" y="144" width="0" height="3" rx="2" fill="#14b8a6" opacity="0.6">
+        <animate attributeName="width" values="0;436;0" dur="6s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+  </g>
+
+  <!-- ===== CONNECTORS ===== -->
+
+  <!-- Arrow 1: Main to Sub (DELEGATE) -->
+  <path class="arrowIndigo" d="M 368 220 L 660 200">
+    <animate attributeName="stroke-dashoffset" from="28" to="0" dur="1.4s" repeatCount="indefinite"/>
+  </path>
+  <circle r="5" fill="#4338ca" opacity="0" filter="url(#glow-indigo)">
+    <animateMotion path="M 368 220 L 660 200" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;0.9;0.9;0" keyTimes="0;0.15;0.75;1" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <rect x="450" y="180" width="120" height="36" rx="18" fill="#eef2ff" stroke="#c7d2fe"/>
+  <text class="kicker" x="510" y="203" text-anchor="middle" fill="#4338ca">DELEGATE</text>
+
+  <!-- Arrow 3: Sub to Main (RETURN) -->
+  <path class="arrowTeal" d="M 660 400 C 620 440 420 440 368 388">
+    <animate attributeName="stroke-dashoffset" from="28" to="0" dur="1.6s" repeatCount="indefinite"/>
+  </path>
+  <circle r="5" fill="#14b8a6" opacity="0" filter="url(#glow-teal)">
+    <animateMotion path="M 660 400 C 620 440 420 440 368 388" dur="2.8s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;0.9;0.9;0" keyTimes="0;0.15;0.75;1" dur="2.8s" repeatCount="indefinite"/>
+  </circle>
+  <rect x="450" y="422" width="120" height="36" rx="18" fill="#ecfdf5" stroke="#99f6e4"/>
+  <text class="kicker" x="510" y="445" text-anchor="middle" fill="#0f766e">RETURN</text>
+
+  <!-- Step numbers in center column -->
+  <g transform="translate(510, 130)">
+    <circle cx="0" cy="0" r="14" fill="#eef2ff" stroke="#c7d2fe"/>
+    <text class="kicker" x="0" y="5" text-anchor="middle" fill="#4338ca">1</text>
+  </g>
+  <g transform="translate(600, 300)">
+    <circle cx="0" cy="0" r="14" fill="#f0fdfa" stroke="#99f6e4"/>
+    <text class="kicker" x="0" y="5" text-anchor="middle" fill="#0f766e">2</text>
+    <circle cx="0" cy="0" r="14" fill="none" stroke="#14b8a6" opacity="0">
+      <animate attributeName="r" values="14;22;14" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;0.25;0" dur="2s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  <g transform="translate(510, 445)">
+    <circle cx="0" cy="0" r="14" fill="#ecfdf5" stroke="#99f6e4"/>
+    <text class="kicker" x="0" y="5" text-anchor="middle" fill="#0f766e">3</text>
+  </g>
+
+  <!-- Footer -->
+  <text class="muted" x="600" y="470" text-anchor="middle">Main Agent sees only the summary. Sub Agent's internal struggles stay in the audit log.</text>
+</svg>

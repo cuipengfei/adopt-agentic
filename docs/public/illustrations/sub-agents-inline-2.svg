@@ -47,9 +47,7 @@
     .arrowNeutral { fill: none; stroke: #64748b; stroke-width: 2.6; marker-end: url(#arrow); }
     .arrowIndigo { fill: none; stroke: #4338ca; stroke-width: 3; marker-end: url(#arrow-indigo); }
     .arrowTeal { fill: none; stroke: #14b8a6; stroke-width: 3; marker-end: url(#arrow-teal); }
-    .arrowAmber { fill: none; stroke: #f59e0b; stroke-width: 3; stroke-dasharray: 8 10; marker-end: url(#arrow-amber); animation: dash 1.7s linear infinite; }
-    @keyframes dash { to { stroke-dashoffset: -36; } }
-    @media (prefers-reduced-motion: reduce) { .arrowAmber { animation: none; } }
+    .arrowAmber { fill: none; stroke: #f59e0b; stroke-width: 3; stroke-dasharray: 8 10; marker-end: url(#arrow-amber); }
 
     .pill { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1; }
     .pillOk { fill: #ecfdf5; stroke: rgba(20, 184, 166, 0.55); }
@@ -135,7 +133,9 @@
   </g>
 
   <!-- Not shared: raw history -->
-  <path class="arrowAmber" d="M 548 258 L 600 258" />
+  <path class="arrowAmber" d="M 548 258 L 600 258">
+    <animate attributeName="stroke-dashoffset" from="0" to="-36" dur="1.7s" repeatCount="indefinite"/>
+  </path>
   <g transform="translate(604, 245)">
     <rect class="pillNo" x="0" y="0" width="92" height="26" rx="13" />
     <text class="label" x="46" y="17" text-anchor="middle" fill="#b91c1c">NOT SHARED</text>

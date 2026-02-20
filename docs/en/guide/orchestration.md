@@ -14,13 +14,13 @@ Why should you care? Because it directly affects how you give instructions:
 
 When your understanding aligns with how the Agent actually works, the quality of your instructions changes completely.
 
-## Conductor unity
+## Don't fight for the wheel
 
 Biggest taboo: **fighting for the wheel.** Tell the driver the destination, then don't grab the steering wheel while it's turning.
 
 The Agent is editing a file and you insert a command to modify the same file? Context desyncs from disk. Conflict. Either wait for it to stop (task done) or take over completely (kill task). Don't micromanage while it's driving.
 
-## Parallel span
+## Parallelize reads, serialize writes
 
 Human brain juggles 1-2 balls. Agent capacity depends on the orchestrator.
 

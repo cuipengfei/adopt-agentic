@@ -30,9 +30,17 @@
       <line x1="0" y1="0" x2="0" y2="6" stroke="#8bafc4" stroke-width="0.5" opacity="0.3"/>
     </pattern>
 
-    <!-- Marker Arrow -->
+    <!-- Marker Arrow (Red) -->
     <marker id="arrow-end" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
       <path d="M0,0 L0,6 L9,3 z" fill="#c0392b"/>
+    </marker>
+    <!-- Marker Arrow (Dark) -->
+    <marker id="arrow-end-dark" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#433422"/>
+    </marker>
+    <!-- Marker Arrow (Blue) -->
+    <marker id="arrow-end-blue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#268bd2"/>
     </marker>
 
     <!-- Milk Bottle Assets -->
@@ -144,13 +152,13 @@
   <!-- Feeding Mechanisms (Pipes/Flows) Labels - Added Flow Animation -->
   <g fill="none" stroke="#433422" stroke-width="1.5">
     <!-- Path from Rules -->
-    <path d="M 420 370 C 350 370 350 150 500 160" marker-end="url(#arrow-end)" stroke-dasharray="4,4">
+    <path d="M 420 370 C 350 370 350 150 500 160" marker-end="url(#arrow-end-dark)" stroke-dasharray="4,4">
       <animate attributeName="stroke-dashoffset" values="8;0" dur="1s" repeatCount="indefinite"/>
     </path>
     <text x="360" y="260" font-size="14" fill="#433422" font-style="italic">Always Active</text>
     
     <!-- Path from Skills -->
-    <path d="M 760 440 C 850 440 850 200 700 160" marker-end="url(#arrow-end)" stroke-dasharray="4,4">
+    <path d="M 760 440 C 850 440 850 200 700 160" marker-end="url(#arrow-end-blue)" stroke="#268bd2" stroke-dasharray="4,4">
       <animate attributeName="stroke-dashoffset" values="8;0" dur="1s" repeatCount="indefinite"/>
     </path>
     <text x="820" y="300" font-size="14" fill="#433422" font-style="italic">On Demand</text>
@@ -164,13 +172,13 @@
   
   <!-- Flow Animations (SVG Native) - Particles kept on top -->
   <!-- Rules Flow -->
-  <circle r="4" fill="#c0392b" opacity="0.8">
+  <circle r="4" fill="#433422" opacity="0.8">
     <animateMotion path="M 420 370 C 350 370 350 150 500 160" dur="4s" repeatCount="indefinite"/>
     <animate attributeName="opacity" values="0;0.9;0.9;0" keyTimes="0;0.1;0.8;1" dur="4s" repeatCount="indefinite"/>
   </circle>
   
   <!-- Skills Flow -->
-  <circle r="4" fill="#c0392b" opacity="0.8">
+  <circle r="4" fill="#268bd2" opacity="0.8">
     <animateMotion path="M 760 440 C 850 440 850 200 700 160" dur="5s" repeatCount="indefinite"/>
     <animate attributeName="opacity" values="0;0.9;0.9;0" keyTimes="0;0.1;0.8;1" dur="5s" repeatCount="indefinite"/>
   </circle>
@@ -188,13 +196,6 @@
     <text x="0" y="40" font-size="14" fill="#665c54">fragments to maintain freshness.</text>
   </g>
 
-  <!-- Decorative Stamp (Bottom Right) - Animated Rotation -->
-  <g transform="translate(1000, 580)">
-    <g transform="rotate(-15 50,30)">
-        <animateTransform attributeName="transform" type="rotate" values="-15 50 30; -10 50 30; -15 50 30" dur="6s" repeatCount="indefinite" />
-        <circle cx="50" cy="30" r="40" fill="none" stroke="#c0392b" stroke-width="2" opacity="0.6"/>
-        <path d="M 20 30 L 80 30" stroke="#c0392b" opacity="0.6"/>
-    </g>
-  </g>
+
 
 </svg>

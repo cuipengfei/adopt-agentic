@@ -33,13 +33,13 @@ flowchart TD
     messages 数组"] -.->|❌ 隔离| B
 ```
 
-还有一点容易忽略：**Sub Agent 的初始 prompt 是主 Agent 构造的，不是你直接写的。** 你给主 Agent 一个大任务，主 Agent 分析后自己决定"这个子任务需要独立处理"，然后构造一份初始指令发给 Sub Agent。你通过给主 Agent 清晰的指令间接影响 Sub Agent 的质量——你的输入越精准，主 Agent 构造的 prompt 就越好。
+还有一点容易忽略：**Sub Agent 的初始 prompt 通常是主 Agent 自动构造的。** 你给主 Agent 一个大任务，主 Agent 分析后自己决定"这个子任务需要独立处理"，然后构造一份初始 prompt 发给 Sub Agent。你可以通过 System Instructions 告诉主 Agent 怎么构造这份 prompt——比如"委派时必须包含文件路径和约束条件"。你的指令越精准，主 Agent 构造的 prompt 就越好。
 
-## 交接便签
+## 好的初始 prompt 长什么样
 
 派活给 Sub Agent，最常见的错误：把所有聊天记录扔给它。
 
-正确做法——写一张交接便签，只含三样：
+正确做法——给一份精简的任务描述，只含三样：
 
 1. **目标**：具体。"修复 auth 模块的登录 bug。"
 2. **约束**："不动数据库 schema。不引入新依赖。"
@@ -53,34 +53,7 @@ flowchart TD
 
 主 Agent 委派任务给 Sub Agent，可以看作三步：
 
-```typescript
-// 主 Agent 的编排逻辑（本地调度，不是 LLM API 调用）
-function mainWorkflow() {
-  // ... 主 Agent 已经和用户进行了多轮对话，上下文很长 ...
-
-  const taskDescription = `
-    你是一个 QA 工程师。
-    这是 API schema 文件：
-    ${await readFile('src/api/v2/schema.json')}
-
-    为 'createUser' endpoint 编写集成测试。
-    - 使用 Vitest 框架。
-    - 覆盖 201 Created 和 400 Bad Request 两种情况。
-    - 写入 'tests/integration/createUser.test.ts'。
-  `;
-
-  // 1. 创建 Sub Agent，给予清晰、独立的任务描述
-  const subAgent = createSubAgent(taskDescription);
-
-  // 2. Sub Agent 在隔离上下文中独立执行（主 Agent 不可见）
-  const result = await subAgent.run();
-
-  // 3. 将结果摘要注入主 Agent 上下文
-  appendToContext(result.summary);
-
-  // ... 主 Agent 基于摘要继续下一步 ...
-}
-```
+![Sub Agent Workflow: 1. Task Description -> 2. Execution -> 3. Summary](/illustrations/sub-agents-inline-3.svg)
 
 **── Sub Agent 内部 ──**
 
@@ -93,7 +66,10 @@ Sub Agent 的 `messages` 从零开始，但 system prompt 继承了项目的 Sys
 {
   "system": "你是一个代码助手。\n\n[项目 System Instructions]\n- TypeScript strict mode\n- 测试用 Vitest\n- 禁止 any 类型\n...",
   "messages": [
-    { "role": "user", "content": "你是一个 QA 工程师。这是 API schema 文件：{...}\n为 createUser endpoint 编写集成测试..." }
+    {
+      "role": "user",
+      "content": "你是一个 QA 工程师。这是 API schema 文件：{...}\n为 createUser endpoint 编写集成测试..."
+    }
   ]
 }
 ```
@@ -110,13 +86,46 @@ Sub Agent 读完 schema、写了测试文件、跑了一次测试发现报错，
   "system": "（同上，不变）",
   "messages": [
     { "role": "user", "content": "你是一个 QA 工程师..." },
-    { "role": "assistant", "content": "我先读取 schema 文件...", "tool_calls": [{ "name": "read_file", "arguments": {"path": "src/api/v2/schema.json"} }] },
-    { "role": "tool", "content": "{ \"endpoints\": { \"createUser\": { ... } } }" },
-    { "role": "assistant", "content": "Schema 已读取。现在编写测试...", "tool_calls": [{ "name": "write_file", "arguments": {"path": "tests/integration/createUser.test.ts", "content": "..."} }] },
+    {
+      "role": "assistant",
+      "content": "我先读取 schema 文件...",
+      "tool_calls": [
+        {
+          "name": "read_file",
+          "arguments": { "path": "src/api/v2/schema.json" }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "content": "{ \"endpoints\": { \"createUser\": { ... } } }"
+    },
+    {
+      "role": "assistant",
+      "content": "Schema 已读取。现在编写测试...",
+      "tool_calls": [
+        {
+          "name": "write_file",
+          "arguments": {
+            "path": "tests/integration/createUser.test.ts",
+            "content": "..."
+          }
+        }
+      ]
+    },
     { "role": "tool", "content": "文件已写入。" },
-    { "role": "assistant", "content": "运行测试验证...", "tool_calls": [{ "name": "bash", "arguments": {"command": "vitest run createUser"} }] },
+    {
+      "role": "assistant",
+      "content": "运行测试验证...",
+      "tool_calls": [
+        { "name": "bash", "arguments": { "command": "vitest run createUser" } }
+      ]
+    },
     { "role": "tool", "content": "FAIL: expected 201 but got 500..." },
-    { "role": "assistant", "content": "测试失败，500 错误。检查 endpoint 实现后发现缺少数据库连接配置。修正测试 mock..." }
+    {
+      "role": "assistant",
+      "content": "测试失败，500 错误。检查 endpoint 实现后发现缺少数据库连接配置。修正测试 mock..."
+    }
   ]
 }
 ```
@@ -131,7 +140,7 @@ Sub Agent 完成后，返回一份**摘要**给主 Agent——不是几十条完
 
 ![Isolation boundary: inherited rules, isolated history, returned summary, and audit trail](/illustrations/sub-agents-inline-2.svg)
 
-## 回扣第一原则
+## 回到第一原则
 
 Sub Agent 的表现，取决于两件事：
 
