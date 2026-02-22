@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { useRoute } from 'vitepress'
 
 type ObserverCallback = (isIntersecting: boolean) => void
 
@@ -39,6 +40,24 @@ const props = withDefaults(defineProps<{
 const hostRef = ref<HTMLElement | null>(null)
 const inView = ref(false)
 let observerCallback: ObserverCallback | null = null
+
+const dialogRef = ref<HTMLDialogElement | null>(null)
+const route = useRoute()
+const isEn = computed(() => route.path.startsWith('/en/'))
+
+function openExpand(): void {
+  dialogRef.value?.showModal()
+}
+
+function closeExpand(): void {
+  dialogRef.value?.close()
+}
+
+function onDialogClick(event: MouseEvent): void {
+  if (event.target === dialogRef.value) {
+    closeExpand()
+  }
+}
 
 function restartSvgAnimations(): void {
   const host = hostRef.value
@@ -204,12 +223,82 @@ onBeforeUnmount(() => {
     :data-in-view="inView ? 'true' : 'false'"
   >
     <div class="aa-svg-illustration__inner" v-html="svgHtml" />
+
+    <button
+      class="aa-svg-illustration__expand"
+      :title="isEn ? 'Expand' : '放大'"
+      @click="openExpand"
+      type="button"
+    >
+      ⤢
+    </button>
+
+    <dialog
+      ref="dialogRef"
+      class="aa-svg-illustration__dialog"
+      @click="onDialogClick"
+    >
+      <div class="aa-svg-illustration__dialog-body" v-html="svgHtml" />
+    </dialog>
   </figure>
 </template>
 
 <style scoped>
 .aa-svg-illustration {
   margin: 1.25rem 0;
+  position: relative;
+}
+
+.aa-svg-illustration__expand {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--vp-c-divider);
+  background: color-mix(in srgb, var(--vp-c-bg) 85%, transparent 15%);
+  color: var(--vp-c-text-3);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.5;
+  transition: opacity 0.15s ease;
+}
+
+.aa-svg-illustration__expand:hover {
+  opacity: 1;
+  border-color: var(--vp-c-brand-1);
+  color: var(--vp-c-brand-1);
+}
+
+.aa-svg-illustration__dialog {
+  border: none;
+  border-radius: 14px;
+  padding: 0;
+  width: min(90vw, 1200px);
+  max-height: 90vh;
+  background: transparent;
+}
+
+.aa-svg-illustration__dialog::backdrop {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.aa-svg-illustration__dialog-body {
+  background: var(--vp-c-bg);
+  border-radius: 14px;
+  padding: 1.5rem;
+  overflow: auto;
+  max-height: 90vh;
+}
+
+.aa-svg-illustration__dialog-body :deep(svg) {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 .aa-svg-illustration :deep(svg) {

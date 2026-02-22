@@ -176,3 +176,78 @@ h1, h2, h3, h4, h5, h6, .title {
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
+
+/* ── Widescreen content width ── */
+@media (min-width: 1280px) {
+  .VPDoc.has-aside .content-container {
+    max-width: 840px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .VPDoc.has-aside .content-container {
+    max-width: 908px;
+  }
+}
+
+/* ── Mermaid expand button ── */
+.mermaid {
+  position: relative;
+}
+
+.aa-mermaid-expand {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--vp-c-divider);
+  background: color-mix(in srgb, var(--vp-c-bg) 85%, transparent 15%);
+  color: var(--vp-c-text-3);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.5;
+  transition: opacity 0.15s ease;
+  z-index: 10;
+}
+
+.aa-mermaid-expand:hover {
+  opacity: 1;
+  border-color: var(--vp-c-brand-1);
+  color: var(--vp-c-brand-1);
+}
+
+/* ── Mermaid expand dialog ── */
+.aa-mermaid-dialog {
+  border: none;
+  border-radius: 14px;
+  padding: 0;
+  width: min(90vw, 1200px);
+  max-height: 90vh;
+  background: transparent;
+}
+
+.aa-mermaid-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.aa-mermaid-dialog__body {
+  background: var(--vp-c-bg);
+  border-radius: 14px;
+  padding: 1.5rem;
+  overflow: auto;
+  max-height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.aa-mermaid-dialog__body svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}

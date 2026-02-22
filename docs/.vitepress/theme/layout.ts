@@ -100,6 +100,104 @@ export default {
     const { frontmatter } = useData()
     const isHomeRoute = computed(() => frontmatter.value?.layout === 'home')
     let slideObserver: IntersectionObserver | null = null
+    let mermaidInjectTimer: number | null = null
+
+    const cleanupMermaidDialogs = (): void => {
+      if (typeof document === 'undefined') return
+
+      const dialogs = document.querySelectorAll<HTMLDialogElement>('dialog.aa-mermaid-dialog')
+      dialogs.forEach((dialog) => {
+        if (dialog.open) {
+          dialog.close()
+        }
+        dialog.remove()
+      })
+    }
+
+    const cleanupMermaidExpand = (): void => {
+      if (typeof window !== 'undefined' && mermaidInjectTimer !== null) {
+        window.clearTimeout(mermaidInjectTimer)
+        mermaidInjectTimer = null
+      }
+
+      if (typeof document === 'undefined') return
+
+      const buttons = document.querySelectorAll<HTMLElement>('.aa-mermaid-expand')
+      buttons.forEach((button) => button.remove())
+
+      cleanupMermaidDialogs()
+    }
+
+    const injectMermaidExpand = (): void => {
+      if (typeof document === 'undefined') return
+
+      const mermaidBlocks = document.querySelectorAll<HTMLElement>('.VPDoc .vp-doc .mermaid')
+
+      mermaidBlocks.forEach((block) => {
+        if (block.querySelector<HTMLElement>(':scope > .aa-mermaid-expand')) return
+
+        block.style.position = 'relative'
+
+        const btn = document.createElement('button')
+        btn.className = 'aa-mermaid-expand'
+        btn.type = 'button'
+        btn.title = 'Expand'
+        btn.setAttribute('aria-label', 'Expand mermaid diagram')
+        btn.textContent = '⤢'
+
+        btn.addEventListener('click', () => {
+          const svg = block.querySelector<SVGElement>('svg')
+          if (!svg) return
+
+          cleanupMermaidDialogs()
+
+          const dialog = document.createElement('dialog')
+          dialog.className = 'aa-mermaid-dialog'
+
+          const body = document.createElement('div')
+          body.className = 'aa-mermaid-dialog__body'
+          body.innerHTML = svg.outerHTML
+
+          dialog.appendChild(body)
+          document.body.appendChild(dialog)
+
+          dialog.addEventListener('click', (event) => {
+            if (event.target === dialog) {
+              dialog.close()
+            }
+          })
+
+          dialog.addEventListener(
+            'close',
+            () => {
+              dialog.remove()
+            },
+            { once: true },
+          )
+
+          dialog.showModal()
+        })
+
+        block.appendChild(btn)
+      })
+    }
+
+    const scheduleMermaidExpand = (): void => {
+      if (typeof window === 'undefined') return
+
+      if (mermaidInjectTimer !== null) {
+        window.clearTimeout(mermaidInjectTimer)
+      }
+
+      mermaidInjectTimer = window.setTimeout(() => {
+        injectMermaidExpand()
+        // Second pass at 2s for late-rendering mermaid diagrams
+        mermaidInjectTimer = window.setTimeout(() => {
+          injectMermaidExpand()
+          mermaidInjectTimer = null
+        }, 1500)
+      }, 500)
+    }
 
     const inferConceptFromSlide = (slide: HTMLElement): string => {
       if (slide.dataset.concept) return slide.dataset.concept
@@ -177,6 +275,8 @@ export default {
         docRoot.dataset.aaSlideDeck = 'ready'
         dispatchSlideHighlight('')
       }
+
+      scheduleMermaidExpand()
     }
 
     onMounted(() => {
@@ -186,6 +286,7 @@ export default {
     watch(
       () => route.path,
       () => {
+        cleanupMermaidExpand()
         void refreshDeck()
       },
     )
@@ -193,11 +294,13 @@ export default {
     watch(
       () => frontmatter.value?.visualRhythm,
       () => {
+        cleanupMermaidExpand()
         void refreshDeck()
       },
     )
 
     onBeforeUnmount(() => {
+      cleanupMermaidExpand()
       slideObserver?.disconnect()
       slideObserver = null
       dispatchSlideHighlight('')
