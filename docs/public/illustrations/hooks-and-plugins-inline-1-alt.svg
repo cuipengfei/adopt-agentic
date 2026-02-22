@@ -1,0 +1,258 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" style="background-color: #0f172a; font-family: 'Courier New', Courier, monospace;">
+  <defs>
+    <!-- Grid Pattern -->
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="1"/>
+    </pattern>
+    <pattern id="grid-large" width="200" height="200" patternUnits="userSpaceOnUse">
+      <rect width="200" height="200" fill="url(#grid)"/>
+      <path d="M 200 0 L 0 0 0 200" fill="none" stroke="#334155" stroke-width="2"/>
+    </pattern>
+
+    <!-- Glow Filter -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <!-- Animations -->
+    <style>
+      @keyframes flow-dash {
+        to { stroke-dashoffset: -16; }
+      }
+      @keyframes flow-dash-fast {
+        to { stroke-dashoffset: -12; }
+      }
+      @keyframes pulse-ring {
+        0% { transform: scale(0.95); opacity: 0.8; stroke-width: 1; }
+        50% { transform: scale(1.05); opacity: 0.2; stroke-width: 4; }
+        100% { transform: scale(0.95); opacity: 0.8; stroke-width: 1; }
+      }
+      @keyframes gear-spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      @keyframes blink-alert {
+        0%, 100% { fill: #f87171; opacity: 1; }
+        50% { fill: #0f172a; opacity: 0.2; }
+      }
+      @keyframes compress-pulse {
+        0% { transform: scaleX(1); }
+        50% { transform: scaleX(0.4); }
+        100% { transform: scaleX(1); }
+      }
+      @keyframes typing {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0; }
+      }
+      @keyframes radar-sweep {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      @keyframes fade-in-out {
+        0%, 100% { opacity: 0.3; }
+        50% { opacity: 1; }
+      }
+      @keyframes float-up {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-4px); }
+      }
+      @keyframes grid-pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.6; }
+      }
+
+      .flow-line {
+        fill: none;
+        stroke: #38bdf8;
+        stroke-width: 2;
+        stroke-dasharray: 8 8;
+        animation: flow-dash 1s linear infinite;
+      }
+      .flow-line-fast {
+        fill: none;
+        stroke: #4ade80;
+        stroke-width: 2;
+        stroke-dasharray: 6 6;
+        animation: flow-dash-fast 0.6s linear infinite;
+      }
+      .node-rect {
+        fill: #0f172a;
+        stroke: #38bdf8;
+        stroke-width: 2;
+      }
+      .node-text {
+        fill: #f8fafc;
+        font-size: 14px;
+        text-anchor: middle;
+        dominant-baseline: middle;
+        font-weight: bold;
+      }
+      .sub-text {
+        fill: #94a3b8;
+        font-size: 11px;
+        text-anchor: middle;
+      }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="url(#grid-large)" style="animation: grid-pulse 8s ease-in-out infinite;"/>
+
+  <!-- Frame / Border -->
+  <rect x="20" y="20" width="960" height="560" fill="none" stroke="#334155" stroke-width="2"/>
+  <path d="M 20 50 L 50 20" fill="none" stroke="#334155" stroke-width="2"/>
+  <path d="M 980 50 L 950 20" fill="none" stroke="#334155" stroke-width="2"/>
+  <path d="M 20 550 L 50 580" fill="none" stroke="#334155" stroke-width="2"/>
+  <path d="M 980 550 L 950 580" fill="none" stroke="#334155" stroke-width="2"/>
+  
+  <text x="40" y="45" fill="#38bdf8" font-size="12" font-weight="bold">LIFECYCLE HOOK EVENTS (7-PHASE ARCHITECTURE)</text>
+  <text x="40" y="60" fill="#94a3b8" font-size="10">SYSTEM.CONTEXT.FLOW_CONTROL // v2.0</text>
+
+  <!-- Tracks (Background lines) -->
+  <g fill="none" stroke="#1e293b" stroke-width="6">
+    <path d="M 290 120 L 410 120"/>
+    <path d="M 590 120 L 710 120"/>
+    <path d="M 890 120 L 920 120 A 20 20 0 0 1 940 140 L 940 280 A 20 20 0 0 1 920 300 L 890 300"/>
+    <path d="M 710 300 L 570 300"/>
+    <path d="M 430 300 L 290 300"/>
+    <path d="M 110 300 L 80 300 A 20 20 0 0 0 60 320 L 60 460 A 20 20 0 0 0 80 480 L 110 480"/>
+    <path d="M 290 480 L 410 480"/>
+    <path d="M 200 270 C 200 200, 500 220, 500 150"/>
+  </g>
+
+  <!-- Flow Lines (Animated dashes) -->
+  <g class="flow-line">
+    <path d="M 290 120 L 410 120"/>
+    <path d="M 590 120 L 710 120"/>
+    <path d="M 890 120 L 920 120 A 20 20 0 0 1 940 140 L 940 280 A 20 20 0 0 1 920 300 L 890 300"/>
+    <path d="M 710 300 L 570 300"/>
+    <path d="M 430 300 L 290 300"/>
+    <path d="M 110 300 L 80 300 A 20 20 0 0 0 60 320 L 60 460 A 20 20 0 0 0 80 480 L 110 480"/>
+    <path d="M 290 480 L 410 480"/>
+  </g>
+  <path d="M 200 270 C 200 200, 500 220, 500 150" class="flow-line-fast"/>
+
+  <!-- Static Arrows -->
+  <g fill="#1e293b">
+    <!-- Flow Right -->
+    <path d="M 395 115 L 405 120 L 395 125 Z"/>
+    <path d="M 695 115 L 705 120 L 695 125 Z"/>
+    <path d="M 395 475 L 405 480 L 395 485 Z"/>
+    <path d="M 100 475 L 110 480 L 100 485 Z"/> <!-- Enter Node 6 -->
+    <!-- Flow Left -->
+    <path d="M 905 295 L 895 300 L 905 305 Z"/> <!-- Enter Node 4 -->
+    <path d="M 585 295 L 575 300 L 585 305 Z"/> <!-- Enter Tool -->
+    <path d="M 305 295 L 295 300 L 305 305 Z"/> <!-- Enter Node 5 -->
+  </g>
+  <!-- Green Arrow for Context Loop -->
+  <path d="M 495 160 L 500 150 L 505 160 Z" fill="#4ade80"/>
+
+  <!-- Context Loop Label -->
+  <g transform="translate(350, 215)">
+    <rect x="-100" y="-12" width="200" height="24" fill="#0f172a" stroke="#1e293b" stroke-width="1" rx="4"/>
+    <text x="0" y="3" class="sub-text" fill="#4ade80" style="animation: fade-in-out 3s infinite;">⟲ Context Loop (Next Turn)</text>
+  </g>
+
+  <!-- Pulse Rings for specific nodes -->
+  <g transform="translate(800, 300)">
+    <path d="M -95 -25 L -85 -35 L 85 -35 L 95 -25 L 95 25 L 85 35 L -85 35 L -95 25 Z" fill="none" stroke="#f87171" style="animation: pulse-ring 2s infinite;" />
+  </g>
+  <g transform="translate(200, 480)">
+    <path d="M -95 -25 L -85 -35 L 85 -35 L 95 -25 L 95 25 L 85 35 L -85 35 L -95 25 Z" fill="none" stroke="#a855f7" style="animation: pulse-ring 2.5s infinite;" />
+  </g>
+
+  <!-- Node 1: Session Start -->
+  <g>
+    <path d="M 110 100 L 120 90 L 280 90 L 290 100 L 290 140 L 280 150 L 120 150 L 110 140 Z" class="node-rect"/>
+    <text x="215" y="112" class="node-text">1. SESSION START</text>
+    <text x="215" y="132" class="sub-text">Initialize Environment</text>
+    <g transform="translate(135, 120)">
+      <circle cx="0" cy="0" r="12" stroke="#38bdf8" fill="#0f172a" stroke-width="1.5"/>
+      <circle cx="0" cy="0" r="4" fill="#38bdf8"/>
+      <line x1="0" y1="0" x2="0" y2="-12" stroke="#facc15" stroke-width="2" style="transform-origin: 0px 0px; animation: radar-sweep 2s linear infinite;"/>
+    </g>
+  </g>
+
+  <!-- Node 2: Prompt Submit -->
+  <g>
+    <path d="M 410 100 L 420 90 L 580 90 L 590 100 L 590 140 L 580 150 L 420 150 L 410 140 Z" class="node-rect"/>
+    <text x="500" y="112" class="node-text">2. PROMPT SUBMIT<tspan style="animation: typing 1s step-end infinite; fill: #facc15;">_</tspan></text>
+    <text x="500" y="132" class="sub-text">Intercept / Rewrite</text>
+  </g>
+
+  <!-- Node 3: System Instruction Change -->
+  <g>
+    <path d="M 710 100 L 720 90 L 880 90 L 890 100 L 890 140 L 880 150 L 720 150 L 710 140 Z" class="node-rect"/>
+    <text x="780" y="112" class="node-text">3. SYSTEM INST.</text>
+    <text x="780" y="132" class="sub-text">Inject Dynamic Rules</text>
+    <g transform="translate(855, 110)" style="animation: float-up 3s ease-in-out infinite;">
+      <rect x="0" y="0" width="14" height="18" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
+      <line x1="3" y1="5" x2="11" y2="5" stroke="#38bdf8" stroke-width="1.5"/>
+      <line x1="3" y1="9" x2="11" y2="9" stroke="#38bdf8" stroke-width="1.5"/>
+      <line x1="3" y1="13" x2="7" y2="13" stroke="#38bdf8" stroke-width="1.5"/>
+    </g>
+  </g>
+
+  <!-- Node 4: Pre-tool Call -->
+  <g>
+    <path d="M 710 280 L 720 270 L 880 270 L 890 280 L 890 320 L 880 330 L 720 330 L 710 320 Z" fill="#0f172a" stroke="#f87171" stroke-width="2"/>
+    <text x="815" y="292" class="node-text" fill="#f87171">4. PRE-TOOL CALL</text>
+    <text x="815" y="312" class="sub-text" fill="#fca5a5">Gatekeeper / Approval</text>
+    <path d="M 730 285 L 745 270 L 760 285 L 745 315 Z" fill="#f87171" style="animation: blink-alert 1.5s infinite;"/>
+  </g>
+
+  <!-- Tool Execution (Inner context) -->
+  <g>
+    <path d="M 430 280 L 450 260 L 550 260 L 570 280 L 570 320 L 550 340 L 450 340 L 430 320 Z" fill="#0f172a" stroke="#facc15" stroke-dasharray="4 4" stroke-width="2"/>
+    <text x="510" y="292" class="node-text" fill="#facc15">TOOL EXECUTION</text>
+    <text x="510" y="312" class="sub-text" fill="#fef08a">External API / Local</text>
+    <g transform="translate(450, 300)">
+      <g style="animation: gear-spin 4s linear infinite; transform-origin: 0px 0px;">
+        <circle cx="0" cy="0" r="10" fill="#0f172a" stroke="#facc15" stroke-width="2"/>
+        <path d="M -3 -13 L 3 -13 L 4 -10 L -4 -10 Z" fill="#facc15"/>
+        <path d="M -3 -13 L 3 -13 L 4 -10 L -4 -10 Z" fill="#facc15" transform="rotate(60)"/>
+        <path d="M -3 -13 L 3 -13 L 4 -10 L -4 -10 Z" fill="#facc15" transform="rotate(120)"/>
+        <path d="M -3 -13 L 3 -13 L 4 -10 L -4 -10 Z" fill="#facc15" transform="rotate(180)"/>
+        <path d="M -3 -13 L 3 -13 L 4 -10 L -4 -10 Z" fill="#facc15" transform="rotate(240)"/>
+        <path d="M -3 -13 L 3 -13 L 4 -10 L -4 -10 Z" fill="#facc15" transform="rotate(300)"/>
+        <circle cx="0" cy="0" r="3" fill="#facc15"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- Node 5: Post-tool Call -->
+  <g>
+    <path d="M 110 280 L 120 270 L 280 270 L 290 280 L 290 320 L 280 330 L 120 330 L 110 320 Z" class="node-rect"/>
+    <text x="215" y="292" class="node-text">5. POST-TOOL CALL</text>
+    <text x="215" y="312" class="sub-text">Log / Modify Result</text>
+    <g transform="translate(130, 290)">
+      <line x1="0" y1="0" x2="16" y2="0" stroke="#4ade80" stroke-width="2" style="animation: fade-in-out 2s infinite;"/>
+      <line x1="0" y1="6" x2="10" y2="6" stroke="#4ade80" stroke-width="2" style="animation: fade-in-out 2.5s infinite;"/>
+      <line x1="0" y1="12" x2="14" y2="12" stroke="#4ade80" stroke-width="2" style="animation: fade-in-out 1.8s infinite;"/>
+    </g>
+  </g>
+
+  <!-- Node 6: Session Compress -->
+  <g>
+    <path d="M 110 460 L 120 450 L 280 450 L 290 460 L 290 500 L 280 510 L 120 510 L 110 500 Z" fill="#0f172a" stroke="#a855f7" stroke-width="2"/>
+    <text x="185" y="472" class="node-text" fill="#d8b4fe">6. SESSION COMPRESS</text>
+    <text x="185" y="492" class="sub-text" fill="#e9d5ff">Force Retain Info</text>
+    <g transform="translate(260, 480)">
+      <rect x="-10" y="-10" width="20" height="20" fill="none" stroke="#d8b4fe" stroke-width="1.5" style="transform-origin: 0px 0px; animation: compress-pulse 2s ease-in-out infinite;"/>
+      <path d="M -15 -12 L -15 12 M 15 -12 L 15 12" stroke="#d8b4fe" stroke-width="2"/>
+    </g>
+  </g>
+
+  <!-- Node 7: Agent Stop -->
+  <g>
+    <path d="M 410 460 L 420 450 L 580 450 L 590 460 L 590 500 L 580 510 L 420 510 L 410 500 Z" class="node-rect"/>
+    <text x="515" y="472" class="node-text">7. AGENT STOP</text>
+    <text x="515" y="492" class="sub-text">Clean &amp; Notify</text>
+    <g transform="translate(440, 480)" style="animation: float-up 2s ease-in-out infinite;">
+      <circle cx="0" cy="0" r="12" fill="#0f172a" stroke="#4ade80" stroke-width="2"/>
+      <path d="M -5 0 L -1 4 L 6 -5" fill="none" stroke="#4ade80" stroke-width="2"/>
+    </g>
+  </g>
+
+</svg>

@@ -100,8 +100,6 @@ The Sub Agent might go through a dozen rounds of tool calls internally—reading
 
 When the Sub Agent finishes, it returns a **summary** to the main Agent—not dozens of raw messages, but a compressed result. Think of it like `git stash`: stash your current complex context, do an atomic task on a clean branch, then switch back with the output.
 
-<SvgIllustration name="sub-agents-inline-4.svg" interactive />
-
 What the main Agent receives is just: "Tests created, covering 201 and 400, file at `tests/integration/createUser.test.ts`." Whatever struggles the Sub Agent went through in between—the main Agent doesn’t need to know.
 
 <SvgIllustration name="sub-agents-inline-2.svg" interactive />
@@ -126,4 +124,3 @@ What you can do: give the main Agent clear instructions and sufficient backgroun
 - **Auditability**: Each Sub Agent’s full session log is saved independently and can be traced. When a summary looks wrong, you can drill down into the Sub Agent’s complete context to investigate. A summary is compression, not truth—the next chapter covers how to verify.
 
 Next up: verification and observability. Is the summary a Sub Agent returned actually reliable? Every output from an Agent needs a verification mechanism as a safety net.
-

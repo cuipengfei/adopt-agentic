@@ -1,0 +1,275 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="100%" height="100%">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap');
+      
+      text {
+        font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+      }
+      .title-main { font-size: 32px; font-weight: 700; fill: #F8FAFC; letter-spacing: -0.5px; }
+      .subtitle { font-size: 16px; font-weight: 400; fill: #94A3B8; }
+      .card-title { font-size: 20px; font-weight: 700; letter-spacing: 1px; }
+      .card-desc { font-size: 14px; fill: #CBD5E1; line-height: 1.6; }
+      .label { font-size: 11px; font-weight: 600; letter-spacing: 0.5px; }
+      .mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+      
+      .card { transition: transform 0.3s ease, filter 0.3s ease; }
+      .card:hover { transform: translateY(-4px); filter: drop-shadow(0 12px 24px rgba(0,0,0,0.4)); }
+      
+      .flow-line { stroke-dasharray: 6 4; animation: flowDash 1s linear infinite; }
+      
+      @keyframes flowDash {
+        to { stroke-dashoffset: -10; }
+      }
+      
+      @keyframes pulseGlow {
+        0%, 100% { opacity: 0.5; filter: drop-shadow(0 0 4px currentColor); }
+        50% { opacity: 1; filter: drop-shadow(0 0 12px currentColor); }
+      }
+      .pulse-glow { animation: pulseGlow 3s ease-in-out infinite; }
+      
+      @keyframes slideDown {
+        0% { transform: translateY(0); opacity: 0; }
+        20% { transform: translateY(20px); opacity: 1; }
+        80% { transform: translateY(80px); opacity: 1; }
+        100% { transform: translateY(100px); opacity: 0; }
+      }
+      .packet-1 { animation: slideDown 2s linear infinite; }
+      .packet-2 { animation: slideDown 2s linear infinite 1s; }
+      
+      @keyframes rotateTick {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      .rotate-tick { animation: rotateTick 4s steps(8) infinite; transform-origin: center; }
+      
+      @keyframes shakeWarning {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+        20%, 40%, 60%, 80% { transform: translateX(2px); }
+      }
+      .shake-warning { animation: shakeWarning 4s ease-in-out infinite; }
+      
+      @keyframes dropOut {
+        0% { transform: translate(0, -10px) rotate(0deg); opacity: 0; }
+        20% { transform: translate(0, 0) rotate(2deg); opacity: 1; }
+        80% { transform: translate(-15px, 30px) rotate(-10deg); opacity: 1; }
+        100% { transform: translate(-25px, 50px) rotate(-15deg); opacity: 0; }
+      }
+      .drop-1 { animation: dropOut 3s ease-in infinite; transform-origin: center; }
+      .drop-2 { animation: dropOut 3s ease-in infinite 1.5s; transform-origin: center; }
+      
+      @keyframes fillUp {
+        0%, 10% { transform: scaleY(0.4); fill: #3B82F6; }
+        40%, 60% { transform: scaleY(1); fill: #EF4444; }
+        90%, 100% { transform: scaleY(0.4); fill: #3B82F6; }
+      }
+      .fill-up { animation: fillUp 4s ease-in-out infinite; transform-origin: 0 130px; }
+      
+      @keyframes signalFade {
+        0%, 100% { opacity: 0.3; }
+        50% { opacity: 0.9; }
+      }
+      .signal-fade { animation: signalFade 2s ease-in-out infinite; }
+      
+      @keyframes floatSlow {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-4px); }
+      }
+      .float { animation: floatSlow 4s ease-in-out infinite; }
+    </style>
+    <pattern id="dotGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.5" fill="#1E293B" opacity="0.6"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="600" fill="#0B1120" />
+  <rect width="1200" height="600" fill="url(#dotGrid)" />
+
+  <!-- Header -->
+  <text class="title-main" x="75" y="65">CONTEXT FRESHNESS STATES</text>
+  <text class="subtitle" x="75" y="95">Information has a shelf life. Managing context injection is like managing a milk supply chain.</text>
+
+  <!-- CARD 1: FRESH -->
+  <g class="card" transform="translate(75, 140)">
+    <!-- Card BG -->
+    <rect width="323" height="400" rx="12" fill="#0F172A" stroke="#1E293B" stroke-width="2"/>
+    <path d="M 0 12 A 12 12 0 0 1 12 0 L 311 0 A 12 12 0 0 1 323 12 L 323 6 L 0 6 Z" fill="#10B981"/>
+    
+    <!-- Tech Corners -->
+    <path d="M 10 24 L 10 10 L 24 10" fill="none" stroke="#334155" stroke-width="2"/>
+    <path d="M 313 24 L 313 10 L 299 10" fill="none" stroke="#334155" stroke-width="2"/>
+    <path d="M 10 376 L 10 390 L 24 390" fill="none" stroke="#334155" stroke-width="2"/>
+    <path d="M 313 376 L 313 390 L 299 390" fill="none" stroke="#334155" stroke-width="2"/>
+
+    <!-- Title & Desc -->
+    <text class="card-title" x="24" y="45" fill="#10B981">1. FRESH</text>
+    <text class="card-desc" x="24" y="75">Recently injected context. Accurate</text>
+    <text class="card-desc" x="24" y="95">and highly relevant, fully utilized</text>
+    <text class="card-desc" x="24" y="115">by the LLM.</text>
+
+    <!-- Visual Box -->
+    <rect x="24" y="140" width="275" height="230" rx="8" fill="#0B1120" stroke="#1E293B" stroke-width="1"/>
+    
+    <!-- Visual Content -->
+    <!-- Signal Indicator -->
+    <circle cx="64" cy="180" r="16" fill="#10B981" opacity="0.1" class="pulse-glow"/>
+    <path d="M 54 180 L 60 185 L 74 172" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+    <text class="label" x="64" y="210" fill="#10B981" text-anchor="middle">100% SIGNAL</text>
+
+    <!-- Waveform -->
+    <path d="M 44 260 L 54 260 L 60 240 L 70 280 L 76 260 L 84 260" stroke="#10B981" stroke-width="2" fill="none" class="pulse-glow" stroke-linecap="round"/>
+
+    <!-- Nodes -->
+    <g class="float">
+      <rect x="154" y="160" width="100" height="32" rx="6" fill="#1E293B" stroke="#10B981" stroke-width="1.5"/>
+      <text class="label" x="204" y="180" fill="#F8FAFC" text-anchor="middle">SOURCE</text>
+    </g>
+    
+    <rect x="144" y="310" width="120" height="40" rx="6" fill="#1E293B" stroke="#38BDF8" stroke-width="1.5"/>
+    <text class="label" x="204" y="335" fill="#F8FAFC" text-anchor="middle">LLM CONTEXT</text>
+
+    <!-- Connection -->
+    <line x1="204" y1="192" x2="204" y2="310" stroke="#10B981" stroke-width="2" class="flow-line"/>
+
+    <!-- Data Packets -->
+    <g class="packet-1" transform="translate(192, 192)">
+      <rect x="0" y="0" width="24" height="24" rx="6" fill="#10B981" stroke="#F8FAFC" stroke-width="1.5" opacity="0.9"/>
+      <path d="M 6 12 L 10 16 L 18 8" stroke="#F8FAFC" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </g>
+    <g class="packet-2" transform="translate(192, 192)">
+      <rect x="0" y="0" width="24" height="24" rx="6" fill="#10B981" stroke="#F8FAFC" stroke-width="1.5" opacity="0.9"/>
+      <path d="M 6 12 L 10 16 L 18 8" stroke="#F8FAFC" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </g>
+  </g>
+
+  <!-- CARD 2: STALE -->
+  <g class="card" transform="translate(438, 140)">
+    <!-- Card BG -->
+    <rect width="323" height="400" rx="12" fill="#0F172A" stroke="#1E293B" stroke-width="2"/>
+    <path d="M 0 12 A 12 12 0 0 1 12 0 L 311 0 A 12 12 0 0 1 323 12 L 323 6 L 0 6 Z" fill="#F59E0B"/>
+    
+    <!-- Tech Corners -->
+    <path d="M 10 24 L 10 10 L 24 10" fill="none" stroke="#334155" stroke-width="2"/>
+    <path d="M 313 24 L 313 10 L 299 10" fill="none" stroke="#334155" stroke-width="2"/>
+    <path d="M 10 376 L 10 390 L 24 390" fill="none" stroke="#334155" stroke-width="2"/>
+    <path d="M 313 376 L 313 390 L 299 390" fill="none" stroke="#334155" stroke-width="2"/>
+
+    <!-- Title & Desc -->
+    <text class="card-title" x="24" y="45" fill="#F59E0B">2. STALE</text>
+    <text class="card-desc" x="24" y="75">Outdated context. Code changed but</text>
+    <text class="card-desc" x="24" y="95">context didn't, causing LLM to base</text>
+    <text class="card-desc" x="24" y="115">decisions on wrong information.</text>
+
+    <!-- Visual Box -->
+    <rect x="24" y="140" width="275" height="230" rx="8" fill="#0B1120" stroke="#1E293B" stroke-width="1"/>
+    
+    <!-- Visual Content -->
+    <!-- Nodes -->
+    <text class="label" x="84" y="165" fill="#94A3B8" text-anchor="middle">CACHED</text>
+    <rect x="44" y="175" width="80" height="32" rx="6" fill="#1E293B" stroke="#94A3B8" stroke-width="1" stroke-dasharray="2,2"/>
+    <text class="label" x="84" y="195" fill="#F8FAFC" text-anchor="middle">CTX v1</text>
+    
+    <text class="label" x="224" y="165" fill="#10B981" text-anchor="middle">UPDATED</text>
+    <rect x="184" y="175" width="80" height="32" rx="6" fill="#1E293B" stroke="#10B981" stroke-width="1.5"/>
+    <text class="label" x="224" y="195" fill="#F8FAFC" text-anchor="middle">CODE v2</text>
+
+    <!-- Mismatch -->
+    <path d="M 124 191 L 184 191" stroke="#EF4444" stroke-width="2" stroke-dasharray="4,4"/>
+    <text class="label mono" x="154" y="186" fill="#EF4444" text-anchor="middle">≠</text>
+
+    <!-- LLM Node -->
+    <rect x="24" y="310" width="120" height="40" rx="6" fill="#1E293B" stroke="#38BDF8" stroke-width="1.5"/>
+    <text class="label" x="84" y="335" fill="#F8FAFC" text-anchor="middle">LLM DECISION</text>
+    
+    <!-- Wrong Output -->
+    <path d="M 154 322 L 164 332 M 164 322 L 154 332" stroke="#EF4444" stroke-width="2" stroke-linecap="round"/>
+
+    <!-- Connection -->
+    <line x1="84" y1="207" x2="84" y2="310" stroke="#94A3B8" stroke-width="2" stroke-dasharray="4 4" class="flow-line"/>
+
+    <!-- Stale Packet -->
+    <g class="signal-fade" transform="translate(72, 230)">
+      <rect x="0" y="0" width="24" height="24" rx="6" fill="#F59E0B" stroke="#F8FAFC" stroke-width="1.5" opacity="0.9"/>
+      <text class="label mono" x="12" y="16" fill="#0B1120" text-anchor="middle" font-size="10">v1</text>
+    </g>
+
+    <!-- Clock ticking -->
+    <circle cx="224" cy="280" r="24" fill="#F59E0B" opacity="0.05" class="pulse-glow"/>
+    <g transform="translate(224, 280)">
+      <circle cx="0" cy="0" r="18" fill="none" stroke="#64748B" stroke-width="2"/>
+      <g class="rotate-tick">
+        <line x1="0" y1="0" x2="0" y2="-10" stroke="#F59E0B" stroke-width="2.5" stroke-linecap="round"/>
+      </g>
+      <line x1="0" y1="0" x2="8" y2="5" stroke="#64748B" stroke-width="2" stroke-linecap="round"/>
+    </g>
+    <text class="label" x="224" y="315" fill="#F59E0B" text-anchor="middle">OUTDATED</text>
+  </g>
+
+  <!-- CARD 3: OVERLOADED -->
+  <g class="card" transform="translate(801, 140)">
+    <!-- Card BG -->
+    <rect width="323" height="400" rx="12" fill="#0F172A" stroke="#1E293B" stroke-width="2"/>
+    <path d="M 0 12 A 12 12 0 0 1 12 0 L 311 0 A 12 12 0 0 1 323 12 L 323 6 L 0 6 Z" fill="#EF4444"/>
+    
+    <!-- Tech Corners -->
+    <path d="M 10 24 L 10 10 L 24 10" fill="none" stroke="#334155" stroke-width="2"/>
+    <path d="M 313 24 L 313 10 L 299 10" fill="none" stroke="#334155" stroke-width="2"/>
+    <path d="M 10 376 L 10 390 L 24 390" fill="none" stroke="#334155" stroke-width="2"/>
+    <path d="M 313 376 L 313 390 L 299 390" fill="none" stroke="#334155" stroke-width="2"/>
+
+    <!-- Title & Desc -->
+    <text class="card-title" x="24" y="45" fill="#EF4444">3. OVERLOADED</text>
+    <text class="card-desc" x="24" y="75">Excessive context exceeding window</text>
+    <text class="card-desc" x="24" y="95">limits. Signal drowned in noise,</text>
+    <text class="card-desc" x="24" y="115">causing lost-in-the-middle effects.</text>
+
+    <!-- Visual Box -->
+    <rect x="24" y="140" width="275" height="230" rx="8" fill="#0B1120" stroke="#1E293B" stroke-width="1"/>
+    
+    <!-- Visual Content -->
+    <!-- Bucket -->
+    <g class="shake-warning" transform="translate(0, 0)">
+      <path d="M 124 170 L 124 330 A 8 8 0 0 0 132 338 L 246 338 A 8 8 0 0 0 254 330 L 254 170" fill="none" stroke="#38BDF8" stroke-width="2" stroke-dasharray="4,4"/>
+      <text class="label" x="189" y="360" fill="#38BDF8" text-anchor="middle">CONTEXT WINDOW</text>
+      
+      <!-- Inside Bucket -->
+      <!-- Top: System -->
+      <rect x="139" y="190" width="100" height="26" rx="4" fill="#3B82F6"/>
+      <text class="label mono" x="189" y="207" fill="#0F172A" text-anchor="middle">SYSTEM (P0)</text>
+
+      <!-- Middle: Lost -->
+      <g class="signal-fade">
+        <rect x="139" y="222" width="100" height="46" rx="4" fill="#475569"/>
+        <text class="label mono" x="189" y="246" fill="#F8FAFC" text-anchor="middle">LOST IN MIDDLE</text>
+      </g>
+
+      <!-- Bottom: Recent -->
+      <rect x="139" y="274" width="100" height="50" rx="4" fill="#10B981"/>
+      <text class="label mono" x="189" y="298" fill="#0F172A" text-anchor="middle">RECENT DATA</text>
+    </g>
+
+    <!-- Dropped Blocks -->
+    <g class="drop-1" transform="translate(90, 160)">
+      <rect x="0" y="0" width="100" height="22" rx="4" fill="#EF4444" stroke="#F8FAFC" stroke-width="1"/>
+      <text class="label mono" x="50" y="15" fill="#F8FAFC" text-anchor="middle" font-size="9">EVICTED</text>
+    </g>
+    <g class="drop-2" transform="translate(140, 140)">
+      <rect x="0" y="0" width="100" height="22" rx="4" fill="#EF4444" stroke="#F8FAFC" stroke-width="1"/>
+      <text class="label mono" x="50" y="15" fill="#F8FAFC" text-anchor="middle" font-size="9">EVICTED</text>
+    </g>
+
+    <!-- Progress Gauge -->
+    <g transform="translate(64, 190)">
+      <!-- Background track -->
+      <rect x="0" y="0" width="14" height="130" rx="7" fill="#1E293B"/>
+      <!-- Fill -->
+      <rect class="fill-up" x="0" y="0" width="14" height="130" rx="7"/>
+      <!-- 100% Mark -->
+      <line x1="-5" y1="40" x2="19" y2="40" stroke="#F8FAFC" stroke-width="2"/>
+    </g>
+    <text class="label" x="71" y="175" fill="#EF4444" text-anchor="middle">145%</text>
+
+  </g>
+</svg>

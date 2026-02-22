@@ -70,7 +70,7 @@ Note "system prompt transform" and "session compaction"—hooks in these categor
 
 The "session compaction" hook is one of the less universal types — not all tools support it, but if yours does, it's worth using well. When agents automatically compress early history in long conversations, your core constraints may get compressed away—the agent "forgets" rules in the second half, not because it's stupid, but because that rule is simply no longer in the context. A compaction hook lets you solve this at the mechanism level: specify which information must be preserved verbatim, and which can be summarized. Far more reliable than manually restating constraints every few turns.
 
-<SvgIllustration name="hooks-and-plugins-inline-1.svg" interactive />
+<SvgIllustration name="hooks-and-plugins-inline-1-alt.svg" interactive />
 
 ### Event Processing Pattern
 
@@ -174,4 +174,3 @@ With great power comes great responsibility to review. You can use built-in tool
 - **Auditability**: Hook execution logs are the most fine-grained observability data—every event, every interception, every decision timestamped. But you need to implement the logging logic yourself.
 
 Next up: "Knowledge Feeding"—a unified review of all the carriers we've covered, answering the one question: "I have a bunch of knowledge, how do I get the agent to know it?"
-

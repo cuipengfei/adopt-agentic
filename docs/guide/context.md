@@ -206,8 +206,6 @@ graph TB
 // 9 条隐含方向 vs 1 条明确纠正 → 惯性压过纠正
 ```
 
-<SvgIllustration name="context-inline-1.svg" interactive />
-
 脏了怎么办？
 
 回滚到干净节点。从源头限流，只给当前步骤需要的文件，别"以防万一"。
