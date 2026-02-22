@@ -42,3 +42,8 @@ docs/.vitepress/dist
 
 # POMASA research workspace
 .sisyphus/research/
+
+# Agent runtime state & ephemeral artifacts
+.sisyphus/boulder.json
+.sisyphus/notepads/
+.sisyphus/evidence/
