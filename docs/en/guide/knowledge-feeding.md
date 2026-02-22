@@ -12,6 +12,9 @@ An Agent's capability ceiling = the quality of its context. The LLM has general 
 
 But context is like milk: nutritious when fresh, spoils over time, and you can only fit so much in the fridge. Knowledge feeding is building a supply chain—delivering the right dose of fresh milk through the right pipes at the right time.
 
+
+<SvgIllustration name="knowledge-feeding-inline-1.svg" interactive />
+
 ## Three Paths
 
 | Path | Core Mechanism | Injection Timing | Context Landing | Persistence | Use Case |

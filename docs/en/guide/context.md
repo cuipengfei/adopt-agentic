@@ -204,6 +204,8 @@ Why? Look at what's in the `messages` array: your correction is just that one me
 // 9 msgs of implicit direction vs. 1 explicit correction → inertia wins
 ```
 
+<SvgIllustration name="context-inline-1.svg" interactive />
+
 What do you do when it's dirty?
 
 Roll back to the last clean checkpoint. Throttle at the source—only feed the agent the files it needs for the current step, never "just in case."

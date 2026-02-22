@@ -136,6 +136,8 @@ Sub Agent 内部可能经历十几轮工具调用——读规范、写代码、�
 
 Sub Agent 完成后，返回一份**摘要**给主 Agent——不是几十条完整消息历史，而是压缩后的结果。这就像 `git stash`：暂存当前复杂上下文，在干净分支上做完一个原子任务，带着产出切回来。
 
+<SvgIllustration name="sub-agents-inline-4.svg" interactive />
+
 主 Agent 拿到的只是："测试已创建，覆盖 201 和 400，文件在 `tests/integration/createUser.test.ts`"。至于 Sub Agent 中间经历了什么挣扎，主 Agent 不需要知道。
 
 <SvgIllustration name="sub-agents-inline-2.svg" interactive />

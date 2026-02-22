@@ -103,6 +103,9 @@ Mitigation:
 
 An Agent helps you do more. But if your understanding of the codebase falls behind, you won’t be able to catch problems in its output.
 
+
+<SvgIllustration name="human-in-the-loop-inline-1.svg" interactive />
+
 There's an equally dangerous slide in the opposite direction: approval fatigue. The Agent pauses for your confirmation before every high-risk operation. When confirmations pop up repeatedly, your attention gives out before your willingness does—you go from "carefully reviewing the diff" to "reflexively clicking approve." The fix mirrors the "Letting Go vs. Stepping In" section above: don't prompt for low-risk ops. Save your approval budget for decisions that genuinely need your judgment.
 
 ## Key Takeaways

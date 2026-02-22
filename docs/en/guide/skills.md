@@ -80,6 +80,8 @@ The agent reads the Skill file's full content and injects it into subsequent req
 
 This is progressive disclosure — unused Skills cost only a single line of metadata; full content is loaded only when needed. Major open-source tools (Codex, Gemini CLI, OpenCode) all adopt this pattern, differing only in the name of the trigger tool.
 
+<SvgIllustration name="skills-inline-1.svg" interactive />
+
 ## Skills vs. Commands
 
 Both share the same underlying mechanism — injecting extra prompt into the context. The differences are:

@@ -145,6 +145,9 @@ If the readback misses a key constraint, correcting it costs one sentence. If yo
 
 Any task with more than trivial complexity needs a readback first.
 
+<SvgIllustration name="actors-inline-1.svg" interactive />
+
+
 Break large tasks into small chunks — verify one before starting the next. Far cheaper than running 20 steps then rolling back. Unsure about direction? Have the agent build a minimal working version first. Verify, then expand.
 
 Different products, different mechanisms. But you provide intent, Agent orchestrates context, LLM reasons — **the triangular relationship stays the same.**

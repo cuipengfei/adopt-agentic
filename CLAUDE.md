@@ -226,27 +226,56 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
 
   **反模式**（禁止）：在 prompt 里指定 viewBox 尺寸、要求用 `<text>` 不用 path、指定配色方案、预定义节点标题和描述。这些都是在替专业 agent 做决策。
 
-- **文件位置**：所有插图放 `docs/public/illustrations/`，SVG 格式优先（可缩放、轻量、加载快）。
-- **现有插图**（全部暗色赛博朋克风格 + SVG 原生动画）：
+  **SVG 生成必须遵守的规则**（从质量事故中提炼）：
+  1. **必须加载 9 个 skills**：`baoyu-infographic`、`baoyu-article-illustrator`、`baoyu-image-gen`、`baoyu-cover-image`、`baoyu-comic`、`baoyu-xhs-images`、`baoyu-compress-image`、`ui-ux-pro-max`、`frontend-ui-ux`。缺一不可。之前因为漏加 baoyu skills 导致同批 SVG 质量天差地别。
+  2. **必须浏览 baoyu-infographic 规格库**：sub-agent 必须先读 `references/layouts/*.md` 和 `references/styles/*.md`，根据概念特征选择 layout × style 组合。**禁止**指向一个已有 SVG 让 sub-agent 照抄——那是「抄作业」，不是设计。
+  3. **纯英文**：SVG 中所有文字必须用英文。同一个 SVG 文件同时被中文和英文页面引用。
+  4. **不放具体文件名**：SVG 中不出现 `.log`、`.sh`、`.js` 等具体扩展名，保持在概念层面。
+  5. **必须有 CSS `@keyframes` 动画**：静态 SVG 不达标。动画数量由概念复杂度决定，不硬定数字。
+  6. **用 `artistry` category**：`visual-engineering` category 的 sub-agent 无法生成回复，已验证失败。
 
+- **文件位置**：所有插图放 `docs/public/illustrations/`，SVG 格式优先（可缩放、轻量、加载快）。
+- **现有插图**（全部暗色赛博朋克风格 + SVG 原生动画，共 38 个：16 主插图 + 22 inline 插图）：
 | 文件 | 对应节点 | 动画数 |
 | ---- | -------- | ------ |
 | `context-supply-chain.svg` | 首页（index） | 3 |
 | `context.svg` | 节点 1 上下文 | 30 |
+| `context-inline-1.svg` | 节点 1 上下文（inline） | 11 |
 | `actors.svg` | 节点 2 三角关系 | 14 |
+| `actors-inline-1.svg` | 节点 2 三角关系（inline） | 26 |
 | `system-instructions.svg` | 节点 3 系统指令 | 21 |
+| `system-instructions-inline-1.svg` | 节点 3 系统指令（inline） | — |
+| `system-instructions-inline-2.svg` | 节点 3 系统指令（inline） | — |
 | `built-in-tools.svg` | 节点 4 内置工具 | 14 |
+| `built-in-tools-inline-1.svg` | 节点 4 内置工具（inline） | — |
+| `built-in-tools-inline-2.svg` | 节点 4 内置工具（inline） | — |
 | `mcp.svg` | 节点 5 MCP | 14 |
+| `mcp-inline-1.svg` | 节点 5 MCP（inline） | — |
+| `mcp-inline-2.svg` | 节点 5 MCP（inline） | — |
 | `commands.svg` | 节点 6 Slash Commands | 20 |
 | `skills.svg` | 节点 7 Skills | 19 |
+| `skills-inline-1.svg` | 节点 7 Skills（inline） | 16 |
 | `cli-tools.svg` | 节点 8 CLI 工具 | 11 |
 | `hooks-and-plugins.svg` | 节点 9 Hooks | 18 |
+| `hooks-and-plugins-inline-1.svg` | 节点 9 Hooks（inline） | 9 |
 | `knowledge-feeding.svg` | 节点 10 知识喂养（⭐ 标杆） | 8 |
+| `knowledge-feeding-inline-1.svg` | 节点 10 知识喂养（inline） | 14 |
 | `orchestration.svg` | 节点 11 编排模式 | 15 |
+| `orchestration-inline-1.svg` | 节点 11 编排模式（inline） | — |
+| `orchestration-inline-2.svg` | 节点 11 编排模式（inline） | — |
 | `sub-agents.svg` | 节点 12 子代理 | 14 |
+| `sub-agents-inline-1.svg` | 节点 12 子代理（inline） | — |
+| `sub-agents-inline-2.svg` | 节点 12 子代理（inline） | — |
+| `sub-agents-inline-3.svg` | 节点 12 子代理（inline） | — |
+| `sub-agents-inline-4.svg` | 节点 12 子代理（inline） | 11 |
 | `eval.svg` | 节点 13 Eval | 24 |
+| `eval-inline-1.svg` | 节点 13 Eval（inline） | — |
+| `eval-inline-2.svg` | 节点 13 Eval（inline） | — |
 | `human-in-the-loop.svg` | 节点 14 HITL | 17 |
+| `human-in-the-loop-inline-1.svg` | 节点 14 HITL（inline） | 7 |
 | `peer-to-peer-agents.svg` | 节点 15 P2P Agents | 24 |
+| `peer-to-peer-agents-inline-1.svg` | 节点 15 P2P Agents（inline） | — |
+| `peer-to-peer-agents-inline-2.svg` | 节点 15 P2P Agents（inline） | — |
 
 **内容结构规则（Phase 3 审校提炼）**
 

@@ -82,6 +82,8 @@ Agent 读取 Skill 文件的完整内容，注入到后续请求中。从这一�
 
 这就是渐进式披露（progressive disclosure）——不用的 Skill 只占一行元数据的空间；用到了才展开全文。主流开源工具（Codex、Gemini CLI、OpenCode）都采用了这个模式，只是触发工具的名称各异。
 
+<SvgIllustration name="skills-inline-1.svg" interactive />
+
 ## Skills vs. Commands
 
 二者底层机制相同——都是把额外 prompt 注入上下文。差异在以下几点：

@@ -100,6 +100,8 @@ The Sub Agent might go through a dozen rounds of tool calls internally—reading
 
 When the Sub Agent finishes, it returns a **summary** to the main Agent—not dozens of raw messages, but a compressed result. Think of it like `git stash`: stash your current complex context, do an atomic task on a clean branch, then switch back with the output.
 
+<SvgIllustration name="sub-agents-inline-4.svg" interactive />
+
 What the main Agent receives is just: "Tests created, covering 201 and 400, file at `tests/integration/createUser.test.ts`." Whatever struggles the Sub Agent went through in between—the main Agent doesn’t need to know.
 
 <SvgIllustration name="sub-agents-inline-2.svg" interactive />

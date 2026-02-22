@@ -70,6 +70,8 @@ Note "system prompt transform" and "session compaction"—hooks in these categor
 
 The "session compaction" hook is one of the less universal types — not all tools support it, but if yours does, it's worth using well. When agents automatically compress early history in long conversations, your core constraints may get compressed away—the agent "forgets" rules in the second half, not because it's stupid, but because that rule is simply no longer in the context. A compaction hook lets you solve this at the mechanism level: specify which information must be preserved verbatim, and which can be summarized. Far more reliable than manually restating constraints every few turns.
 
+<SvgIllustration name="hooks-and-plugins-inline-1.svg" interactive />
+
 ### Event Processing Pattern
 
 Different agent tools implement hooks very differently—some use shell scripts with JSON communication, some use TypeScript async functions, some use declarative configuration. But the **conceptual pattern** is universal:
