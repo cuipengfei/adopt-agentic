@@ -14,7 +14,7 @@ The reality: Agents make mistakes, get stuck, and need your confirmation before 
 
 But here’s an important insight: **if you find yourself constantly fixing the Agent’s half-finished work, that’s not "collaboration"—that’s the Agent (or your instructions) failing.** Healthy Human-in-the-Loop means your interventions decrease over time, not increase. Each intervention should be a signal: either improve the Agent’s configuration (better System Instructions, clearer prompts) or accept the current capability boundary.
 
-![The Context Control Loop: Human defines tasks, approves critical decisions, and accepts results — each intervention reshapes the Agent's context](/illustrations/human-in-the-loop.svg)
+<SvgIllustration name="human-in-the-loop.svg" interactive />
 
 ## Paving the Rails
 

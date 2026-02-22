@@ -8,7 +8,7 @@ Type `/review`, and the agent doesn't philosophize about code review — it imme
 
 That's a Slash Command: **a shortcut starting with `/`, backed by a pre-written prompt template**. You trigger it, the agent expands the template and injects it into the request sent to the LLM. The LLM has no idea what you pressed — all it sees is a structured instruction.
 
-![Slash Commands: user triggers a shortcut, Agent expands the prompt template and injects it into the LLM request — one-shot context injection](/illustrations/commands.svg)
+<SvgIllustration name="commands.svg" interactive />
 
 ## How a Command Expands
 

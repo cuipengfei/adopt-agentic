@@ -4,7 +4,7 @@
 
 上一节讲了人类作为上下文的最终仲裁者。即便进入多 Agent 协作，这一点不变——但上下文的流动方式会变得更复杂。
 
-![Peer-to-Peer Agents: bidirectional context flow among equals — no hierarchy, multi-perspective collision with O(n²) coordination overhead](/illustrations/peer-to-peer-agents.svg)
+<SvgIllustration name="peer-to-peer-agents.svg" interactive />
 
 ## 层级式 vs 平级式
 
@@ -24,11 +24,11 @@ P2P 模型打破层级。多个 Agent 平级协作，没有绝对的指挥者，
 
 `N` 个 Agent 的团队，潜在通信渠道是 `N × (N-1) / 2`。3 个 Agent 是 3 条信道，5 个就是 10 条，10 个是 45 条。协调成本呈二次增长（quadratic, O(n²)），不是线性的。
 
-![Hierarchy vs P2P: channel count grows O(N) vs O(N²)](/illustrations/peer-to-peer-agents-inline-1.svg)
+<SvgIllustration name="peer-to-peer-agents-inline-1.svg" interactive />
 
 而且实际运行中通信类型远不止 A ↔ B 一种。peer 之间的直接对话、协调者广播、共享任务状态——两个 Agent 就有这么多信道。消息模型通常是 fire-and-forget：发出不等 ACK，接收方已关闭也不报错。你不能假设每条消息都被处理了。
 
-![Fire-and-forget messaging: no ACK wait, receiver may be offline](/illustrations/peer-to-peer-agents-inline-2.svg)
+<SvgIllustration name="peer-to-peer-agents-inline-2.svg" interactive />
 
 具体的代价：
 

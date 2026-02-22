@@ -4,7 +4,7 @@
 
 上一节讲了编排模式——怎么组织步骤。这一节看执行单元：当主 Agent 需要一个干净的环境来处理子任务时，它会派生出 Sub Agent。
 
-![Sub Agents: context isolation through spawning — main Agent delegates with a handoff note, Sub Agent works in a clean room, returns summary back to main context](/illustrations/sub-agents.svg)
+<SvgIllustration name="sub-agents.svg" interactive />
 
 ## 问题：上下文越来越脏
 
@@ -47,13 +47,13 @@ flowchart TD
 
 其余历史不要。倾倒上下文是偷懒，Sub Agent 会在噪声中迷失。
 
-![Handoff note vs context dump — what to send to a Sub Agent](/illustrations/sub-agents-inline-1.svg)
+<SvgIllustration name="sub-agents-inline-1.svg" interactive />
 
 ## 工作方式
 
 主 Agent 委派任务给 Sub Agent，可以看作三步：
 
-![Sub Agent Workflow: 1. Task Description -> 2. Execution -> 3. Summary](/illustrations/sub-agents-inline-3.svg)
+<SvgIllustration name="sub-agents-inline-3.svg" interactive />
 
 **── Sub Agent 内部 ──**
 
@@ -138,7 +138,7 @@ Sub Agent 完成后，返回一份**摘要**给主 Agent——不是几十条完
 
 主 Agent 拿到的只是："测试已创建，覆盖 201 和 400，文件在 `tests/integration/createUser.test.ts`"。至于 Sub Agent 中间经历了什么挣扎，主 Agent 不需要知道。
 
-![Isolation boundary: inherited rules, isolated history, returned summary, and audit trail](/illustrations/sub-agents-inline-2.svg)
+<SvgIllustration name="sub-agents-inline-2.svg" interactive />
 
 ## 回到第一原则
 

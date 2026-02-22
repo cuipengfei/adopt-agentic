@@ -14,7 +14,7 @@
 
 但这里有个重要洞察：**如果你发现自己不断在修 Agent 的半成品，这不是"协作"——这是 Agent（或你的指令）出了问题。** 健康的 Human-in-the-Loop 是你的介入越来越少，而不是越来越多。每次介入都应该是一个信号：要么提升 Agent 的配置（更好的 System Instructions、更清晰的指令），要么接受当前能力边界。
 
-![The Context Control Loop: Human defines tasks, approves critical decisions, and accepts results — each intervention reshapes the Agent's context](/illustrations/human-in-the-loop.svg)
+<SvgIllustration name="human-in-the-loop.svg" interactive />
 
 ## 铺轨策略
 

@@ -86,7 +86,7 @@ This is observability—continuous monitoring of the Agent’s behavioral patter
 
 Structure verification as a pyramid. Lower levels automate; the top requires humans.
 
-![The Verification Pyramid: three layers of validation — Execution (automated), Task Logic (tests), and System Value (human judgment) — with feedback loops injecting signals back into context](/illustrations/eval.svg)
+<SvgIllustration name="eval.svg" interactive />
 
 ### Level 1: Syntax and execution
 Agent checks automatically. Does it run? Do commands error out?
@@ -111,7 +111,7 @@ A counterintuitive finding: **don't rush to erase errors.** Failed attempts left
 
 This doesn't mean never clean up—context windows are finite. The key is distinguishing "stale noise" from "failure records that still inform."
 
-![Inline diagram: Evidence-driven recovery moves](/illustrations/eval-inline-1.svg)
+<SvgIllustration name="eval-inline-1.svg" interactive />
 
 **Rollback**: When task-level verification fails, return to the last known good state. Say a code refactor breaks the tests—the Agent uses `git checkout` to undo the changes and tries a different approach. The key is establishing a rollback point before making changes. Good Agents check that git status is clean before starting major edits.
 
@@ -164,7 +164,7 @@ Your job is to keep step 3 intact. Tests ran but results weren't fed back? That'
 
 ## Common Anti-Patterns
 
-![Inline diagram: Anti-patterns, signals, fixes](/illustrations/eval-inline-2.svg)
+<SvgIllustration name="eval-inline-2.svg" interactive />
 
 ### False Completion
 

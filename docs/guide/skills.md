@@ -11,7 +11,7 @@
 
 Command 是"这次做什么"，Skill 是"从现在起怎么做"。
 
-![Skills: on-demand system instruction modules — LLM discovers available skills via metadata, loads full content when needed](/illustrations/skills.svg)
+<SvgIllustration name="skills.svg" interactive />
 
 ## 加载前后的行为差异
 

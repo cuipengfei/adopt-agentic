@@ -8,7 +8,7 @@ As the previous chapter covered, the Agent orchestrates context. System instruct
 
 Before you type anything, they're already there.
 
-![System Instructions: the behavioral baseline injected into every request — maintainable asset with version control, context injector assembling system rules before user input, and guardrails paving the road](/illustrations/system-instructions.svg)
+<SvgIllustration name="system-instructions.svg" interactive />
 
 **── Round 1 ──**
 
@@ -72,7 +72,7 @@ User-defined system instructions are the **most effective handle** you have to i
 
 You don't need to modify the agent's core code or understand its internals. Write your rules and expectations in plain language, and you globally alter the agent's behavior.
 
-![System instructions in the request: injected first, unchanged every round](/illustrations/system-instructions-inline-1.svg)
+<SvgIllustration name="system-instructions-inline-1.svg" interactive />
 
 Want it to follow your team's unique coding style? Put it in the system instructions.
 Want it to avoid touching a sensitive module? Put it in the system instructions.
@@ -124,7 +124,7 @@ Don't treat your system instructions as a one-off note. They are a **living docu
 
 Some describe project-level instruction files as an "institutional lessons log"—every rule traces back to a real incident. But instruction files aren't just postmortems. Proven patterns that survived repeated validation belong there too. **Lessons learned tell the Agent what paths fail; proven practices tell it how the team prefers to work.** Together, they form the team's institutional wisdom.
 
-![Instructions as assets: positive invariants + Git versioning + PR review + iteration](/illustrations/system-instructions-inline-2.svg)
+<SvgIllustration name="system-instructions-inline-2.svg" interactive />
 
 > "Show the path, don't fence the pitfalls" is about **how you write instructions**—using positive descriptions instead of negations. "Lessons learned" is about **where instruction content comes from**—recording real mistakes the team has made and crystallizing experience into rules. These don't conflict: the content comes from lessons learned, the writing style stays positive.
 

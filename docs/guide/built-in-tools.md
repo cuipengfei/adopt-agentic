@@ -18,7 +18,7 @@ Agent 在本地执行工具，然后把执行结果——成功或失败，连�
 
 这个"生成工具调用 → 本地执行 → 返回结果 → 基于结果再推理"的闭环，就是 agentic 工作流的核心。
 
-![Built-in Tools: LLM generates tool_calls JSON, Agent executes locally, results feed back as context — the action-perception loop powering agentic workflows](/illustrations/built-in-tools.svg)
+<SvgIllustration name="built-in-tools.svg" interactive />
 
 ## 工具调用流程
 
@@ -154,7 +154,7 @@ sequenceDiagram
 2. **工具返回值 → 动态上下文**：每次工具执行结果追加到 `messages`，成为下一轮推理的输入。`read_file` 让 LLM 看到代码。
    LLM 通过工具定义知道能做什么，通过返回值了解外部世界的当前状态。
 
-![How tools shape context: static tool definitions vs dynamic tool results](/illustrations/built-in-tools-inline-1.svg)
+<SvgIllustration name="built-in-tools-inline-1.svg" interactive />
 
 但工具返回值也是上下文膨胀最快的来源。一次未加限制的 `ls -R` 或读一个几万行的日志文件，直接撑爆大半个上下文窗口。
 
@@ -190,7 +190,7 @@ Agent 会**真实执行** LLM 请求的操作。好的工具分两级信任：
 
 你需要清楚你的 Agent 有多大权限，并有意识地监督高风险操作。
 
-![Tool trust boundary levels: allow read-only, review writes, confirm high-risk operations](/illustrations/built-in-tools-inline-2.svg)
+<SvgIllustration name="built-in-tools-inline-2.svg" interactive />
 
 
 

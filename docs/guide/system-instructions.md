@@ -8,7 +8,7 @@
 
 你打字之前，它就已经在了。
 
-![System Instructions: the behavioral baseline injected into every request — maintainable asset with version control, context injector assembling system rules before user input, and guardrails paving the road](/illustrations/system-instructions.svg)
+<SvgIllustration name="system-instructions.svg" interactive />
 
 **── 第 1 轮 ──**
 
@@ -78,7 +78,7 @@
 
 
 
-![System instructions in the request: injected first, unchanged every round](/illustrations/system-instructions-inline-1.svg)
+<SvgIllustration name="system-instructions-inline-1.svg" interactive />
 
 想让它遵循团队独特的代码风格？写进系统指令。
 想让它避免接触某个敏感模块？写进系统指令。
@@ -140,7 +140,7 @@
 
 但指令文件不只是踩坑记录。那些经过反复验证、沉淀下来的成功做法——同样写在里面。
 
-![Instructions as assets: positive invariants + Git versioning + PR review + iteration](/illustrations/system-instructions-inline-2.svg)
+<SvgIllustration name="system-instructions-inline-2.svg" interactive />
 
 **踩坑教训告诉 Agent 什么路走不通，验证过的好做法告诉它应该怎么走。** 两者合起来，才是完整的团队智慧。
 

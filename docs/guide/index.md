@@ -12,7 +12,7 @@ Agentic 编程的所有复杂机制，从工具调用到多 agent 协作，都�
 
 **在正确的时机，把正确的信息，放进上下文。**
 
-![一次任务中的上下文供给链：Task Goal 汇入 System Instructions / Project Context / Tool Capabilities，经 Agent Request 到 LLM API，再返回 SSE Response 与 Next Action](/illustrations/context-supply-chain.svg)
+<SvgIllustration name="context-supply-chain.svg" interactive />
 
 LLM 没有记忆。你给它什么，它就看到什么。本教程的每一节，都在从不同角度剖析"上下文如何流动"这件事。这里所有的能力——工具、协议、编排——本质都是上下文工程。
 

@@ -50,7 +50,7 @@ Agent 干活很快，能力也强——但它没有"这个操作太危险，我�
 
 这就是 Hook 的核心价值：在 Agent 和真实世界之间，加一道可编程的防火墙。
 
-![The Gatekeeper Pattern: Agent intent flows through a Hook checkpoint that decides to Block, Modify, or Allow before reaching the real world](/illustrations/hooks-and-plugins.svg)
+<SvgIllustration name="hooks-and-plugins.svg" interactive />
 
 ### 生命周期事件
 

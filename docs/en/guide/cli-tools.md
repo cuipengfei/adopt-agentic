@@ -6,7 +6,7 @@ The previous chapter's Skills inject behavioral knowledge — "how to do things.
 
 Back to the conclusion from the built-in tools chapter: `bash` is the most versatile tool — in theory it can do anything. CLI tools are bash's ammo — the agent calls `git`, `curl`, `jq`, `rg` through bash, and their output becomes part of the context directly.
 
-![Agent-Native CLI Tools: Unix philosophy meets agentic workflows — plain text output becomes context, composable through pipes, predictable and auditable](/illustrations/cli-tools.svg)
+<SvgIllustration name="cli-tools.svg" interactive />
 
 ## Why CLI Is Naturally Agent-Friendly
 

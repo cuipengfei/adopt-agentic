@@ -30,7 +30,7 @@
 
 经验法则：**读操作（搜索、研究）尽管并行，写操作（改代码）谨慎并行**。读很少冲突，写经常会。
 
-![Control and concurrency: one driver, one wheel; parallelize reads, serialize writes](/illustrations/orchestration-inline-1.svg)
+<SvgIllustration name="orchestration-inline-1.svg" interactive />
 
 ## 常见模式
 
@@ -38,7 +38,7 @@ Agent 的编排模式就像电路板：串联、并联、或者更复杂的组�
 
 先记住一条行业共识：**简单循环优先**。能用单 agent 顺序执行搞定的，别上并行；能用一层循环解决的，别套两层。复杂编排不是"更强"，而是"更多失败点"——每多一层抽象，上下文对齐的难度翻倍。先从最简单的模式开始，真正不够用了再升级。
 
-![Four orchestration patterns compared: Sequential (linear accumulation), Parallel (split and merge), Plan-and-Execute (draft to frozen), and Iterative Loop (spiral ascent)](/illustrations/orchestration.svg)
+<SvgIllustration name="orchestration.svg" interactive />
 
 ### 1. 顺序执行 (Sequential)
 
@@ -125,7 +125,7 @@ Plan-and-Execute 在动手前纠偏，迭代循环在动手后纠偏。Agent 执
 
 同时开三个会话改同一个项目，每个会话都有自己的上下文，互相看不见。没人协调，很容易变成一场灾难。
 
-![Parallel session governance playbook: partition, sync, converge, accept](/illustrations/orchestration-inline-2.svg)
+<SvgIllustration name="orchestration-inline-2.svg" interactive />
 
 **切干净**
 并行的前提是任务能切干净。每个会话负责一个独立区域——不同的文件、不同的模块。如果要改同一个文件，就别并行。按文件边界切，通常更稳妥。

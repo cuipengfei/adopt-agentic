@@ -20,7 +20,7 @@ But context is like milk: nutritious when fresh, spoils over time, and you can o
 | **Capability Layer** | Skills | On task demand, loaded as needed | system or messages (varies by tool) | Persists within session (some tools support deactivation) | Domain-specific workflows, best practices |
 | **Project Layer** | Codebase + doc structure | When Agent reads files | user/assistant messages | On-demand | Project structure, README, comments, llms.txt |
 
-![Three knowledge feeding paths: Rule Layer (always-on), Capability Layer (on-demand injection), and Project Layer (just-in-time file reads) flow into the Agent's Context Window](/illustrations/knowledge-feeding.svg)
+<SvgIllustration name="knowledge-feeding.svg" interactive />
 
 ### 1. Rule Layer: Setting the Ground Rules
 

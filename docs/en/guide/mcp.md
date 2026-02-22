@@ -8,7 +8,7 @@ Wait for the agent developer to add it? Impractical. Modify the agent's source c
 
 You need a standard interface that lets **any external capability** plug into the agent. That's MCP (Model Context Protocol).
 
-![MCP: the USB port of the agent world — a standard protocol connecting external tools via stdio or Streamable HTTP, transparent to the LLM](/illustrations/mcp.svg)
+<SvgIllustration name="mcp.svg" interactive />
 
 ## What is MCP?
 
@@ -18,7 +18,7 @@ MCP is an open protocol. It defines a standard that allows anyone to develop too
 
 The agent dynamically discovers and loads these external tools at runtime. You just configure it — no code required.
 
-![MCP overview: client/server and transport options](/illustrations/mcp-inline-1.svg)
+<SvgIllustration name="mcp-inline-1.svg" interactive />
 
 ## Server and Client
 
@@ -144,7 +144,7 @@ The LLM only cares that it got the page content. It doesn't know or need to know
 
 One-line summary: **LLM layer — fully equivalent. Agent execution layer — different paths.**
 
-![Context cost: tool schemas vs messages](/illustrations/mcp-inline-2.svg)
+<SvgIllustration name="mcp-inline-2.svg" interactive />
 
 But flexibility has a hidden cost. Each connected MCP Server injects all of its tool definitions into every request. Enable ten Servers at once, and dozens of tool definitions permanently occupy the context window—squeezing out space for your instructions, conversation history, and tool return values. In practice: create different MCP profiles for different task types—one set for coding, another for data work. The principle: off by default, on when needed.
 

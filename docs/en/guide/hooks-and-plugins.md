@@ -50,7 +50,7 @@ You need a gatekeeper to stop it before it executes a high-risk operation.
 
 This is the core value of a hook: a programmable firewall between the agent and the real world.
 
-![The Gatekeeper Pattern: Agent intent flows through a Hook checkpoint that decides to Block, Modify, or Allow before reaching the real world](/illustrations/hooks-and-plugins.svg)
+<SvgIllustration name="hooks-and-plugins.svg" interactive />
 
 ### Lifecycle Events
 

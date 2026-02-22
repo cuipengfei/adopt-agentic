@@ -16,7 +16,7 @@ That's it. The LLM has never touched your files — it only reasons about what t
 
 You think AI messed up your code? More likely the Agent fed the wrong context in, and the LLM faithfully reasoned on garbage.
 
-![The Triangle: User provides intent, Agent orchestrates context and executes tools, LLM reasons — the collaboration loop in action](/illustrations/actors.svg)
+<SvgIllustration name="actors.svg" interactive />
 
 ## Collaboration Loop
 

@@ -11,7 +11,7 @@ The real differences are:
 
 Commands are "what to do this time." Skills are "how to behave from now on."
 
-![Skills: on-demand system instruction modules — LLM discovers available skills via metadata, loads full content when needed](/illustrations/skills.svg)
+<SvgIllustration name="skills.svg" interactive />
 
 ## Behavior Before and After Loading
 

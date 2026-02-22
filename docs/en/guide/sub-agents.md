@@ -4,7 +4,7 @@
 
 The previous chapter covered orchestration patterns—how to organize steps. This chapter looks at the execution unit: when the main Agent needs a clean environment for a sub-task, it spawns a Sub Agent.
 
-![Sub Agents: context isolation through spawning — main Agent delegates with a handoff note, Sub Agent works in a clean room, returns summary back to main context](/illustrations/sub-agents.svg)
+<SvgIllustration name="sub-agents.svg" interactive />
 
 ## The Problem: Context Gets Dirty
 
@@ -47,13 +47,13 @@ The right approach — a focused task description with just three things:
 
 Dumping context is lazy. The Sub Agent will get lost in the noise.
 
-![Handoff note vs context dump — what to send to a Sub Agent](/illustrations/sub-agents-inline-1.svg)
+<SvgIllustration name="sub-agents-inline-1.svg" interactive />
 
 ## How It Works
 
 The main Agent delegating to a Sub Agent boils down to three steps:
 
-![Sub Agent Workflow: 1. Task Description -> 2. Execution -> 3. Summary](/illustrations/sub-agents-inline-3.svg)
+<SvgIllustration name="sub-agents-inline-3.svg" interactive />
 
 **── Inside the Sub Agent ──**
 
@@ -102,7 +102,7 @@ When the Sub Agent finishes, it returns a **summary** to the main Agent—not do
 
 What the main Agent receives is just: "Tests created, covering 201 and 400, file at `tests/integration/createUser.test.ts`." Whatever struggles the Sub Agent went through in between—the main Agent doesn’t need to know.
 
-![Isolation boundary: inherited rules, isolated history, returned summary, and audit trail](/illustrations/sub-agents-inline-2.svg)
+<SvgIllustration name="sub-agents-inline-2.svg" interactive />
 
 ## Connecting Back to the First Principle
 

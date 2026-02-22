@@ -12,7 +12,7 @@ All the complex mechanisms of agentic programming, from tool use to multi-agent 
 
 **Putting the right information into the context at the right time.**
 
-![Context supply chain in one task: Task Goal flows into System Instructions, Project Context, and Tool Capabilities; the Agent builds the request to the LLM API, then receives SSE Response and takes the Next Action.](/illustrations/context-supply-chain.svg)
+<SvgIllustration name="context-supply-chain.svg" interactive />
 
 LLMs have no memory. What you give them is what they see. Every section of this guide dissects how context flows. Every capability here—tools, protocols, orchestration—is context engineering in disguise.
 

@@ -160,6 +160,10 @@ So working with agents actually has two distinct modes:
 
 Switch between them based on the task at hand.
 
+Try it directly: click the buttons below and watch how context accumulates layer by layer across one complete Agent-LLM interaction.
+
+<ContextBuilder />
+
 Context management boils down to four actions:
 
 - **Write** — generate useful information
@@ -171,7 +175,7 @@ Every tool and mechanism in subsequent chapters helps you do these four things.
 
 Write, Select, Compress, Isolate — these four actions help you manage context at the **single-step** level. But in **multi-step long conversations**, there's a subtler problem.
 
-![Context management distilled: raw project data flows through Select, Write, Compress, and Isolate modules before entering the finite Context Window](/illustrations/context.svg)
+<SvgIllustration name="context.svg" interactive />
 
 ### Context Pollution
 
@@ -324,4 +328,3 @@ mindmap
 - **Auditability:** Good news — the complete `messages` array in each HTTP request is your log. Something went wrong? Replay from the start.
 
 Next chapter breaks apart the three roles — you, the Agent, and the LLM — to see how context flows between them.
-

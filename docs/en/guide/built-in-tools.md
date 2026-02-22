@@ -16,7 +16,7 @@ The agent executes the tool locally, then packages the result—success or failu
 
 This closed loop of "generate tool call → execute locally → return result → reason based on result" is the core engine of agentic workflows.
 
-![Built-in Tools: LLM generates tool_calls JSON, Agent executes locally, results feed back as context — the action-perception loop powering agentic workflows](/illustrations/built-in-tools.svg)
+<SvgIllustration name="built-in-tools.svg" interactive />
 
 ## The Tool-Call Flow
 
@@ -149,7 +149,7 @@ After walking through this flow, you can see tools shape the LLM's context from 
 
 The LLM knows "what it can do" from tool definitions, and learns "what the current state of the outside world is" from return values.
 
-![How tools shape context: static tool definitions vs dynamic tool results](/illustrations/built-in-tools-inline-1.svg)
+<SvgIllustration name="built-in-tools-inline-1.svg" interactive />
 
 But tool return values are also the fastest source of context bloat. One unrestricted `ls -R` or reading a log file with tens of thousands of lines can blow through most of the context window in a single call.
 
@@ -185,7 +185,7 @@ Watch one thing: did it read before writing? An agent that calls `write_file` wi
 
 You need to know the extent of your agent's permissions and consciously supervise high-risk operations.
 
-![Tool trust boundary levels: allow read-only, review writes, confirm high-risk operations](/illustrations/built-in-tools-inline-2.svg)
+<SvgIllustration name="built-in-tools-inline-2.svg" interactive />
 
 Just saying "tools" is too abstract. What do the built-in tools of different agents actually look like? A few examples make it clear. Here’s a comparison of the toolsets for four common AI coding assistants to give you a concrete idea of what "built-in" means.
 

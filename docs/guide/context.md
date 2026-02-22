@@ -162,6 +162,10 @@ graph TB
 
 两种模式要根据当前任务切换。
 
+亲手试一试：点击下面的按钮，看看一次完整的 Agent-LLM 交互中上下文是怎么一层层堆起来的。
+
+<ContextBuilder />
+
 上下文管理归结为四个动作：
 
 - **写** — 生成有用信息
@@ -173,7 +177,7 @@ graph TB
 
 写选压隔——帮你在**单步**层面管好上下文。但在**多步长对话**中，还有一个更隐蔽的问题。
 
-![Context management distilled: raw project data flows through Select, Write, Compress, and Isolate modules before entering the finite Context Window](/illustrations/context.svg)
+<SvgIllustration name="context.svg" interactive />
 
 ### 上下文污染
 
@@ -326,4 +330,3 @@ mindmap
 - **可审计性**：好消息——每次 HTTP 请求的完整 `messages` 数组就是日志。出了问题，从头重放。
 
 下一节拆开三方角色——你、Agent、LLM——看上下文在它们之间怎么流转。
-

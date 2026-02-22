@@ -8,7 +8,7 @@
 
 你需要一个标准接口，让**任何外部能力**都能接入 Agent。这就是 MCP（Model Context Protocol）。
 
-![MCP: the USB port of the agent world — a standard protocol connecting external tools via stdio or Streamable HTTP, transparent to the LLM](/illustrations/mcp.svg)
+<SvgIllustration name="mcp.svg" interactive />
 
 ## 什么是 MCP？
 
@@ -18,7 +18,7 @@ MCP 是一个开放协议。它规定了一套标准，允许任何人为 Agent 
 
 Agent 在运行时动态发现并加载这些外部工具。你只需要配一下，不需要写代码。
 
-![MCP overview: client/server and transport options](/illustrations/mcp-inline-1.svg)
+<SvgIllustration name="mcp-inline-1.svg" interactive />
 
 ## Server 与 Client
 
@@ -148,7 +148,7 @@ LLM 只关心拿到了网页内容。它不知道也不需要知道这个结果�
 
 一句话总结：**LLM 层完全等价，Agent 执行层路径不同。**
 
-![Context cost: tool schemas vs messages](/illustrations/mcp-inline-2.svg)
+<SvgIllustration name="mcp-inline-2.svg" interactive />
 
 但灵活性有隐性成本。每接入一个 MCP Server，它所有的工具定义都会注入到每一轮请求里。同时挂十个 Server，几十个工具定义永久占着上下文窗口，挤掉的是你的指令、对话历史和工具返回值的空间。实操：按任务类型建不同的 MCP 配置——写代码用一套，跑数据用另一套。原则是默认关闭，需要时再开。
 

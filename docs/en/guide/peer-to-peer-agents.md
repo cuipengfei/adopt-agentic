@@ -4,7 +4,7 @@
 
 The previous chapter established the human as the ultimate arbiter of context. Even in multi-Agent collaboration, that doesn't change—but the way context flows gets more complex.
 
-![Peer-to-Peer Agents: bidirectional context flow among equals — no hierarchy, multi-perspective collision with O(n²) coordination overhead](/illustrations/peer-to-peer-agents.svg)
+<SvgIllustration name="peer-to-peer-agents.svg" interactive />
 
 ## Hierarchical vs. Peer-to-Peer
 
@@ -24,11 +24,11 @@ The answer: **coordination overhead.**
 
 A team of `N` Agents has `N × (N-1) / 2` potential communication channels. 3 Agents = 3 channels, 5 = 10, 10 = 45. Coordination cost grows quadratically (O(n²)), not linearly.
 
-![Hierarchy vs P2P: channel count grows O(N) vs O(N²)](/illustrations/peer-to-peer-agents-inline-1.svg)
+<SvgIllustration name="peer-to-peer-agents-inline-1.svg" interactive />
 
 And in practice, the communication types go well beyond A ↔ B. Direct peer conversations, coordinator broadcasts, shared task state—just two Agents already generate this many channels. The messaging model is typically fire-and-forget: sent without waiting for ACK, no error if the receiver has already shut down. You cannot assume every message was processed.
 
-![Fire-and-forget messaging: no ACK wait, receiver may be offline](/illustrations/peer-to-peer-agents-inline-2.svg)
+<SvgIllustration name="peer-to-peer-agents-inline-2.svg" interactive />
 
 The specific costs:
 

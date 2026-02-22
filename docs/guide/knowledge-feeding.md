@@ -20,7 +20,7 @@ Agent 的能力上限 = 它拥有的高质量上下文。LLM 自带通用知识�
 | **能力层** | Skills              | 任务需要时，按需加载 | system 或 messages（视工具实现） | 会话内持续（部分工具支持停用） | 特定领域工作流、最佳实践         |
 | **项目层** | 代码库 + 文档结构   | Agent 读取文件时     | user/assistant messages          | 按需                           | 项目结构、README、注释、llms.txt |
 
-![Three knowledge feeding paths: Rule Layer (always-on), Capability Layer (on-demand injection), and Project Layer (just-in-time file reads) flow into the Agent's Context Window](/illustrations/knowledge-feeding.svg)
+<SvgIllustration name="knowledge-feeding.svg" interactive />
 
 ### 1. 规则层：给 Agent 立规矩
 
