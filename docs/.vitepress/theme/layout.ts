@@ -1,8 +1,10 @@
-import { h, nextTick, onMounted, watch, type VNode } from 'vue'
+/// <reference path="./vue-shim.d.ts" />
+
+import { computed, h, nextTick, onBeforeUnmount, onMounted, watch, type VNode } from 'vue'
 import { useData, useRoute } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
-// @ts-expect-error -- Vue SFC resolved by Vite at build time
 import AgentPrompt from './AgentPrompt.vue'
+import BootSequence from './BootSequence.vue'
 
 function collectGroups(nodes: HTMLElement[]): HTMLElement[][] {
   const groups: HTMLElement[][] = []
@@ -76,6 +78,7 @@ function buildDeck(docRoot: HTMLElement): void {
     const h2 = group.find(node => node.tagName === 'H2')
     if (h2 && h2.id) {
       slide.id = h2.id
+      slide.dataset.concept = h2.id
       h2.removeAttribute('id')
     }
 
@@ -95,6 +98,67 @@ export default {
   setup() {
     const route = useRoute()
     const { frontmatter } = useData()
+    const isHomeRoute = computed(() => frontmatter.value?.layout === 'home')
+    let slideObserver: IntersectionObserver | null = null
+
+    const inferConceptFromSlide = (slide: HTMLElement): string => {
+      if (slide.dataset.concept) return slide.dataset.concept
+
+      const id = slide.id
+      if (!id) return ''
+
+      if (id.includes('请求') || id.includes('request') || id.includes('what-is-context')) return 'request-line'
+      if (id.includes('污染') || id.includes('pollution')) return 'isolate'
+      if (id.includes('管好') || id.includes('managing-context')) return 'select'
+      if (id.includes('state') || id.includes('memory')) return 'window'
+
+      return id
+    }
+
+    const dispatchSlideHighlight = (concept: string): void => {
+      if (typeof window === 'undefined') return
+
+      window.dispatchEvent(
+        new CustomEvent('aa-slide-highlight', {
+          detail: { concept },
+        }),
+      )
+    }
+
+    const bindSlideHighlightObserver = (docRoot: HTMLElement): void => {
+      if (typeof window === 'undefined' || typeof IntersectionObserver === 'undefined') return
+
+      slideObserver?.disconnect()
+      slideObserver = null
+
+      const slides = Array.from(docRoot.querySelectorAll<HTMLElement>(':scope > .aa-slide-deck > .aa-slide'))
+      if (!slides.length) {
+        dispatchSlideHighlight('')
+        return
+      }
+
+      slideObserver = new IntersectionObserver(
+        (entries) => {
+          const visible = entries
+            .filter((entry) => entry.isIntersecting)
+            .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
+
+          const top = visible[0]
+          if (!top || !(top.target instanceof HTMLElement)) {
+            dispatchSlideHighlight('')
+            return
+          }
+
+          dispatchSlideHighlight(inferConceptFromSlide(top.target))
+        },
+        {
+          root: null,
+          threshold: [0.2, 0.45, 0.7],
+        },
+      )
+
+      slides.forEach((slide) => slideObserver?.observe(slide))
+    }
 
     const refreshDeck = async (): Promise<void> => {
       await nextTick()
@@ -108,6 +172,10 @@ export default {
 
       if (visualRhythmEnabled) {
         buildDeck(docRoot)
+        bindSlideHighlightObserver(docRoot)
+      } else {
+        docRoot.dataset.aaSlideDeck = 'ready'
+        dispatchSlideHighlight('')
       }
     }
 
@@ -129,7 +197,14 @@ export default {
       },
     )
 
+    onBeforeUnmount(() => {
+      slideObserver?.disconnect()
+      slideObserver = null
+      dispatchSlideHighlight('')
+    })
+
     return (): VNode => h(DefaultTheme.Layout, null, {
+      'layout-top': () => (isHomeRoute.value ? h(BootSequence) : null),
       'doc-before': () => h(AgentPrompt)
     })
   },

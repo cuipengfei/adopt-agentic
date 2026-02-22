@@ -48,16 +48,16 @@
     
     <!-- 1. The Request Loop (Blue) -->
     <!-- Path: Start(-400,-150) -> Write(-200,-150) -> Down to Actions Line(-150,-100) -> Across to Window(350,-100) -->
-    <path id="requestPath" d="M -400 -180 L -220 -180 L -20 -180 L 350 -100" 
+    <path id="requestPath" data-concept="request-line" d="M -400 -180 L -220 -180 L -20 -180 L 350 -100" 
           fill="none" stroke="#3b82f6" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
     
     <!-- 2. The Response Loop (Green) -->
     <!-- Path: Window(350,100) -> LLM(200,100) -> Agent(-200,100) -> Up and Left to End(-400,0) -->
-    <path id="responsePath" d="M 350 100 L -200 100 L -300 0 L -400 0" 
+    <path id="responsePath" data-concept="response-line" d="M 350 100 L -200 100 L -300 0 L -400 0" 
           fill="none" stroke="#10b981" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
           
     <!-- 3. The Isolate Siding (Purple) - Alternative path (animated flow) -->
-    <path id="isolatePath" d="M -220 -180 L -220 -20 L -20 -20 L -20 -180" 
+    <path id="isolatePath" data-concept="isolate" d="M -220 -180 L -220 -20 L -20 -20 L -20 -180" 
           fill="none" stroke="#a855f7" stroke-width="6" stroke-dasharray="12,4">
       <animate attributeName="stroke-dashoffset" values="0;32" dur="2s" repeatCount="indefinite"/>
     </path>
@@ -65,7 +65,7 @@
     <!-- STATIONS & ZONES -->
     
     <!-- User Station (Start) -->
-    <g transform="translate(-400, -180)">
+    <g transform="translate(-400, -180)" data-concept="context">
       <circle r="15" fill="white" stroke="#3b82f6" stroke-width="4">
         <animate attributeName="stroke-width" values="4; 8; 4" dur="2s" repeatCount="indefinite"/>
         <animate attributeName="stroke-opacity" values="1; 0.5; 1" dur="2s" repeatCount="indefinite"/>
@@ -74,7 +74,7 @@
     </g>
 
     <!-- Action 1: WRITE (Generation) -->
-    <g transform="translate(-220, -180)">
+    <g transform="translate(-220, -180)" data-concept="write">
       <circle r="8" fill="none" stroke="#3b82f6" stroke-width="2" opacity="0.6">
         <animate attributeName="r" values="8; 16; 8" dur="2s" repeatCount="indefinite"/>
         <animate attributeName="opacity" values="0.6; 0; 0.6" dur="2s" repeatCount="indefinite"/>
@@ -85,7 +85,7 @@
     </g>
 
     <!-- Action 2: ISOLATE (Branch Point) -->
-    <g transform="translate(-220, -20)">
+    <g transform="translate(-220, -20)" data-concept="isolate">
       <circle r="12" fill="none" stroke="#a855f7" stroke-width="2" opacity="0.6">
         <animate attributeName="r" values="12; 20; 12" dur="2s" begin="1s" repeatCount="indefinite"/>
         <animate attributeName="opacity" values="0.6; 0; 0.6" dur="2s" begin="1s" repeatCount="indefinite"/>
@@ -96,7 +96,7 @@
     </g>
     
     <!-- Action 3: SELECT (Filter) -->
-    <g transform="translate(-20, -180)">
+    <g transform="translate(-20, -180)" data-concept="select">
       <circle r="8" fill="none" stroke="#3b82f6" stroke-width="2" opacity="0.6">
         <animate attributeName="r" values="8; 16; 8" dur="2s" begin="0.5s" repeatCount="indefinite"/>
         <animate attributeName="opacity" values="0.6; 0; 0.6" dur="2s" begin="0.5s" repeatCount="indefinite"/>
@@ -107,7 +107,7 @@
     </g>
 
     <!-- Action 4: SQUEEZE (Compress) -->
-    <g transform="translate(-20, -20)">
+    <g transform="translate(-20, -20)" data-concept="compress">
       <circle r="8" fill="none" stroke="#a855f7" stroke-width="2" opacity="0.6">
         <animate attributeName="r" values="8; 16; 8" dur="2s" begin="0.75s" repeatCount="indefinite"/>
         <animate attributeName="opacity" values="0.6; 0; 0.6" dur="2s" begin="0.75s" repeatCount="indefinite"/>
@@ -118,7 +118,7 @@
     </g>
 
     <!-- Context Window (Terminus/Hub) -->
-    <g transform="translate(350, 0)">
+    <g transform="translate(350, 0)" data-concept="window">
       <!-- The Window Zone Box -->
       <rect x="-60" y="-130" width="120" height="260" rx="8" fill="white" stroke="#1e293b" stroke-width="3" stroke-dasharray="8,4">
       <animate attributeName="stroke-dashoffset" from="12" to="0" dur="2s" repeatCount="indefinite"/>
@@ -156,7 +156,7 @@
     </g>
 
     <!-- LLM Station -->
-    <g transform="translate(200, 100)">
+    <g transform="translate(200, 100)" data-concept="llm">
       <rect x="-40" y="-20" width="80" height="40" fill="#1e293b" rx="4"/>
       <circle cx="30" cy="-10" r="3" fill="#10b981">
         <animate attributeName="opacity" values="1; 0.2; 1" dur="1s" repeatCount="indefinite"/>
@@ -165,7 +165,7 @@
     </g>
     
     <!-- Agent Response Station -->
-    <g transform="translate(-200, 100)">
+    <g transform="translate(-200, 100)" data-concept="agent">
       <circle r="8" fill="none" stroke="#10b981" stroke-width="2" opacity="0.6">
         <animate attributeName="r" values="8; 16; 8" dur="2s" begin="1.25s" repeatCount="indefinite"/>
         <animate attributeName="opacity" values="0.6; 0; 0.6" dur="2s" begin="1.25s" repeatCount="indefinite"/>
@@ -176,7 +176,7 @@
     </g>
 
     <!-- Result (End) -->
-    <g transform="translate(-400, 0)">
+    <g transform="translate(-400, 0)" data-concept="result">
        <circle r="15" fill="white" stroke="#10b981" stroke-width="4">
          <animate attributeName="stroke-width" values="4; 8; 4" dur="2s" begin="1s" repeatCount="indefinite"/>
          <animate attributeName="stroke-opacity" values="1; 0.5; 1" dur="2s" begin="1s" repeatCount="indefinite"/>
