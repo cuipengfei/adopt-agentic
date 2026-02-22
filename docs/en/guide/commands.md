@@ -64,3 +64,4 @@ System instructions define how the agent behaves *by default*. Commands define w
 - **Auditability**: Agent logs should record which command triggered subsequent actions. When something goes wrong, tracing back to the source command definition is the key to troubleshooting.
 
 Next chapter: Skills — commands are triggered manually by the user and expand to full text immediately; Skills are loaded on demand by the LLM, starting as metadata at launch.
+

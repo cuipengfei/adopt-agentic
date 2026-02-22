@@ -116,3 +116,4 @@ After loading, watch for instruction conflicts. Some tools support mid-session d
 - **Auditability**: Agent logs should record when each Skill was loaded or deactivated. Agent behaving strangely? Check the currently loaded Skill list and their contents first.
 
 Next chapter: Agent-Native CLI Tools — Skills inject behavioral knowledge into the agent, CLI tools give it executable capabilities.
+

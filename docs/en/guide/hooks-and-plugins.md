@@ -172,3 +172,4 @@ With great power comes great responsibility to review. You can use built-in tool
 - **Auditability**: Hook execution logs are the most fine-grained observability data—every event, every interception, every decision timestamped. But you need to implement the logging logic yourself.
 
 Next up: "Knowledge Feeding"—a unified review of all the carriers we've covered, answering the one question: "I have a bunch of knowledge, how do I get the agent to know it?"
+

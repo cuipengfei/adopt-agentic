@@ -163,3 +163,4 @@ MCP's value isn't "yet another protocol." Its value is **freeing you from depend
 - **Auditability**: Every interaction between the agent and MCP Server should be logged — what was requested, what was returned, how long it took. When something goes wrong, this is your investigation trail.
 
 Next chapter: Slash Commands — how to package common operations into one-click shortcuts.
+

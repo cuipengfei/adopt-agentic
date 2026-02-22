@@ -31,3 +31,4 @@
 | 上下文工程        | Context Engineering                 | 设计动态系统，在正确的时间以正确的格式向 LLM 提供正确的信息和工具。从"写好一条 prompt"演进到"管理整个上下文供给链"。 |
 | Agentic 工程      | Agentic Engineering                 | 用 AI agent 工具高效构建软件的工程实践全集——涵盖上下文管理、工具选型、并行编排、反馈闭环、质量验证等全链路。上下文工程是其核心子领域。 |
 | Fire-and-forget   | Fire-and-forget                     | 消息发出后不等确认回执的通信模式。简化系统设计，但不能假设每条消息都被处理了。                               |
+

@@ -182,3 +182,4 @@ Think of an orchestra conductor: the conductor doesn't play any instrument, but 
 - **Auditability**: The execution path, branch decisions, and intermediate results of all orchestration patterns should be logged. This allows you to trace "what the agent was thinking" and replay the entire process.
 
 Next up: Sub Agents. Orchestration patterns are the organizational method; Sub Agents are the execution units. When a task calls for parallelism or context isolation, the main Agent spawns independent child agents to do the work.
+

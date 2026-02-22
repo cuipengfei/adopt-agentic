@@ -225,3 +225,4 @@ Multiple sub-agents searched session history in parallel, extracted patterns, br
 Writing this chapter involved SQLite queries to sift through work session history—the same `bun -e` plus database combination described in the "Tools" section above. Git commit history was aligned to session messages one by one—the user instruction behind each commit was traced not from memory, but from data.
 
 The tutorial validated its own theory by building itself. If that's not enough to show what "context management" looks like in practice, go back and reread [chapter one](/en/guide/context).
+

@@ -162,3 +162,4 @@ One person maintaining an instruction file? Just iterate. A team maintaining the
 - **Auditability**: System instructions are fully readable — open the agent's defaults and your customizations, and you know exactly what's driving its behavior.
 
 Next chapter: tools — how tool definitions and return values enter the same context loop.
+

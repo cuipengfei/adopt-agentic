@@ -1,6 +1,8 @@
 import { h, nextTick, onMounted, watch, type VNode } from 'vue'
 import { useData, useRoute } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
+// @ts-expect-error -- Vue SFC resolved by Vite at build time
+import AgentPrompt from './AgentPrompt.vue'
 
 function collectGroups(nodes: HTMLElement[]): HTMLElement[][] {
   const groups: HTMLElement[][] = []
@@ -127,6 +129,8 @@ export default {
       },
     )
 
-    return (): VNode => h(DefaultTheme.Layout)
+    return (): VNode => h(DefaultTheme.Layout, null, {
+      'doc-before': () => h(AgentPrompt)
+    })
   },
 }

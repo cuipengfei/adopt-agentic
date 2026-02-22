@@ -1,3 +1,5 @@
+/// <reference types="vitepress/client" />
+
 import type { Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import Layout from './layout'

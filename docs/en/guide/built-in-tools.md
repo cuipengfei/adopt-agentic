@@ -217,3 +217,4 @@ The tool names and categories differ, but the pattern is the same: read, write, 
 - **Auditability**: Every `tool_calls` request and its corresponding `tool`-role message lives in the conversation history — a complete evidence chain of actions.
 
 Next chapter: MCP — when built-in tools aren't enough, how to let agents call external services. The execution path changes, but to the LLM, everything looks the same.
+

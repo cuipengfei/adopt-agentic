@@ -201,3 +201,4 @@ One more degradation worth watching for, though it's not quite an anti-pattern: 
 - **Auditability**: Logs from all three verification layers form a complete audit chain. Tool call inputs/outputs, task verification pass/fail records, observability metrics—these let you trace what the Agent saw, what it did, and why, at every decision point.
 
 Next up: Human-in-the-Loop. Verification tells you whether things are right or wrong. When the answer is "wrong" and the operation is irreversible—it’s time for a human to step in.
+

@@ -112,3 +112,4 @@ There's an equally dangerous slide in the opposite direction: approval fatigue. 
 - **Auditability**: Every intervention you make—what you approved, rejected, changed—should be logged. This isn’t just for tracing issues; it’s your data source for reviewing whether your collaboration model with the Agent is healthy.
 
 Next is the final stop: Peer-to-Peer Agents. Until now, the human has always been the ultimate arbiter of context. But when multiple Agents start collaborating as peers, context flow gets more complex.
+

@@ -118,3 +118,4 @@ Agent 的能力边界不再只由开发者决定，而是可以被生态扩展�
 - **可审计性**：Agent 日志应记录哪个 Skill 在何时被加载或停用。Agent 行为异常？先查当前加载的 Skill 列表和它们的内容。
 
 下一节看 Agent-Native CLI Tools——Skills 给 Agent 注入行为知识，CLI Tools 给它可执行的能力。
+

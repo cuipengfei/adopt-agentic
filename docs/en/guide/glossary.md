@@ -31,3 +31,4 @@
 | Context Engineering | 上下文工程 | Designing dynamic systems that provide the right information and tools, in the right format, at the right time, to give an LLM everything it needs. The evolution from "writing a good prompt" to "managing an entire context supply chain." |
 | Agentic Engineering | Agentic 工程 | The full engineering discipline of building software effectively with AI agent tools—spanning context management, tool selection, parallel orchestration, feedback loops, and quality verification. Context Engineering is its core sub-discipline. |
 | Fire-and-forget | Fire-and-forget | A messaging model where messages are sent without waiting for acknowledgment. Simplifies system design, but you cannot assume every message was processed. |
+

@@ -324,3 +324,4 @@ mindmap
 - **Auditability:** Good news — the complete `messages` array in each HTTP request is your log. Something went wrong? Replay from the start.
 
 Next chapter breaks apart the three roles — you, the Agent, and the LLM — to see how context flows between them.
+

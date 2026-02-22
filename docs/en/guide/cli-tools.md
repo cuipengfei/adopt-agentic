@@ -140,3 +140,4 @@ CLI tools are the **simplest, most universal, and most mature** way for an agent
 - **Auditability**: Every shell command the agent executes and its output should be logged — a complete audit trail, the foundation for debugging and security reviews.
 
 Next chapter: Hooks & Plugins — shifting from "putting things into context" to "intercepting and modifying the context flow."
+
