@@ -136,24 +136,97 @@ const sourceSvg = computed(() => {
   return svgModules[key]
 })
 
+function scopeCssSelectors(css: string, prefix: string): string {
+  const result: string[] = []
+  let i = 0
+  const len = css.length
+
+  while (i < len) {
+    // Preserve whitespace as-is
+    if (/\s/.test(css[i])) {
+      result.push(css[i])
+      i++
+      continue
+    }
+
+    // Preserve CSS comments
+    if (css[i] === '/' && css[i + 1] === '*') {
+      const endComment = css.indexOf('*/', i + 2)
+      const end = endComment === -1 ? len : endComment + 2
+      result.push(css.slice(i, end))
+      i = end
+      continue
+    }
+
+    // Handle @-rules
+    if (css[i] === '@') {
+      // Block @-rules (keyframes, media, supports, font-face) — track brace depth, keep untouched
+      const atBlockMatch = css.slice(i).match(/^@(keyframes|media|supports|font-face)\b/)
+      if (atBlockMatch) {
+        const braceStart = css.indexOf('{', i)
+        if (braceStart === -1) { result.push(css.slice(i)); break }
+        let depth = 1
+        let j = braceStart + 1
+        while (j < len && depth > 0) {
+          if (css[j] === '{') depth++
+          else if (css[j] === '}') depth--
+          j++
+        }
+        result.push(css.slice(i, j))
+        i = j
+        continue
+      }
+
+      // Non-block @-rules (@import, @charset, etc.) — find semicolon outside quotes
+      let j = i + 1
+      let inSingle = false
+      let inDouble = false
+      while (j < len) {
+        if (css[j] === "'" && !inDouble) inSingle = !inSingle
+        else if (css[j] === '"' && !inSingle) inDouble = !inDouble
+        else if (css[j] === ';' && !inSingle && !inDouble) break
+        j++
+      }
+      result.push(css.slice(i, j < len ? j + 1 : len))
+      i = j < len ? j + 1 : len
+      continue
+    }
+
+    // Regular rule: selector { declarations }
+    const braceIdx = css.indexOf('{', i)
+    if (braceIdx === -1) { result.push(css.slice(i)); break }
+
+    const selectorText = css.slice(i, braceIdx)
+    const trimmed = selectorText.trim()
+
+    if (trimmed) {
+      const scoped = trimmed
+        .split(',')
+        .map((s: string) => s.trim())
+        .filter(Boolean)
+        .map((s: string) => `${prefix} ${s}`)
+        .join(', ')
+      const leadingWs = selectorText.match(/^(\s*)/)?.[1] || ''
+      result.push(leadingWs + scoped)
+    }
+    result.push(' {')
+
+    // Find closing brace (regular CSS rules don't nest)
+    const closeIdx = css.indexOf('}', braceIdx + 1)
+    if (closeIdx === -1) { result.push(css.slice(braceIdx + 1)); break }
+    result.push(css.slice(braceIdx + 1, closeIdx + 1))
+    i = closeIdx + 1
+  }
+
+  return result.join('')
+}
+
 function scopeSvgStyles(rawSvg: string, id: string): string {
   if (!rawSvg) return ''
-
   const withScopeAttr = rawSvg.replace('<svg', `<svg data-aa-svg-scope="${id}"`)
-
   return withScopeAttr.replace(/<style([\s\S]*?)>([\s\S]*?)<\/style>/g, (_full, attrs, cssText: string) => {
-    const scopedCss = cssText.replace(/(^|})\s*([^@{}][^{}]*)\{/g, (_m, boundary: string, selectors: string) => {
-      const scopedSelectors = selectors
-        .split(',')
-        .map((selector) => selector.trim())
-        .filter(Boolean)
-        .map((selector) => `svg[data-aa-svg-scope="${id}"] ${selector}`)
-        .join(', ')
-
-      if (!scopedSelectors) return `${boundary} ${selectors}{`
-      return `${boundary} ${scopedSelectors} {`
-    })
-
+    const scopePrefix = `svg[data-aa-svg-scope="${id}"]`
+    const scopedCss = scopeCssSelectors(cssText, scopePrefix)
     return `<style${attrs}>${scopedCss}</style>`
   })
 }
