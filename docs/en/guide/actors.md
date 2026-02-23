@@ -182,7 +182,7 @@ Longer sessions are not always better. Context windows are finite. The longer th
 | Task topic shifts (e.g., frontend to backend) | Start a new session |
 | Agent repeats the same mistake | Restart with a fresh approach |
 
-Restarting isn't failure. It's **context subtraction**. You're cutting away noise to continue with a clean slate. A fresh session is often ten times more productive than a polluted one.
+Restarting isn't failure. It's **context subtraction**. You're cutting away noise to continue with a clean slate. A fresh session is often far more productive than a polluted one.
 
 ## Key Takeaways
 

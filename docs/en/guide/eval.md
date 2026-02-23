@@ -107,7 +107,7 @@ This layer can't be automated. An Agent perfectly implementing a feature you don
 
 Agents make mistakes. What matters is whether they can pick themselves back up.
 
-A counterintuitive finding: **don't rush to erase errors.** Failed attempts left in context actually help the LLM avoid repeating the same mistake—it implicitly learns "that path doesn't work" from the failure record. Blindly pruning conversation history can backfire because you're wiping out valuable negative experience alongside the noise.
+A counterintuitive finding: **don't rush to erase errors.** Failed attempts left in context help the LLM avoid repeating the same mistake—it implicitly learns "that path doesn't work" from the failure record. Blindly pruning conversation history can backfire because you're wiping out valuable negative experience alongside the noise.
 
 This doesn't mean never clean up—context windows are finite. The key is distinguishing "stale noise" from "failure records that still inform."
 
@@ -180,7 +180,7 @@ Your job is to keep step 3 intact. Tests ran but results weren't fed back? That'
 
 **Consequence**: Burns tokens and time, ultimately still fails. Worse, conversation history gets polluted with identical failure records, filling the context window with useless content.
 
-**Fix**: Set a retry threshold—"If the same approach fails twice, try a different strategy." Or more directly: when you spot a stuck loop, intervene and tell the Agent to stop trying, then give it a new direction. Some Agents will self-identify loops and report "I seem to be stuck"—this is actually good behavior, far better than silently hitting the wall.
+**Fix**: Set a retry threshold—"If the same approach fails twice, try a different strategy." Or more directly: when you spot a stuck loop, intervene and tell the Agent to stop trying, then give it a new direction. Some Agents will self-identify loops and report "I seem to be stuck"—this is good behavior, far better than silently hitting the wall.
 
 ### The Speed Trap
 
@@ -190,7 +190,9 @@ Your job is to keep step 3 intact. Tests ran but results weren't fed back? That'
 
 **Fix**: Verification density must keep up with generation speed. Agent modified code? Immediately run tests, lint, type checking. For things automated verification can't catch (naming, design intent, architectural consistency), do manual reviews at key checkpoints. Not every time—but spot-check every few tasks.
 
-All three anti-patterns share the same root cause: Agents are amplifiers—they faithfully replicate patterns already in your codebase, including the bad ones. Three inconsistent error-handling styles? The Agent picks one at random. Stale comments? The Agent references them when writing new code. It amplifies everything, good and bad. Verification isn't a one-time sweep—it's ongoing maintenance.
+All three anti-patterns share the same root cause: Agents are amplifiers—they faithfully replicate patterns already in your codebase, including the bad ones.
+
+Three inconsistent error-handling styles? The Agent picks one at random. Stale comments? The Agent references them when writing new code. It amplifies everything, good and bad. Verification isn't a one-time sweep—it's ongoing maintenance.
 
 One more degradation worth watching for, though it's not quite an anti-pattern: in long tasks, codebase coherence quietly erodes. Architectural patterns established early get drifted from later; different modules develop contradictory styles. The Agent hasn't gotten dumber—it's a physical limitation of the context window: the longer the task runs, the higher the probability that early constraints get pushed out of the window. Periodically reviewing overall codebase consistency is the most direct defense.
 

@@ -54,7 +54,7 @@ Then a new phase began. The user called for humanizer skill to start review pass
 
 The writing style solidified during this phase too. The user said: "Whenever we edit content in this repo, always load the humanizer skill and the hybrid writing style. Put it in CLAUDE.md." One sentence turned a conversational preference into a permanent rule—inherited by every future session and every sub-agent automatically.
 
-Review wasn't a one-pass affair. First, the humanizer skill scrubbed AI-generated phrasing—filler words like "Additionally," "crucial," and "indispensable" got hunted down and replaced one by one. Then different models were brought in for cross-review: Kimi K2.5 and MiniMax each did a pass, specifically looking for blind spots that Opus couldn't see in its own output. Finally, Opus did an exhaustive sweep—counting how many times "essentially" appeared in the same article. Each pass caught things the previous one missed.
+Review wasn't a one-pass affair. First, the humanizer skill scrubbed AI-generated phrasing—filler words like "Additionally," "crucial," and "indispensable" got hunted down and replaced one by one. Then different models were brought in for cross-review: Kimi K2.5 and MiniMax each did a pass, specifically looking for blind spots that Opus couldn't see in its own output. Finally, Opus did an exhaustive sweep—counting repeated filler-token usage in the same article. Each pass caught things the previous one missed.
 
 Content wasn't frozen after the first drafts either. The user launched a research initiative—using the very methodology the tutorial teaches (multi-agent parallel orchestration) to verify the tutorial's own coverage. A large set of community sources was fed in, and the result confirmed the skeleton was sound. The gaps weren't in breadth—they were in depth. Three blind spots were flagged as high priority: parallel session governance, long-running loop control, and team-level configuration management. Those findings drove a second round of content deepening, expanding nearly ten chapters.
 
@@ -200,7 +200,9 @@ Looking back at the user's corrections, there's a surprising finding: nearly hal
 
 The tone of corrections had a clear escalation pattern. It started with mild preference statements: "Sub-agents should always run in the background." Then direct rejections: "This doesn't look appealing—we're not running a marketing campaign." When the same issue kept recurring, the tone spiked—directly calling out the agent for fabricating facts, demanding evidence before conclusions.
 
-The most intense exchange was about factual accuracy. The agent made a string of assertions about how skill loading works—plausible-sounding, but entirely fabricated when checked against source code. The user's first response was blunt: stop making things up. The agent acknowledged and corrected. But a few rounds later, similar issues resurfaced, and the user escalated: "Be factual." The two corrections together drove a permanent rule: claims about specific technical mechanisms must distinguish between "verified" and "unverified." Once written into CLAUDE.md, all subsequent sessions and sub-agents were bound by it. The problem stopped recurring.
+The most intense exchange was about factual accuracy. The agent made a string of assertions about how skill loading works—plausible-sounding, but entirely fabricated when checked against source code. The user's first response was blunt: stop making things up. The agent acknowledged and corrected. But a few rounds later, similar issues resurfaced, and the user escalated: "Be factual."
+
+The two corrections together drove a permanent rule: claims about specific technical mechanisms must distinguish between "verified" and "unverified." Once written into CLAUDE.md, all subsequent sessions and sub-agents were bound by it. The problem stopped recurring.
 
 There's another form of course-correction that's less obvious: interruption. The user cut in while the agent was still mid-response, redirecting to a new topic. This happened twenty times in the main session. Interruptions weren't rejections—most of the time, the agent wasn't doing anything wrong. The user's priorities had simply shifted. The agent was delivering a status summary the user already knew the conclusion of—interrupt, move to the next task.
 
@@ -225,4 +227,3 @@ Multiple sub-agents searched session history in parallel, extracted patterns, br
 Writing this chapter involved SQLite queries to sift through work session history—the same `bun -e` plus database combination described in the "Tools" section above. Git commit history was aligned to session messages one by one—the user instruction behind each commit was traced not from memory, but from data.
 
 The tutorial validated its own theory by building itself. If that's not enough to show what "context management" looks like in practice, go back and reread [chapter one](/en/guide/context).
-

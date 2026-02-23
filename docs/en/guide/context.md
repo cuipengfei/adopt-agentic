@@ -10,7 +10,7 @@ Every piece of information the LLM sees when processing your request — system 
 
 Let's make this concrete: look at what happens under the hood.
 
-### Requests and Responses: What Context Actually Looks Like
+### Requests and Responses: What Context Looks Like
 
 Communication between an agent and an LLM is HTTPS requests.
 
@@ -115,7 +115,7 @@ Bottom line — your project rules file might be beautifully written, but if the
 
 **Most of the frustrating problems you encounter** — generated code ignoring conventions, edits to wrong files, forgotten agreements — **are context problems at their root.** The model isn't stupid. It just didn't see what it needed to see.
 
-Every mechanism covered in subsequent chapters — System Instructions, tools, MCP, Commands, Skills — **is fundamentally answering the same set of questions: what information to put in, when to put it in, and how to get it into context.**
+Every mechanism covered in subsequent chapters — System Instructions, tools, MCP, Commands, Skills — **answers the same set of questions: what information to put in, when to put it in, and how to get it into context.**
 
 ## Managing Context
 
@@ -141,7 +141,7 @@ graph TB
 
 The window size is a hard limit. But even when you're nowhere near it, the quality of what's inside matters just as much.
 
-Good context management means "retrieving the right few dozen key facts," not "dumping all text in at once." The goal is to **include only what the LLM actually needs to make its decision**—just enough, not one wasted sentence.
+Good context management means "retrieving the right few dozen key facts," not "dumping all text in at once." The goal is to **include only what the LLM needs to make its decision**—just enough, not one wasted sentence.
 
 Hand an extremely smart stranger an entire filing cabinet and say "the relevant stuff is in there somewhere." They'll find some useful things, but they'll likely be misled by the noise too.
 
@@ -149,9 +149,9 @@ Hand an extremely smart stranger an entire filing cabinet and say "the relevant 
 
 Understanding project structure or mapping module dependencies? Large context is fine. These tasks tolerate fuzziness; a wide view helps see the big picture.
 
-Modifying a specific function or fixing a precise bug? Feed it only the files it needs. For precision edits, more information actually means less accuracy—the LLM's attention gets diluted by sheer volume, and it starts "borrowing" patterns from irrelevant files, copying the wrong variable name, or missing a constraint.
+Modifying a specific function or fixing a precise bug? Feed it only the files it needs. For precision edits, more information means less accuracy—the LLM's attention gets diluted by sheer volume, and it starts "borrowing" patterns from irrelevant files, copying the wrong variable name, or missing a constraint.
 
-So working with agents actually has two distinct modes:
+So working with agents has two distinct modes:
 
 | Mode | Task Type | Context Strategy |
 | :--- | :--- | :--- |
