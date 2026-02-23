@@ -4,6 +4,13 @@ import { useData, useRoute } from 'vitepress'
 import { ZH_PROMPT_TEMPLATE, EN_PROMPT_TEMPLATE } from './prompt-templates'
 import { knowledgeGraph, getRelatedNodes } from '../data/knowledge-graph'
 
+
+const GITHUB_RAW_BASE = 'https://raw.githubusercontent.com/cuipengfei/adopt-agentic/master/docs'
+
+function getRawUrl(nodeId: string, en: boolean): string {
+  const path = en ? `en/guide/${nodeId}` : `guide/${nodeId}`
+  return `${GITHUB_RAW_BASE}/${path}.md`
+}
 const route = useRoute()
 const { lang } = useData()
 
@@ -62,13 +69,17 @@ async function copyPageContent() {
   const related = relatedNodes.value
   const relatedLabel = isEn.value ? 'Chapters Most Relevant to This Page:' : '与本页最相关的章节：'
   const relatedText = related.length
-    ? `\n\n${relatedLabel}\n${related.map(n => `- ${n.title}: ${origin}${n.url}`).join('\n')}`
+    ? `\n\n${relatedLabel}\n${related.map(n => `- ${n.title}\n  ${origin}${n.url}\n  Markdown source: ${getRawUrl(n.id, isEn.value)}`).join('\n')}`
     : ''
 
   // Build full chapter list (complete tutorial map)
   const allLabel = isEn.value ? 'All Chapters in This Tutorial:' : '本教程全部章节：'
   const allList = knowledgeGraph
-    .map(n => `- ${isEn.value ? n.titleEn : n.titleZh}: ${origin}${isEn.value ? n.urlEn : n.urlZh}`)
+    .map(n => {
+      const title = isEn.value ? n.titleEn : n.titleZh
+      const url = isEn.value ? n.urlEn : n.urlZh
+      return `- ${title}\n  ${origin}${url}\n  Markdown source: ${getRawUrl(n.id, isEn.value)}`
+    })
     .join('\n')
   const allText = `\n\n${allLabel}\n${allList}`
 

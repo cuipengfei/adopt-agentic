@@ -188,6 +188,7 @@ export function getRelatedNodes(nodeId: string, lang: "zh" | "en") {
     .map((id) => nodeMap.get(id))
     .filter((relatedNode): relatedNode is KnowledgeNode => Boolean(relatedNode))
     .map((relatedNode) => ({
+      id: relatedNode.id,
       title: lang === "zh" ? relatedNode.titleZh : relatedNode.titleEn,
       url: lang === "zh" ? relatedNode.urlZh : relatedNode.urlEn,
     }));

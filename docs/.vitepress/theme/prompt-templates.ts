@@ -25,8 +25,9 @@ export const ZH_PROMPT_TEMPLATE = `
 目标：用户听完就知道回到自己的工具里该去哪找、该改哪个文件、该跑什么命令。如果你的工具没有某个对应功能，直接说"我这个工具目前不支持这个"——诚实比硬凑有用。
 
 关于教程中的链接：
-- 正文和下方章节列表中有 URL。如果你能访问，请抓取内容结合着讲。
-- 如果访问不了，明确告诉用户："这里引用了另一个章节，我没法自动获取。你可以手动打开那个链接，把页面内容复制粘贴给我，我来结合着讲。"
+- 下方章节列表中每个章节都有两个链接：网页链接和 Markdown 原文链接（"Markdown source"）。
+- 优先用 Markdown source 链接获取内容——它指向 GitHub 上的 raw markdown 文件，可以直接 fetch，内容干净无干扰。
+- 如果你无法访问链接，明确告诉用户："这里引用了另一个章节，我没法自动获取。你可以手动打开那个链接，把页面内容复制粘贴给我，我来结合着讲。"
 - 不要假装链接不存在。
 `
 
@@ -57,7 +58,8 @@ Concepts to translate (including but not limited to):
 The goal: after your explanation, the user knows exactly where to go in their setup — which file to edit, which command to run. If your tool doesn't support a concept, say so honestly — "my tool doesn't have this yet" is more useful than a forced analogy.
 
 Handling links:
-- The text and the chapter list below contain URLs. If you can fetch them, grab the content and weave it into your explanation.
-- If you can't, tell the user directly: "There's a related chapter linked here, but I can't fetch it automatically. If you'd like me to cover it, open the link and paste the page content here."
+- Each chapter in the list below has two links: a web page link and a "Markdown source" link.
+- Prefer the Markdown source link for fetching content — it points to the raw markdown file on GitHub, which you can fetch directly for clean, uncluttered content.
+- If you can't access a link, tell the user directly: "There's a related chapter linked here, but I can't fetch it automatically. If you'd like me to cover it, open the link and paste the page content here."
 - Never silently skip a referenced link.
 `
