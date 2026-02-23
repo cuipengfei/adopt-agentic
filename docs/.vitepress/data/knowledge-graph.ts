@@ -64,7 +64,7 @@ export const knowledgeGraph: KnowledgeNode[] = [
     urlZh: "/adopt-agentic/guide/built-in-tools",
     urlEn: "/adopt-agentic/en/guide/built-in-tools",
     group: "carriers",
-    related: ["system-instructions", "mcp", "cli-tools", "hooks-and-plugins", "eval"],
+    related: ["system-instructions", "mcp", "cli-tools", "hooks-and-plugins", "orchestration"],
   },
   {
     id: "mcp",
@@ -100,7 +100,7 @@ export const knowledgeGraph: KnowledgeNode[] = [
     urlZh: "/adopt-agentic/guide/cli-tools",
     urlEn: "/adopt-agentic/en/guide/cli-tools",
     group: "carriers",
-    related: ["built-in-tools", "commands", "mcp", "hooks-and-plugins", "eval"],
+    related: ["built-in-tools", "commands", "mcp", "hooks-and-plugins", "orchestration"],
   },
   {
     id: "hooks-and-plugins",
@@ -109,7 +109,7 @@ export const knowledgeGraph: KnowledgeNode[] = [
     urlZh: "/adopt-agentic/guide/hooks-and-plugins",
     urlEn: "/adopt-agentic/en/guide/hooks-and-plugins",
     group: "carriers",
-    related: ["built-in-tools", "mcp", "cli-tools", "eval", "orchestration"],
+    related: ["built-in-tools", "mcp", "cli-tools", "human-in-the-loop", "orchestration"],
   },
   {
     id: "knowledge-feeding",
@@ -136,16 +136,7 @@ export const knowledgeGraph: KnowledgeNode[] = [
     urlZh: "/adopt-agentic/guide/sub-agents",
     urlEn: "/adopt-agentic/en/guide/sub-agents",
     group: "advanced",
-    related: ["orchestration", "knowledge-feeding", "skills", "eval", "human-in-the-loop"],
-  },
-  {
-    id: "eval",
-    titleZh: "Eval / 验证 / 可观测性",
-    titleEn: "Eval / Verification / Observability",
-    urlZh: "/adopt-agentic/guide/eval",
-    urlEn: "/adopt-agentic/en/guide/eval",
-    group: "advanced",
-    related: ["built-in-tools", "hooks-and-plugins", "sub-agents", "human-in-the-loop", "orchestration"],
+    related: ["orchestration", "knowledge-feeding", "skills", "human-in-the-loop", "in-practice"],
   },
   {
     id: "human-in-the-loop",
@@ -154,7 +145,7 @@ export const knowledgeGraph: KnowledgeNode[] = [
     urlZh: "/adopt-agentic/guide/human-in-the-loop",
     urlEn: "/adopt-agentic/en/guide/human-in-the-loop",
     group: "advanced",
-    related: ["actors", "eval", "sub-agents", "orchestration", "in-practice"],
+    related: ["actors", "hooks-and-plugins", "sub-agents", "orchestration", "in-practice"],
   },
   {
     id: "peer-to-peer-agents",

@@ -28,6 +28,6 @@ features:
     details: System Instructions, Slash Commands & Skills — three context injection mechanisms.
   - icon:
       src: /icons/verify.svg
-    title: Verification & Multi-Agent
-    details: Eval observability and Sub Agent context isolation — advanced agentic practices.
+    title: Collaboration & Multi-Agent
+    details: Human-in-the-Loop collaboration and Sub Agent context isolation — advanced agentic practices.
 ---

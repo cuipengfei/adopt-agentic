@@ -268,9 +268,6 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
 | `sub-agents-inline-2.svg` | 节点 12 子代理（inline） | — |
 | `sub-agents-inline-3.svg` | 节点 12 子代理（inline） | — |
 | `sub-agents-inline-4.svg` | 节点 12 子代理（inline） | 11 |
-| `eval.svg` | 节点 13 Eval | 24 |
-| `eval-inline-1.svg` | 节点 13 Eval（inline） | — |
-| `eval-inline-2.svg` | 节点 13 Eval（inline） | — |
 | `human-in-the-loop.svg` | 节点 14 HITL | 17 |
 | `human-in-the-loop-inline-1.svg` | 节点 14 HITL（inline） | 7 |
 | `peer-to-peer-agents.svg` | 节点 15 P2P Agents | 24 |
@@ -286,6 +283,17 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
 - **渲染验证**：mermaid 图和 SVG 修改后，必须用 `bun run docs:build` 验证渲染（文字截断、元素重叠、parse error）。
 - **Agent-agnostic 引用**：在 `docs/guide/` 中引用配置文件时，列举多工具格式（如"不同工具叫法不同——`AGENTS.md`、`.cursorrules`、`CLAUDE.md` 等"），不单独引用一个。
 - **内容归属**：每段内容应属于当前章节主题。如果像是实操建议放在概念章节，必须有引子解释为什么放在这里。
+
+
+**内容格式规则（Phase 6 inline review 提炼）**
+
+ **禁止 ASCII art 流程图**：全站禁止用 ASCII 字符画流程图（`→`、`│`、`└──` 组合），必须用 Mermaid 替代。ASCII art 在不同字体/终端下错位，Mermaid 项目已集成，没有理由用 ASCII。
+ **示例通用化**：代码示例和工具示例应使用文中已经提到的真实工具/服务，不引入额外技术栈。例如 MCP 章节举例用 Context7（文中已提及），不要突然冒出 postgres。
+ **Mermaid 图表完整性**：Mermaid 序列图/流程图应包含所有关键参与者。例如描述 Agent→LLM→Tool 的交互流程，如果 Tool 操作了本地文件系统，则文件系统也应作为参与者出现。
+ **JSON 示例精简**：示例 JSON 应精简到核心要素，去掉不影响概念理解的字段（如 `content` 摘要全文、`system` 重复指令）。读者需要看到结构，不需要看到冗余。
+ **技术描述准确性**：描述技术机制时必须精确，不夸大不模糊。例如 MCP 工具是预先配置的而非运行时“动态发现”的，就必须准确描述为“预先配置”。
+ **段落间逻辑过渡**：章节内主题切换时必须有自然过渡句。直接从 A 话题跳到 B 话题（无论在同一 section 还是跨 section）是逻辑断裂，读者会迷失。
+ **VitePress 容器语法**：全站推广 `::: tip / ::: warning / ::: danger / ::: details` 容器来标注提示、警告、可折叠内容。纯文字注释（如括号补充说明）应评估是否适合改用容器。
 
 **风格红线**
 
@@ -355,7 +363,7 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
 
 ### 骨架状态
 
-**已锁定**。16 个概念节点 + In Practice + 术语表。完整序列：
+**已锁定**。15 个概念节点 + In Practice + 术语表。完整序列：
 
 ```
 ━━ 基础概念 ━━
@@ -374,7 +382,7 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
 10  知识喂养
 11  编排模式
 12  Sub Agent — 上下文隔离
-13  Eval / 验证 / 可观测性               [+ 可靠性]
+~~13  Eval / 验证 / 可观测性~~              （Phase 6 已删除，内容并入节点 2 actors 和节点 14 HITL）
 14  Human-in-the-loop                    [+ 认知债务]
 15  Peer-to-Peer Agents                  ← frontier
 ━━ 附录 ━━
@@ -384,7 +392,7 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
 
 ### 内容填充状态
 
-**Phase 1 + Phase 2 均已完成**。所有 16 个概念节点 + In Practice + 术语表均已填充实质内容，中英双语同步。Phase 3-5 为多轮审校（详见下文）。
+**Phase 1 + Phase 2 均已完成**。所有 15 个概念节点 + In Practice + 术语表均已填充实质内容，中英双语同步。Phase 3-5 为多轮审校（详见下文）。Phase 6 删除了 Eval 章节（节点 13），内容并入 actors（节点 2）和 HITL（节点 14）。
 
 Phase 2 对 9 个节点做了内容补深，填补了 POMASA Gap Analysis 发现的 3 个 P1 盲区（并行会话治理、长时 Loop 控制、团队级配置治理）、1 个 P2 观察项（长期记忆），融入了 6 个"它山之石"洞察（Vibe→CE 叙事、Command/Skill/Sub-agent 职责边界、权限梯度索引、Conductor 比喻、反模式清单、决策框架元素）。涉及节点覆盖了 STONE-006"概念→决策框架"的写法升级。
 
@@ -397,7 +405,7 @@ Phase 5 切回 Opus 4.6 做穷尽审校，新增"AI filler 词密度控制"维�
 | 内容量区间 | 节点 |
 | ---------- | ---- |
 | 重量级（>400W） | context、hooks-and-plugins、sub-agents、in-practice |
-| 中量级（250-400W） | actors、built-in-tools、mcp、cli-tools、knowledge-feeding、eval、human-in-the-loop、peer-to-peer-agents、glossary、orchestration |
+| 中量级（250-400W） | actors、built-in-tools、mcp、cli-tools、knowledge-feeding、human-in-the-loop、peer-to-peer-agents、glossary、orchestration |
 | 轻量级（<250W） | index、system-instructions、commands、skills |
 
 写作特征：HTTP 请求/响应模式贯穿核心节点，具体例子先行，每节末尾有"上下文流动 / 风险 / 可审计性"三件事收尾。Phase 2 新增了决策框架元素（"何时 X / 何时 Y"对比表格）贯穿高改动量节点。
@@ -433,7 +441,7 @@ Phase 5 切回 Opus 4.6 做穷尽审校，新增"AI filler 词密度控制"维�
 | 10 | 知识喂养 | `knowledge-feeding.md` | 三条路径：规则层（全局指令）、能力层（Skills）、项目层（代码库本身）；上下文像牛奶；按需喂养别硬推 |
 | 11 | 编排模式 | `orchestration.md` | 顺序/并行/计划-执行/迭代循环四种模式；一个司机一个方向盘；并行会话治理；简单循环优先 |
 | 12 | Sub Agent | `sub-agents.md` | 派生隔离上下文处理子任务，结果摘要回传；交接便签三要素（目标、约束、关键上下文）；别急着擦掉错误 |
-| 13 | Eval | `eval.md` | 三层验证：命令级→任务级→系统级；验证结果回注上下文驱动下一步；反模式清单；可观测性 |
+| ~~13~~ | ~~Eval~~ | ~~`eval.md`~~ | ~~三层验证：命令级→任务级→系统级；验证结果回注上下文驱动下一步；反模式清单；可观测性~~（Phase 6 已删除） |
 | 14 | HITL | `human-in-the-loop.md` | 三个介入位置：定义任务、审批、验收；铺轨策略（人搭骨架 agent 填空）；认知债务；纠偏三条路 |
 | 15 | P2P Agents | `peer-to-peer-agents.md` | 从层级委派到平级协作；协调开销 O(n²)；绝大多数工具选层级式；什么任务值得 P2P |
 
@@ -474,8 +482,8 @@ Phase 5 切回 Opus 4.6 做穷尽审校，新增"AI filler 词密度控制"维�
 | Command / Skill / Sub-agent 职责边界   | 节点 7        | 正常融入 | ✅ 已入 |
 | 权限分级统一交叉索引               | 节点 9        | 提一嘴   | ✅ 已入 |
 | Conductor 模式比喻（人分发/验收）       | 节点 11       | 提一嘴   | ✅ 已入 |
-| 反模式清单化（社区吐槽→显式清单）       | 节点 13       | 正常融入 | ✅ 已入 |
-| "概念→决策框架" 升级方向               | 节点 0/2/3/10/11/13 | 方向性 | ✅ 已入（Phase 2 涉及的 9 个节点） |
+| 反模式清单化（社区吐槽→显式清单）       | 节点 2（actors）+ 节点 14（HITL）       | 正常融入 | ✅ 已入 |
+| "概念→决策框架" 升级方向               | 节点 0/2/3/10/11 | 方向性 | ✅ 已入（Phase 2 涉及的 9 个节点） |
 
 ### 社区覆盖度研究结论（POMASA Gap Analysis）
 
@@ -489,7 +497,7 @@ Phase 5 切回 Opus 4.6 做穷尽审校，新增"AI filler 词密度控制"维�
 | GAP | 问题 | 处理方式 | 状态 |
 | --- | ---- | -------- | ---- |
 | GAP-001 并行 Session 治理 | 有并行概念，缺多会话协同方法 | 扩展节点 11（编排模式） | ✅ 已补深 |
-| GAP-002 长时 Loop 治理 | 有 loop 概念，缺 checkpoint/stop/恢复体系 | 扩展节点 2 + 13 | ✅ 已补深 |
+| GAP-002 长时 Loop 治理 | 有 loop 概念，缺 checkpoint/stop/恢复体系 | 扩展节点 2（actors） | ✅ 已补深 |
 | GAP-003 团队级配置治理 | 有"prompt 是资产"，缺团队共建/审查/回收 | 扩展节点 3 + 10 | ✅ 已补深 |
 
 **P2 观察（1 个）**：GAP-004 长期持久记忆 — 已在节点 1 轻量补充基本概念（会话内 vs 跨会话、自动积累风险）。

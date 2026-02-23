@@ -210,9 +210,9 @@ Roll back to the last clean checkpoint. Throttle at the source—only feed the a
 
 The most effective move is starting a new session. But don't copy-paste the chat history. Distill what's worth keeping: confirmed facts, finalized decisions, acceptance criteria. Compress that into a clean input and carry only that forward. Leave the detours in the old session.
 
-Why bother distilling yourself? Most tools' auto-compression is opaque—you don't know what was kept and what was dropped. Some tools offer [compaction hooks](./hooks-and-plugins.md) that let you control retention, which helps. But manual distillation has a benefit auto-compression can't provide: the process itself forces you to organize your thinking.
+Some tools offer auto-compression, but most are opaque—you don't know what was kept and what was dropped. Some tools offer [compaction hooks](./hooks-and-plugins.md) that let you control retention, which helps. But manual distillation has a benefit auto-compression can't provide: the process itself forces you to organize your thinking.
 
-Addition decides what the agent sees. Subtraction decides what doesn't drown it.
+At its core, context management balances two operations: addition decides what the agent sees; subtraction decides what doesn't drown it.
 
 One more actionable principle: put your most important constraints at the beginning and end of the conversation.
 
@@ -220,9 +220,9 @@ Models pay the least attention to the middle—researchers call this "lost-in-th
 
 ## State & Memory
 
-Why does the agent "forget" things?
+We've covered how context accumulates, gets dirty, and gets cleaned up. But there's an even more fundamental question: when the conversation ends, where does all of it go?
 
-Because it has no memory at all. What it has is **session state** — the accumulated message list in the current conversation.
+The agent has no memory. What it has is **session state** — the accumulated message list in the current conversation.
 
 Your project rules file takes effect in every new conversation. Coding conventions get re-applied each time. That's not memory. That's **persistent context** — the agent proactively reads these files at the start of each new session, re-injecting them into the `messages` array. Looks like memory. It's a fresh reload every time.
 
@@ -292,7 +292,6 @@ Every subsequent chapter covers a different context carrier:
 | Knowledge Feeding | Turn what you know into what the agent knows |
 | Orchestration Patterns | How context flows, forks, and merges across steps |
 | Sub Agents | Creating fresh context (isolation) |
-| Eval / Verification | Verification results = feedback context |
 | Human-in-the-Loop | Humans determine context's final direction |
 | Peer-to-Peer Agents | Context flows bidirectionally between peer agents |
 
@@ -316,7 +315,6 @@ mindmap
       Sub Agents
       Peer-to-Peer
     Governance
-      Eval / Verification
       Human-in-the-Loop
       Hooks & Plugins
 ```

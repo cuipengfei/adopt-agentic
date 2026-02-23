@@ -1,5 +1,6 @@
 # In Practice — 用这个教程本身验证前面 15 章
 
+
 > 用一个具体项目的真实构建过程，映射回每个概念。
 
 这个教程是用一个 agent 工具写的。
@@ -162,7 +163,7 @@ CLI 的使用模式也值得看。构建验证跑了很多次——每改完一�
 
 ## 验证——技术通过不等于验收通过
 
-> 对应概念：[Eval](/guide/eval)、[上下文](/guide/context)
+> 对应概念：[上下文](/guide/context)、[Human-in-the-Loop](/guide/human-in-the-loop)
 
 做 SVG 插图的时候，这个区别体现得最清楚。
 

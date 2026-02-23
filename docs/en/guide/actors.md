@@ -171,6 +171,22 @@ Clear stop conditions are external signals: all tests pass, the build succeeds, 
 
 In practice, give the agent a checklist or clear acceptance criteria. It checks off items as it works. When everything is checked, it stops. That's more reliable than asking it to "let me know when you're done."
 
+Be specific—tell the Agent what "done" looks like:
+
+- Which test command to run (`bun test`, `pytest`)
+- Which lint check to run (`eslint .`, `tsc --noEmit`)
+- What file states to verify
+
+The clearer the criteria, the stronger the Agent's ability to self-verify.
+
+A common trap: the Agent announces "Done!" but tests haven't been run, lint hasn't passed, or the feature hasn't been implemented. This is **false completion**—the most common mode of losing control. The fix: make verification a mandatory step—"After changes, you must run `bun test`; all tests passing is the definition of done." Let external signals (exit codes) define completion, not the Agent's self-assessment.
+
+#### Recognizing Infinite Loops
+
+The Agent keeps trying the same approach but keeps failing—the same error shows up three or four times in the conversation.
+
+When you see this pattern, intervene directly. Give a new direction ("Stop trying this approach, switch to X"), or restart the session. Some Agents can self-detect and report "I'm stuck"—which is better than silently banging their head against the wall.
+
 #### When to Continue, When to Restart
 
 Longer sessions are not always better. Context windows are finite. The longer the conversation, the more likely that early details get compressed or dropped entirely.

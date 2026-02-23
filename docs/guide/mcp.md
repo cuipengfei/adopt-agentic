@@ -16,7 +16,7 @@
 
 MCP 是一个开放协议。它规定了一套标准，允许任何人为 Agent 开发工具，无需修改 Agent 本身的代码。就像 USB 设备不需要了解电脑内部构造，一个 MCP 工具不需要了解 Agent 的实现细节。
 
-Agent 在运行时动态发现并加载这些外部工具。你只需要配一下，不需要写代码。
+Agent 加载你预先配置好的这些外部工具。你只需要配一下，不需要写代码。
 
 <SvgIllustration name="mcp-inline-1.svg" interactive />
 
@@ -33,7 +33,7 @@ Agent 在运行时动态发现并加载这些外部工具。你只需要配一�
 
 MCP 支持两种连接方式：
 
-**stdio（本地子进程）**：Agent 直接 spawn 一个子进程来运行 MCP Server。通信走 stdin/stdout，Agent 管理这个进程的整个生命周期——启动、通信、关闭。你在配置文件里写 `command: "npx", args: ["-y", "@modelcontextprotocol/server-postgres"]`，背后就是这个机制。
+**stdio（本地子进程）**：Agent 直接 spawn 一个子进程来运行 MCP Server。通信走 stdin/stdout，Agent 管理这个进程的整个生命周期——启动、通信、关闭。比如你在配置文件里写 `command: "npx", args: ["-y", "@upstash/context7-mcp"]` 来接入 Context7 文档查询服务，背后就是这个机制。
 
 **Streamable HTTP（远程服务）**：MCP Server 作为独立的 HTTP 服务运行，Agent 通过 HTTP 请求连接。适合需要持久运行或多个 Agent 共享的场景。
 
@@ -87,7 +87,12 @@ sequenceDiagram
       "input_schema": { "...": "..." }
     }
   ],
-  "messages": [{ "role": "user", "content": "帮我看一下 https://example.com/docs/api 这个页面写了什么" }]
+  "messages": [
+    {
+      "role": "user",
+      "content": "帮我看一下 https://example.com/docs/api 这个页面写了什么"
+    }
+  ]
 }
 ```
 
@@ -167,4 +172,3 @@ MCP 的价值不在"又多了一个协议"，而在于**解除你对 Agent 开�
 - **可审计性**：Agent 与 MCP Server 之间的每次交互都应该被记录——请求了什么、返回了什么、耗时多少。出了问题，这就是你的排查线索。
 
 下一节看 Slash Commands——如何把常用操作打包成一键触发的快捷方式。
-

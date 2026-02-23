@@ -16,7 +16,7 @@ One sentence: **the USB port of the agent world.**
 
 MCP is an open protocol. It defines a standard that allows anyone to develop tools for an agent without modifying the agent's own code. Just as a USB device doesn't need to understand a computer's internals, an MCP tool doesn't need to know the agent's implementation details.
 
-The agent dynamically discovers and loads these external tools at runtime. You just configure it — no code required.
+The agent loads these pre-configured external tools at runtime. You just configure it — no code required.
 
 <SvgIllustration name="mcp-inline-1.svg" interactive />
 
@@ -33,7 +33,7 @@ You'll encounter all kinds of MCP Servers. Some real examples: Context7 (documen
 
 MCP supports two ways to connect to a Server:
 
-**stdio (local child process)**: The agent spawns a child process to run the MCP Server. Communication goes through stdin/stdout, and the agent manages the process's entire lifecycle — startup, communication, shutdown. When you write `command: "npx", args: ["-y", "@modelcontextprotocol/server-postgres"]` in your config, this is the mechanism behind it.
+**stdio (local child process)**: The agent spawns a child process to run the MCP Server. Communication goes through stdin/stdout, and the agent manages the process's entire lifecycle — startup, communication, shutdown. When you write `command: "npx", args: ["-y", "@upstash/context7-mcp"]` in your config to connect to the Context7 documentation lookup service, this is the mechanism behind it.
 
 **Streamable HTTP (remote service)**: The MCP Server runs as an independent HTTP service, and the agent connects via HTTP requests. Suited for scenarios requiring persistent uptime or shared access across multiple agents.
 

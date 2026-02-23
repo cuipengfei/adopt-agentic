@@ -125,16 +125,17 @@ sequenceDiagram
     participant User
     participant Agent
     participant LLM_API
+    participant FS as Local Filesystem
 
     User->>Agent: "Rename `log` to `logEvent`"
     Agent->>LLM_API: POST /chat/completions (with tool definitions)
     LLM_API-->>Agent: SSE: `tool_calls` (to call read_file)
-    Agent->>Agent: Local execution: read_file('src/logger.js')
-    Note right of Agent: Read file content
+    Agent->>FS: read_file('src/logger.js')
+    FS-->>Agent: File contents
     Agent->>LLM_API: POST /chat/completions (with file content)
     LLM_API-->>Agent: SSE: `tool_calls` (to call write_file)
-    Agent->>Agent: Local execution: write_file(...)
-    Note right of Agent: Write modified content
+    Agent->>FS: write_file(...)
+    FS-->>Agent: Write successful
     Agent->>LLM_API: POST /chat/completions (with write success message)
     LLM_API-->>Agent: SSE: "Operation complete"
     Agent->>User: "I have renamed the `log` function to `logEvent`."

@@ -162,7 +162,7 @@ Role specialization was clear too. Oracle (a sub-agent specialized in content ju
 
 ## Verification — Passing the Build Doesn't Mean Passing Review
 
-> Related concepts: [Eval](/en/guide/eval), [Context](/en/guide/context)
+> Related concepts: [Context](/en/guide/context), [Human-in-the-Loop](/en/guide/human-in-the-loop)
 
 The SVG illustrations made this distinction painfully clear.
 

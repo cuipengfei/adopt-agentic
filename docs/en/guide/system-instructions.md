@@ -94,7 +94,7 @@ For example, your instruction file might look like this:
 
 These user-level instructions are typically appended to the agent's base instructions or, using specific syntax, can override default behaviors. A well-crafted set of instructions offers an exceptional return on investment—far more effective than spending days working around the agent's defaults.
 
-Your project's existing engineering constraints—`tsconfig strict`, lint rules, pre-commit hooks—matter more with Agents than with humans. They might feel pedantic when you're the one writing code, but Agents generate at volume, and every line runs through the same checks. Rules you encode once benefit every line of code it produces.
+Your project's existing engineering constraints—`tsconfig strict`, lint rules, pre-commit hooks—matter for both humans and Agents, just in different ways. For humans, these checks guard your baseline. Agents generate at higher volume, so every line passes through the same gates—the effect is even more pronounced. Rules you encode once benefit every line of code it produces.
 
 ## Two Approaches to Writing Good Instructions
 

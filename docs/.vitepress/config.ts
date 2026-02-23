@@ -42,7 +42,6 @@ export default withMermaid(
               { text: "知识喂养", link: "/guide/knowledge-feeding" },
               { text: "编排模式", link: "/guide/orchestration" },
               { text: "Sub Agent — 上下文隔离", link: "/guide/sub-agents" },
-              { text: "Eval / 验证 / 可观测性", link: "/guide/eval" },
               { text: "Human-in-the-Loop", link: "/guide/human-in-the-loop" },
               {
                 text: "Peer-to-Peer Agents",
@@ -93,10 +92,6 @@ export default withMermaid(
               {
                 text: "Sub Agents — Context Isolation",
                 link: "/en/guide/sub-agents",
-              },
-              {
-                text: "Eval / Verification / Observability",
-                link: "/en/guide/eval",
               },
               {
                 text: "Human-in-the-Loop",

@@ -14,8 +14,6 @@
 
 你需要一个干净的房间。
 
-不过先停一下——并非所有任务都需要这个干净的房间。单步触发一次 [Command](./commands.md) 够用？那就用它，更轻量。需要一直遵守的规矩？[Skill](./skills.md) 加载一次即可。子任务足够独立、目标明确？直接派生 Sub Agent——不用等到上下文变脏才考虑。
-
 ## 派生 Sub Agent
 
 Sub Agent 就是这个干净的房间。
@@ -83,49 +81,15 @@ Sub Agent 读完 schema、写了测试文件、跑了一次测试发现报错，
 ```json
 // → REQUEST (Sub Agent → LLM API, 第 2 轮)
 {
-  "system": "（同上，不变）",
   "messages": [
     { "role": "user", "content": "你是一个 QA 工程师..." },
-    {
-      "role": "assistant",
-      "content": "我先读取 schema 文件...",
-      "tool_calls": [
-        {
-          "name": "read_file",
-          "arguments": { "path": "src/api/v2/schema.json" }
-        }
-      ]
-    },
-    {
-      "role": "tool",
-      "content": "{ \"endpoints\": { \"createUser\": { ... } } }"
-    },
-    {
-      "role": "assistant",
-      "content": "Schema 已读取。现在编写测试...",
-      "tool_calls": [
-        {
-          "name": "write_file",
-          "arguments": {
-            "path": "tests/integration/createUser.test.ts",
-            "content": "..."
-          }
-        }
-      ]
-    },
+    { "role": "assistant", "tool_calls": [{ "name": "read_file", "arguments": { "path": "src/api/v2/schema.json" } }] },
+    { "role": "tool", "content": "{ \"endpoints\": { \"createUser\": { ... } } }" },
+    { "role": "assistant", "tool_calls": [{ "name": "write_file", "arguments": { "path": "tests/createUser.test.ts", "content": "..." } }] },
     { "role": "tool", "content": "文件已写入。" },
-    {
-      "role": "assistant",
-      "content": "运行测试验证...",
-      "tool_calls": [
-        { "name": "bash", "arguments": { "command": "vitest run createUser" } }
-      ]
-    },
+    { "role": "assistant", "tool_calls": [{ "name": "bash", "arguments": { "command": "vitest run createUser" } }] },
     { "role": "tool", "content": "FAIL: expected 201 but got 500..." },
-    {
-      "role": "assistant",
-      "content": "测试失败，500 错误。检查 endpoint 实现后发现缺少数据库连接配置。修正测试 mock..."
-    }
+    { "role": "assistant", "content": "测试失败，500 错误。修正测试 mock..." }
   ]
 }
 ```
@@ -157,6 +121,6 @@ Sub Agent 的表现，取决于两件事：
 
 - **上下文流动**：主 Agent 从自己的上下文中提取信息，构造初始 prompt → Sub Agent 在隔离上下文中独立执行 → 完成后返回摘要，回注主 Agent 上下文。运行时隔离，但日志完整保留——两者不冲突。
 - **风险**：隔离是双刃剑。如果主 Agent 构造 prompt 时遗漏了关键约束，Sub Agent 会在缺少关键信息的情况下干活，产出不合规的代码。过度拆分也有成本——每个 Sub Agent 都要重新建立上下文，协调开销会累积。
-- **可审计性**：Sub Agent 的完整会话记录独立保存，可追溯。当摘要有问题时，你可以下钻到 Sub Agent 的完整上下文排查根因。摘要是压缩，不是真相——下一节看怎么验证。
+- **可审计性**：Sub Agent 的完整会话记录独立保存，可追溯。当摘要有问题时，你可以下钻到 Sub Agent 的完整上下文排查根因。摘要是压缩，不是真相。
 
-下一节看验证与可观测性——Sub Agent 返回的摘要可靠吗？Agent 的每一步输出，都需要验证机制来兜底。
+下一节看 [Human-in-the-Loop](./human-in-the-loop.md)——你在工作流中的角色：何时放手，何时介入。

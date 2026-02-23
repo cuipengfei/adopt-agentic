@@ -35,7 +35,6 @@ const nodeDefinitionsZh: Partial<Record<KnowledgeNode['id'], string>> = {
   skills: '核心术语：Skills。按需加载的领域模块。',
   orchestration: '核心术语：编排。顺序、并行、计划-执行与迭代循环。',
   'sub-agents': '核心术语：Sub Agent / 上下文隔离。子任务在隔离上下文中执行。',
-  eval: '核心术语：验证金字塔。执行级、任务级、系统级分层验证。',
   glossary: '核心术语：术语表。提供双语定义与统一词汇基线。',
 }
 
@@ -48,7 +47,6 @@ const nodeDefinitionsEn: Partial<Record<KnowledgeNode['id'], string>> = {
   skills: 'Core term: Skills. On-demand domain modules loaded at runtime.',
   orchestration: 'Core term: Orchestration. Sequential, parallel, plan-execute, and iterative loops.',
   'sub-agents': 'Core term: Sub Agents and Context Isolation for delegated sub-tasks.',
-  eval: 'Core term: Verification Pyramid across execution, task logic, and system value.',
   glossary: 'Core term: Glossary. Bilingual baseline definitions for stable terminology.',
 }
 

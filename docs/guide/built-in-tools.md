@@ -8,8 +8,6 @@
 
 其中 `bash`（或 `shell`）是最万能的一个。理论上它能做任何事——读文件、装依赖、跑测试、查 Git 历史、curl 一个 API。那为什么还需要其他工具？因为专用工具更安全、更精确：`read_file` 比 `cat` 更可控，`edit_file` 比手动拼接文件内容更不容易出错。
 
-
-
 LLM 自己不能运行这些函数。它能做的是生成一个 JSON 对象，告诉 Agent "帮我执行这个操作"。
 
 这个操作就是一次工具调用（tool call）。
@@ -126,25 +124,26 @@ LLM 的上下文中现在有了文件真实内容。它生成修改计划：
 
 Agent 再次在本地执行 `write_file`。一个完整的读取-修改-写入循环完成。
 
-````mermaid
+```mermaid
 sequenceDiagram
     participant User as 用户
     participant Agent
     participant LLM_API as LLM API
+    participant FS as 本地文件系统
 
     User->>Agent: "把 `log` 改名为 `logEvent`"
     Agent->>LLM_API: POST /chat/completions (含工具定义)
     LLM_API-->>Agent: SSE: `tool_calls` (调用 read_file)
-    Agent->>Agent: 本地执行: read_file('src/logger.js')
-    Note right of Agent: 读取文件内容
+    Agent->>FS: read_file('src/logger.js')
+    FS-->>Agent: 文件内容
     Agent->>LLM_API: POST /chat/completions (含文件内容)
     LLM_API-->>Agent: SSE: `tool_calls` (调用 write_file)
-    Agent->>Agent: 本地执行: write_file(...)
-    Note right of Agent: 写入修改后的内容
+    Agent->>FS: write_file(...)
+    FS-->>Agent: 写入成功
     Agent->>LLM_API: POST /chat/completions (含写入成功信息)
     LLM_API-->>Agent: SSE: "操作完成"
     Agent->>User: "已将 `log` 函数重命名为 `logEvent`。"
-````
+```
 
 ## 工具如何塑造上下文
 
@@ -192,28 +191,26 @@ Agent 会**真实执行** LLM 请求的操作。好的工具分两级信任：
 
 <SvgIllustration name="built-in-tools-inline-2.svg" interactive />
 
-
-
 光说“工具”太抽象。不同 agent 的内置工具长什么样？看几个例子就明白了。下面是四个常见 AI 编码助手的工具集对比，让你对“内置”有个具体概念。
 
 ### 工具分类对比
 
-| 工具类型 | Claude Code | Codex | Gemini CLI | OpenCode |
-| :--- | :--- | :--- | :--- | :--- |
-| **读取类** | `Read`, `Glob`, `Grep` | `read_file`, `list_dir` | `read_file`, `list_directory`, `glob` | `read`, `glob`, `grep` |
-| **写入类** | `Write`, `Edit` | `apply_patch` | `write_file`, `replace` | `edit`, `write` |
-| **执行类** | `Bash` | `shell`（沙箱内） | `run_shell_command` | `bash` |
-| **搜索类** | `Grep`, `Glob` | `grep_files` | `search_file_content`, `glob` | `grep`, `lsp` |
-| **网络类** | `WebFetch`, `WebSearch` | `web_search` | `web_fetch`, `google_web_search` | `webfetch` |
+| 工具类型   | Claude Code             | Codex                   | Gemini CLI                            | OpenCode               |
+| :--------- | :---------------------- | :---------------------- | :------------------------------------ | :--------------------- |
+| **读取类** | `Read`, `Glob`, `Grep`  | `read_file`, `list_dir` | `read_file`, `list_directory`, `glob` | `read`, `glob`, `grep` |
+| **写入类** | `Write`, `Edit`         | `apply_patch`           | `write_file`, `replace`               | `edit`, `write`        |
+| **执行类** | `Bash`                  | `shell`（沙箱内）       | `run_shell_command`                   | `bash`                 |
+| **搜索类** | `Grep`, `Glob`          | `grep_files`            | `search_file_content`, `glob`         | `grep`, `lsp`          |
+| **网络类** | `WebFetch`, `WebSearch` | `web_search`            | `web_fetch`, `google_web_search`      | `webfetch`             |
 
 ### 权限控制对比
 
-| Agent | 权限模型 | 用户配置方式 |
-| :--- | :--- | :--- |
-| **Claude Code** | 分层权限（default, acceptEdits, plan, dontAsk） | `allowedTools` 列表 + 交互式提示 |
-| **Codex** | 沙箱 + 审批策略（Auto / Read-only / Full Access 预设） | CLI 参数 + `~/.codex/config.toml` |
-| **Gemini CLI** | 交互式确认 + Trusted Folders + Sandbox | `~/.gemini/settings.json` |
-| **OpenCode** | 每工具三档（allow, ask, deny） | `opencode.json` 文件 |
+| Agent           | 权限模型                                               | 用户配置方式                      |
+| :-------------- | :----------------------------------------------------- | :-------------------------------- |
+| **Claude Code** | 分层权限（default, acceptEdits, plan, dontAsk）        | `allowedTools` 列表 + 交互式提示  |
+| **Codex**       | 沙箱 + 审批策略（Auto / Read-only / Full Access 预设） | CLI 参数 + `~/.codex/config.toml` |
+| **Gemini CLI**  | 交互式确认 + Trusted Folders + Sandbox                 | `~/.gemini/settings.json`         |
+| **OpenCode**    | 每工具三档（allow, ask, deny）                         | `opencode.json` 文件              |
 
 工具名和分类不同，但模式一样——读、写、执行、搜索，再加上权限分级控制。这套组合拳是 Agent 与世界互动的基石。
 
@@ -224,4 +221,3 @@ Agent 会**真实执行** LLM 请求的操作。好的工具分两级信任：
 - **可审计性**：每次 `tool_calls` 请求和对应的 `tool` 角色消息都在对话历史中——完整的行动证据链。
 
 下一节看 MCP——当内置工具不够用时，如何让 Agent 调用外部服务。执行路径变了，但对 LLM 来说，一切照旧。
-

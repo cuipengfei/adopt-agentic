@@ -55,7 +55,6 @@ This guide follows the flow of context in three parts: The Basics, Context Carri
 *   [**Knowledge Ingestion**](./knowledge-feeding.md): How to systematically feed your project's knowledge into the agent's context.
 *   [**Orchestration Patterns**](./orchestration.md): Sequential execution, parallel branching, routing—the different ways an agent works.
 *   [**Sub Agents — Context Isolation**](./sub-agents.md): Spawning isolated context environments for sub-tasks, with summarized results passed back.
-*   [**Eval / Validation / Observability**](./eval.md): How to know if the agent did the right thing and how to trace its actions.
 *   [**Human-in-the-Loop**](./human-in-the-loop.md): Your role in the workflow—when to delegate, when to intervene.
 *   [**Peer-to-Peer Agents**](./peer-to-peer-agents.md): From hierarchical delegation to peer collaboration—bidirectional context flow.
 

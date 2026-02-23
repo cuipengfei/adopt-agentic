@@ -80,16 +80,15 @@ The Sub Agent reads the schema, writes a test file, runs the test, sees a failur
 ```json
 // → REQUEST (Sub Agent → LLM API, Round 2)
 {
-  "system": "(same as above, unchanged)",
   "messages": [
     { "role": "user", "content": "You are a QA Engineer..." },
-    { "role": "assistant", "content": "Let me read the schema first...", "tool_calls": [{ "name": "read_file", "arguments": {"path": "src/api/v2/schema.json"} }] },
+    { "role": "assistant", "tool_calls": [{ "name": "read_file", "arguments": { "path": "src/api/v2/schema.json" } }] },
     { "role": "tool", "content": "{ \"endpoints\": { \"createUser\": { ... } } }" },
-    { "role": "assistant", "content": "Schema loaded. Writing the test...", "tool_calls": [{ "name": "write_file", "arguments": {"path": "tests/integration/createUser.test.ts", "content": "..."} }] },
+    { "role": "assistant", "tool_calls": [{ "name": "write_file", "arguments": { "path": "tests/createUser.test.ts", "content": "..." } }] },
     { "role": "tool", "content": "File written." },
-    { "role": "assistant", "content": "Running the test to verify...", "tool_calls": [{ "name": "bash", "arguments": {"command": "vitest run createUser"} }] },
+    { "role": "assistant", "tool_calls": [{ "name": "bash", "arguments": { "command": "vitest run createUser" } }] },
     { "role": "tool", "content": "FAIL: expected 201 but got 500..." },
-    { "role": "assistant", "content": "Test failed with 500. Checking the endpoint implementation—missing DB connection config. Fixing the test mock..." }
+    { "role": "assistant", "content": "Test failed with 500. Fixing test mock..." }
   ]
 }
 ```
@@ -121,6 +120,6 @@ What you can do: give the main Agent clear instructions and sufficient backgroun
 
 - **Context flow**: The main Agent extracts information from its own context to construct the initial prompt → Sub Agent executes independently in isolated context → returns a summary that gets injected back into the main Agent’s context. Runtime isolation and full logging coexist—they don’t conflict.
 - **Risk**: Isolation is a double-edged sword. If the main Agent omits a key constraint when constructing the prompt, the Sub Agent works without critical information and may produce non-compliant code. Over-splitting also has costs—each Sub Agent needs to rebuild context from scratch, and coordination overhead accumulates.
-- **Auditability**: Each Sub Agent’s full session log is saved independently and can be traced. When a summary looks wrong, you can drill down into the Sub Agent’s complete context to investigate. A summary is compression, not truth—the next chapter covers how to verify.
+- **Auditability**: Each Sub Agent’s full session log is saved independently and can be traced. When a summary looks wrong, you can drill down into the Sub Agent’s complete context to investigate. A summary is compression, not truth.
 
-Next up: verification and observability. Is the summary a Sub Agent returned actually reliable? Every output from an Agent needs a verification mechanism as a safety net.
+Next up: [Human-in-the-Loop](./human-in-the-loop.md)—your role in the workflow: when to let go, when to step in.

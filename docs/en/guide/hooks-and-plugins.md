@@ -20,21 +20,18 @@ An agent goes through a series of **lifecycle events** during execution—starti
 
 Same pattern as HTTP middleware: intercept → inspect → allow, deny, or modify.
 
-```
-User submits prompt
-    ↓
-Agent prepares to call tool
-    ↓ Fires "before tool call" event
-    ↓ Executes your hook logic
-    ↓ Hook returns: allow / block / modify parameters
-    ↓
-Agent continues or aborts based on hook decision
-    ↓
-Tool execution completes
-    ↓ Fires "after tool call" event
-    ↓ Executes your hook logic (logging, validation, result modification)
-    ↓
-Agent continues reasoning
+```mermaid
+flowchart TD
+    A["User submits prompt"] --> B["Agent prepares to call tool"]
+    B --> C{{"Fires 'before tool call' event"}}
+    C --> D["Execute your hook logic"]
+    D --> E{"Hook decision"}
+    E -->|"Allow"| F["Tool executes"]
+    E -->|"Block"| G["Abort operation"]
+    E -->|"Modify params"| F
+    F --> H{{"Fires 'after tool call' event"}}
+    H --> I["Execute your hook logic<br/>(logging, validation, result modification)"]
+    I --> J["Agent continues reasoning"]
 ```
 
 The flow above shows the most intuitive hook scenario—intercepting tool calls. But hooks do far more than that: desktop notifications, token counting, compaction control, dynamic rule injection are all hooks. Interception is just one use case.
@@ -76,11 +73,11 @@ The "session compaction" hook is one of the less universal types — not all too
 
 Different agent tools implement hooks very differently—some use shell scripts with JSON communication, some use TypeScript async functions, some use declarative configuration. But the **conceptual pattern** is universal:
 
-```
-Event fires
-    → Event data passed in (session info, tool name, parameters, etc.)
-    → Your logic executes
-    → Return a decision (allow / block / modified data)
+```mermaid
+flowchart LR
+    A["Event fires"] --> B["Event data passed in<br/>(session info, tool name, parameters, etc.)"]
+    B --> C["Your logic executes"]
+    C --> D["Return a decision<br/>(allow / block / modified data)"]
 ```
 
 Core elements:
@@ -157,9 +154,9 @@ Note the last row: the **results** of hook modifications appear in context (the 
 
 All three can be combined. A single plugin that injects a Skill (Git convention knowledge) + mounts a Hook (auto-lint before commits) is perfectly normal.
 
-### The Trust and Permission Gradient
+### Trust and Permission Levels
 
-If you care about security, you'll notice a theme running through several nodes: a gradient of permissions.
+If you care about security, you'll notice a theme running through several nodes: permissions are tiered.
 
 [Built-in tools](./built-in-tools.md) are safest; the agent's developer has your back.
 [MCP](./mcp.md) is next. Its permissions are bound by a protocol, but you have to trust the provider.

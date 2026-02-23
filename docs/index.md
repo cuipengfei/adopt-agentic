@@ -28,6 +28,6 @@ features:
     details: System Instructions、Slash Commands 与 Skills — 上下文注入的三种机制。
   - icon:
       src: /icons/verify.svg
-    title: 验证与多 Agent
-    details: Eval 可观测性和 Sub Agent 上下文隔离 — 进阶 agentic 关键实践。
+    title: 协作与多 Agent
+    details: Human-in-the-Loop 协作模式与 Sub Agent 上下文隔离 — 进阶 agentic 关键实践。
 ---
