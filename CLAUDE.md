@@ -234,7 +234,7 @@ GitHub 仓库 → Settings → Pages → Source：选择 **GitHub Actions**（�
   5. **必须有 CSS `@keyframes` 动画**：静态 SVG 不达标。动画数量由概念复杂度决定，不硬定数字。
   6. **用 `artistry` category**：`visual-engineering` category 的 sub-agent 无法生成回复，已验证失败。
 
-- **文件位置**：所有插图放 `docs/public/illustrations/`，SVG 格式优先（可缩放、轻量、加载快）。
+- **文件位置**：所有插图放 `docs/illustrations/`（非 public 目录，通过 `import.meta.glob` + `?raw` 内联加载），SVG 格式优先（可缩放、轻量、加载快）。
 - **现有插图**（全部暗色赛博朋克风格 + SVG 原生动画，共 38 个：16 主插图 + 22 inline 插图）：
 | 文件 | 对应节点 | 动画数 |
 | ---- | -------- | ------ |

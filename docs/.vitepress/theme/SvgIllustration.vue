@@ -116,7 +116,7 @@ function bindConceptHoverHandlers(): void {
   })
 }
 
-const svgModules = import.meta.glob('../../public/illustrations/*.svg', {
+const svgModules = import.meta.glob('../../illustrations/*.svg', {
   eager: true,
   query: '?raw',
   import: 'default',
