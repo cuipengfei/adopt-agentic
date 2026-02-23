@@ -320,6 +320,7 @@ onBeforeUnmount(() => {
 .aa-svg-illustration {
   margin: 1.25rem 0;
   position: relative;
+  user-select: none;
 }
 
 .aa-svg-illustration__expand {

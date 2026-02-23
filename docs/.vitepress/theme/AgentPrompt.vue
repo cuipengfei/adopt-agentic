@@ -45,7 +45,7 @@ async function copyPageContent() {
 
   const clone = docEl.cloneNode(true) as HTMLElement
 
-  clone.querySelectorAll('.header-anchor, .agent-prompt-bar, button.copy, .line-numbers-wrapper, style').forEach(el => el.remove())
+  clone.querySelectorAll('.header-anchor, .agent-prompt-bar, button.copy, .line-numbers-wrapper, style, .aa-svg-illustration, .mermaid').forEach(el => el.remove())
 
   const pageText = clone.innerText.trim()
   const prompt = isEn.value ? EN_PROMPT_TEMPLATE : ZH_PROMPT_TEMPLATE
