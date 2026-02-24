@@ -83,7 +83,7 @@ async function copyPageContent() {
     .join('\n')
   const allText = `\n\n${allLabel}\n${allList}`
 
-  const fullText = `${separator}\n\n${pageText}\n\n${instructionSep}\n\n${prompt.trim()}${relatedText}${allText}`
+  const fullText = `${instructionSep}\n\n${prompt.trim()}\n\n${separator}\n\n${pageText}${relatedText}${allText}`
 
   await navigator.clipboard.writeText(fullText)
 

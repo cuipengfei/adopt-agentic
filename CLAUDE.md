@@ -517,6 +517,45 @@ Phase 5 切回 Opus 4.6 做穷尽审校，新增"AI filler 词密度控制"维�
 | `.sisyphus/notepads/`             | 临时工作记录（gitignored） | agent 临时用        |
 | `.sisyphus/boulder.json`          | 运行时状态（gitignored）   | 自动生成            |
 
+## AgentPrompt
+
+Every guide page has a copy button. Clicking copies tutor prompt + tutorial text + chapter links to clipboard. User pastes into their coding agent, agent becomes a private tutor.
+
+### Files
+
+| File | Role |
+| ---- | ---- |
+| `docs/.vitepress/theme/prompt-templates.ts` | ZH/EN prompt templates |
+| `docs/.vitepress/theme/AgentPrompt.vue` | Copy button component, mounted at layout.ts `doc-before` slot |
+| `docs/.vitepress/data/knowledge-graph.ts` | Chapter relationship graph for related/all chapter lists |
+
+### Clipboard Structure
+
+```
+Instructions (prompt-templates.ts)
+Tutorial text (page content, SVG/mermaid/anchors stripped)
+Related chapter links + Markdown source links
+All chapter links
+```
+
+Instructions first, content second — combats LLM lost-in-the-middle effect.
+
+### Prompt Design Principles
+
+- **Mode selection**: Sprint / Deep dive / Hands-on, using agent native interactive tools (not plain-text A/B/C)
+- **Teaching loop**: Anchor (known concepts) > Mechanism (how it works) > Micro-practice (small action) > Checkpoint
+- **Terminology translation**: Generic terms mapped to user's tool-specific names, paths, commands
+- **Jump routing**: Out-of-order questions welcomed, answer first then offer prerequisite catch-up
+- **Honesty**: Never fabricate features, paths, or commands that don't exist
+- **No micromanaging**: No hard output length limits or forced formats, trust SOTA models
+
+### Modification Rules
+
+- ZH and EN prompts **must stay in sync**
+- No hard numeric limits ("X sentences", "X lines max")
+- Keep agent-agnostic (prompt doesn't bind to specific tools, terminology translation done by executing agent)
+- Chapter links driven by `knowledge-graph.ts` — adding/removing chapters requires sync update
+
 ## 已知问题 / TODO
 
 - `themeConfig.logo` 用 `/logo.svg`，但 `head` favicon 用 `/adopt-agentic/logo.svg` — 写法不一致（因 VitePress base 处理两者都能工作，但应统一）
