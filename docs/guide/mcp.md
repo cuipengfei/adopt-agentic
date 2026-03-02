@@ -33,7 +33,7 @@ Agent 加载你预先配置好的这些外部工具。你只需要配一下，�
 
 MCP 支持两种连接方式：
 
-**stdio（本地子进程）**：Agent 直接 spawn 一个子进程来运行 MCP Server。通信走 stdin/stdout，Agent 管理这个进程的整个生命周期——启动、通信、关闭。比如你在配置文件里写 `command: "npx", args: ["-y", "@upstash/context7-mcp"]` 来接入 Context7 文档查询服务，背后就是这个机制。
+**stdio（本地子进程）**：Agent 直接 spawn 一个子进程来运行 MCP Server，通信走 stdin/stdout。Agent 管理进程的整个生命周期——启动、通信、关闭。比如配置文件里写 `command: "npx", args: ["-y", "@upstash/context7-mcp"]`，就能接入 Context7 文档查询服务。
 
 **Streamable HTTP（远程服务）**：MCP Server 作为独立的 HTTP 服务运行，Agent 通过 HTTP 请求连接。适合需要持久运行或多个 Agent 共享的场景。
 
@@ -155,11 +155,13 @@ LLM 只关心拿到了网页内容。它不知道也不需要知道这个结果�
 
 <SvgIllustration name="mcp-inline-2.svg" interactive />
 
-但灵活性有隐性成本。每接入一个 MCP Server，它所有的工具定义都会注入到每一轮请求里。同时挂十个 Server，几十个工具定义永久占着上下文窗口，挤掉的是你的指令、对话历史和工具返回值的空间。实操：按任务类型建不同的 MCP 配置——写代码用一套，跑数据用另一套。原则是默认关闭，需要时再开。
+灵活性好理解。代价呢？每接入一个 MCP Server，它所有的工具定义都会注入到每一轮请求里。同时挂十个 Server，几十个工具定义永久占着上下文窗口——挤掉的是你的指令、对话历史和工具返回值的空间。
+
+实操建议：按任务类型建不同的 MCP 配置——写代码用一套，跑数据用另一套。默认关闭，需要时再开。
 
 ## 为什么重要
 
-MCP 的价值不在"又多了一个协议"，而在于**解除你对 Agent 开发者的依赖**：
+MCP 解决的问题很直接——**你不再需要等 Agent 开发者给你加工具**：
 
 - **不等官方更新**：想接搜索引擎？装个 MCP Server 就行，不需要等 Agent 下个版本。
 - **快接内部系统**：公司内部 API 大概率不会被 Agent 官方支持，但你可以自己写（或找现成的）MCP Server。

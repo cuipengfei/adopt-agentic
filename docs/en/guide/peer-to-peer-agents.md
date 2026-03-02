@@ -39,7 +39,9 @@ The specific costs:
 
 The hierarchical delegation model is simple, controllable, and economical. For the vast majority of daily development tasks, it's enough.
 
-**In fact, as of now, products that truly support bidirectional messaging between Agents—not orchestrator → worker one-way delegation, but agent A directly messaging agent B, with B able to reply and challenge A—can be counted on one hand.** Most products—including many that market themselves as "multi-agent"—are actually parallel execution (each working independently without communicating) or hierarchical delegation (superior directing subordinates). The step from "parallel execution" to "team collaboration" is much harder than it looks.
+As of now, products that truly support bidirectional messaging between Agents can be counted on one hand. Not orchestrator → worker one-way delegation, but agent A directly messaging agent B, with B able to reply and even challenge A.
+
+Most products—including many that market themselves as "multi-agent"—are actually parallel execution (each working independently without communicating) or hierarchical delegation (superior directing subordinates). The step from "parallel execution" to "team collaboration" is much harder than it looks.
 
 ## What Tasks Are Worth Peer Collaboration
 

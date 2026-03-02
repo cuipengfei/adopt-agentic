@@ -110,7 +110,9 @@ Mitigation:
 
 An Agent helps you do more. But if your understanding of the codebase falls behind, you won't be able to catch problems in its output.
 
-Speed doesn't equal quality. A subtle slide: as Agent output gets faster, you unconsciously lower your acceptance bar. Code that runs gets merged, long diffs get skipped, passing tests mean "done"—until one day you realize the codebase has accumulated a pile of "runs but isn't right" logic. Mitigation: set yourself a simple checkpoint, even if it takes just two minutes—open the diff, look at the three most critical files, confirm the changes match your intent. You don't need line-by-line review, but you must confirm the direction hasn't drifted.
+Speed doesn't equal quality. As Agent output gets faster, you unconsciously lower your acceptance bar. Code that runs gets merged, long diffs get skipped, passing tests mean "done"—until one day you realize the codebase has accumulated a pile of "runs but isn't right" logic.
+
+The fix is simple: set yourself a checkpoint, even if it takes just two minutes—open the diff, look at the three most critical files, confirm the changes match your intent. You don't need line-by-line review, but the direction can't drift.
 
 <SvgIllustration name="human-in-the-loop-inline-1.svg" interactive />
 

@@ -33,7 +33,7 @@ You'll encounter all kinds of MCP Servers. Some real examples: Context7 (documen
 
 MCP supports two ways to connect to a Server:
 
-**stdio (local child process)**: The agent spawns a child process to run the MCP Server. Communication goes through stdin/stdout, and the agent manages the process's entire lifecycle — startup, communication, shutdown. When you write `command: "npx", args: ["-y", "@upstash/context7-mcp"]` in your config to connect to the Context7 documentation lookup service, this is the mechanism behind it.
+**stdio (local child process)**: The agent spawns a child process to run the MCP Server, communicating via stdin/stdout. The agent manages the process's entire lifecycle—startup, communication, shutdown. Write `command: "npx", args: ["-y", "@upstash/context7-mcp"]` in your config, and you've connected to the Context7 documentation lookup service.
 
 **Streamable HTTP (remote service)**: The MCP Server runs as an independent HTTP service, and the agent connects via HTTP requests. Suited for scenarios requiring persistent uptime or shared access across multiple agents.
 
@@ -146,11 +146,13 @@ One-line summary: **LLM layer — fully equivalent. Agent execution layer — di
 
 <SvgIllustration name="mcp-inline-2.svg" interactive />
 
-But flexibility has a hidden cost. Each connected MCP Server injects all of its tool definitions into every request. Enable ten Servers at once, and dozens of tool definitions permanently occupy the context window—squeezing out space for your instructions, conversation history, and tool return values. In practice: create different MCP profiles for different task types—one set for coding, another for data work. The principle: off by default, on when needed.
+Flexibility is easy to understand. The cost? Each connected MCP Server injects all of its tool definitions into every request. Enable ten Servers at once, and dozens of tool definitions permanently occupy the context window—squeezing out space for your instructions, conversation history, and tool return values.
+
+In practice: create different MCP profiles for different task types—one set for coding, another for data work. Off by default, on when needed.
 
 ## Why It Matters
 
-MCP's value isn't "yet another protocol." Its value is **freeing you from depending on the agent developer**:
+MCP solves a straightforward problem—**you no longer need to wait for the agent developer to add tools**:
 
 - **Don't wait for updates**: Want a search engine integration? Install an MCP Server. No need to wait for the next agent release.
 - **Connect internal systems**: Your company's internal API will most likely never get official agent support, but you can write (or find) an MCP Server for it.

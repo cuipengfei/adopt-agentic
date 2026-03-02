@@ -4,7 +4,7 @@
 
 The previous chapter's Commands and this chapter's Skills do the same thing under the hood — inject extra prompt into the context. There's no difference in persistence: once something enters the context, it's carried in every subsequent request (recall the [Context](./context.md) chapter — LLMs are stateless; everything is resent every turn).
 
-The real differences are:
+So what's different? Two things:
 
 - **Who triggers it**: A Command is triggered manually when you type `/`. A Skill is loaded by the LLM based on task requirements, via a tool call.
 - **How it enters**: A Command expands to its full text immediately upon trigger. A Skill first appears in the context as just a name and short description (metadata); the LLM loads the full content only when it determines the task requires it.
@@ -47,7 +47,7 @@ Same request: "Commit these changes."
 
 Agent generates: `feat(auth): add JWT token refresh endpoint`, with a detailed body explaining why the change is needed.
 
-The LLM hasn't "learned" anything new. It simply saw richer instructions and acted accordingly. Loading a Skill means injecting its content into the request sent to the LLM — the exact injection point (the `system` field vs. `messages`) varies by tool, but the effect is the same: the Skill's rules persist in every subsequent request.
+The LLM hasn't "learned" anything new—it simply saw richer instructions. Loading a Skill means injecting its content into the request sent to the LLM. Whether it lands in the `system` field or `messages` varies by tool, but the effect is the same: the Skill's rules persist in every subsequent request.
 
 ### Discover First, Load Later
 
@@ -97,22 +97,22 @@ Different agent tools use different syntax for loading Skills, but the flow is t
 
 ## Ecosystem: Reusable Behavior Patterns
 
-Both Commands and Skills can be packaged into files, committed to a repository, and shared across teams. There's no difference in distribution and reuse. Skills are better suited for ecosystem-level sharing because of **persistence** — load once and it takes effect automatically, no need to manually trigger each time:
+Both Commands and Skills can be packaged into files, committed to a repository, and shared across teams. There's no difference in distribution. Skills are better suited for reusable modules because of persistence—load once and it takes effect automatically, no need to manually trigger each time.
 
-- **Individuals**: Encapsulate your workflows and best practices into a Skill file.
-- **Teams**: Create shared Skills for your project to ensure everyone (including agents) follows uniform standards.
-- **Communities**: Publish public Skills for specific tech stacks — React component design principles, Go error handling patterns, Terraform module structure.
+- **Individuals**: Encapsulate your workflows into a Skill file.
+- **Teams**: Create shared Skills to enforce consistent coding standards.
+- **Communities**: Publish public Skills for specific tech stacks—React component design principles, Go error handling patterns.
 
-Agent capabilities are no longer limited to what the developer ships — they can be extended by the ecosystem.
+The cost? Every loaded Skill keeps occupying context. Load three Skills, and every request carries three extra sets of instructions. Before loading, ask yourself: does this task actually need it?
 
-But every loaded Skill keeps occupying context. Before loading, ask: does this task actually need it? "Just in case" is voluntarily injecting noise.
-
-After loading, watch for instruction conflicts. Some tools support mid-session deactivation; others don't — if they don't, a loaded Skill stays until the session ends. So the decision to load matters more than managing what's already loaded.
+Then there's instruction conflicts. One Skill demands detailed comments, another demands minimalism—how does the Agent choose? Some tools support mid-session deactivation; others don't—if they don't, a loaded Skill stays until session end. The decision to load matters more than managing what's already loaded.
 
 ## Key Takeaways
 
 - **Context flow**: Loading a Skill = its content injected into every request sent to the LLM, continuously occupying the context window. Some tools support mid-session deactivation to free space; others keep it until session end. It produces stable, reproducible domain-specific behavior patterns.
 - **Risk**: Too many Skills loaded will exhaust the context window. A subtler problem: different Skills' instructions may conflict — one demands detailed comments, another demands minimalism — and agent behavior becomes unpredictable.
 - **Auditability**: Agent logs should record when each Skill was loaded or deactivated. Agent behaving strangely? Check the currently loaded Skill list and their contents first.
+
+Skills aren't free. Every one you load is context that can't be used for the actual work.
 
 Next chapter: Agent-Native CLI Tools — Skills inject behavioral knowledge into the agent, CLI tools give it executable capabilities.

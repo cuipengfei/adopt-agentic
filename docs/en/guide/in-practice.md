@@ -150,7 +150,7 @@ A concrete example: when rewriting this chapter, patterns needed to be extracted
 
 Every dispatched task carried a structured prompt: what the goal is, what must be done, what's forbidden, what the expected output looks like. Not a casual one-liner. This structure proved especially useful for failure recovery—when a sub-agent didn't finish, resuming its session could precisely specify "what wasn't done."
 
-Skill packs switched with the phase. During tutorial writing, sub-agents shipped out with the writer skill. During review, they carried the humanizer. For SVG work, the entire visual skill suite got bundled in. Not a fixed template—the main agent selected which capabilities to load based on the current task domain. The writing-phase skill set and the visual-phase skill set had almost no overlap.
+Skill packs switched with the phase. During tutorial writing, sub-agents shipped out with the writer skill. During review, they carried the humanizer. For SVG work, the entire visual skill suite got bundled in. Not a fixed template—the main agent selected capability packs based on the current task domain, with almost no overlap between phases.
 
 For failure recovery, session resumption beats starting fresh—the context is already there, no need to re-read files or re-establish background. The follow-up prompt only needs to specify what went wrong. Early attempts at session resumption often failed—the tooling wasn't stable enough, sessions couldn't be found. By the later phases, resumption had become the standard recovery mechanism.
 

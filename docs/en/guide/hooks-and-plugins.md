@@ -65,7 +65,9 @@ Different agent tools support different event sets and naming. Below are represe
 
 Note "system prompt transform" and "session compaction"—hooks in these categories **directly modify context content**. So hooks aren't just "side-channel interception"—they can also "put things into context."
 
-The "session compaction" hook is one of the less universal types — not all tools support it, but if yours does, it's worth using well. When agents automatically compress early history in long conversations, your core constraints may get compressed away—the agent "forgets" rules in the second half, not because it's stupid, but because that rule is simply no longer in the context. A compaction hook lets you solve this at the mechanism level: specify which information must be preserved verbatim, and which can be summarized. Far more reliable than manually restating constraints every few turns.
+The "session compaction" hook is one of the less universal types—not all tools support it, but if yours does, it's worth using well.
+
+When agents automatically compress early history in long conversations, your core constraints may get compressed away—the agent "forgets" rules in the second half, not because it's stupid, but because that rule is simply no longer in the context. A compaction hook lets you solve this at the mechanism level: specify which information must be preserved verbatim, and which can be summarized. Far more reliable than manually restating constraints every few turns.
 
 <SvgIllustration name="hooks-and-plugins-inline-1-alt.svg" interactive />
 
@@ -132,7 +134,7 @@ The two models aren't mutually exclusive. You can run marketplace-installed gene
 
 ### Ecosystem Status
 
-The plugin ecosystem is still early. Each agent tool's plugin interfaces, distribution mechanisms, and security models are iterating rapidly. But the direction is clear: **agent capabilities are no longer solely defined by developers—users and communities can extend them programmatically.**
+The plugin ecosystem is still early. Each agent tool's plugin interfaces, distribution mechanisms, and security models are iterating rapidly. The direction is clear: users and communities can extend agent capabilities programmatically, no longer waiting for developer updates.
 
 Same evolution path as browser extensions and editor plugins—first core functionality, then open extension interfaces, then ecosystem explosion.
 

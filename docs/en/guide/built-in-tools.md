@@ -146,9 +146,7 @@ sequenceDiagram
 After walking through this flow, you can see tools shape the LLM's context from two directions:
 
 1. **Tool definitions → static context**: Every request's `system` or `tools` field carries the full tool manifest. Your agent has 15 tools? Then every single request — regardless of what the user asked — sends all 15 tool names, descriptions, and parameter schemas to the LLM. That's what "static" means: it doesn't change based on conversation content, but it always occupies context window. The LLM relies on it to plan actions — without knowing what tools are available, it can't decide what to do next.
-2. **Tool return values → dynamic context**: Each tool execution result is appended to `messages`, becoming input for the next round of reasoning. `read_file` lets the LLM see the code; `bash` output tells it the current Git branch.
-
-The LLM knows "what it can do" from tool definitions, and learns "what the current state of the outside world is" from return values.
+2. **Tool return values → dynamic context**: Each tool execution result is appended to `messages`, becoming input for the next round of reasoning. `read_file` lets the LLM see the code; `bash` output tells it the current Git branch. The LLM knows "what it can do" from tool definitions, and learns "what the current state of the outside world is" from return values.
 
 <SvgIllustration name="built-in-tools-inline-1.svg" interactive />
 

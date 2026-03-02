@@ -18,7 +18,7 @@ When your understanding aligns with how the Agent actually works, the quality of
 
 Biggest taboo: **fighting for the wheel.** Tell the driver the destination, then don't grab the steering wheel while it's turning.
 
-The Agent is editing a file and you insert a command to modify the same file? Context desyncs from disk. Conflict. Either wait for it to stop (task done) or take over completely (kill task). Don't micromanage while it's driving.
+The Agent is editing a file and you insert a command to modify the same file? Context desyncs from disk. Collision is almost certain. Either wait for it to stop (task done) or take over completely (kill task). Don't micromanage while it's driving.
 
 ## Parallelize reads, serialize writes
 
@@ -34,7 +34,9 @@ Rule of thumb: maximize parallelism for read tasks (search, research). Be conser
 
 An agent's orchestration patterns are like a circuit board: series, parallel, or more complex combinations. We don't care how the underlying framework implements them, only the behavioral patterns they present to you.
 
-One industry consensus to internalize first: **start with the simplest loop**. If a single agent running sequentially can handle it, don't reach for parallelism. If one loop solves it, don't nest two. Complex orchestration isn't "more powerful" — it's "more failure points." Every added layer of abstraction doubles the difficulty of keeping context aligned. Start simple. Upgrade only when you've genuinely outgrown it.
+One industry consensus to internalize first: **start with the simplest loop**. If a single agent running sequentially can handle it, don't reach for parallelism. If one loop solves it, don't nest two. Complex orchestration isn't "more powerful"—it's "more failure points." Every added layer of abstraction doubles the difficulty of keeping context aligned.
+
+Start simple. Upgrade only when you've genuinely outgrown it.
 
 <SvgIllustration name="orchestration.svg" interactive />
 
@@ -111,7 +113,7 @@ This makes the Agent more robust under uncertainty. It doesn't stubbornly follow
 - **Debugging**: Run tests → see an error → read the error log → guess the cause → modify the code → re-run tests.
 - **API Integration**: Try to send a request → receive a 400 error → read the API documentation → correct the request body → send again.
 
-The context here spirals upward, with each loop carrying the "lessons" from the previous one.
+Each loop's context is one piece richer than the last: what went wrong.
 
 ## Parallel Session Governance
 
@@ -173,11 +175,11 @@ A Sub Agent is a **means** to implement certain orchestration patterns (especial
 
 You can use Sub Agents to implement sequential execution (one Sub Agent passes its result to the next), or you can implement sequential execution without them (the main agent does it step by step).
 
-Think of an orchestra conductor: the conductor doesn't play any instrument, but controls tempo, assigns sections, and coordinates all the parts. When you use parallel sessions + Sub Agents to handle complex tasks, you're playing the conductor—dispatching work, tracking progress, accepting deliverables. You're not writing the code, but the overall direction is yours to command.
+Think of an orchestra conductor: the conductor doesn't play any instrument, but controls tempo, assigns sections, and coordinates all the parts. When you use parallel sessions + Sub Agents to handle complex tasks, you're no longer writing code line by line—you're dispatching work, tracking progress, accepting deliverables. You're not writing the code, but the overall direction is yours to command.
 
 ## Key Takeaways
 
-- **Context Flow**: Sequential mode is linear accumulation; parallel mode is splitting and merging; plan-and-execute is draft to final; iterative loop is spiral enrichment.
+- **Context Flow**: Sequential mode is linear accumulation; parallel mode is splitting and merging; plan-and-execute is draft to final; iterative loop carries each round's lessons into the next.
 - **Risk Advisory**: Parallel branches can lead to result conflicts, requiring well-designed merge logic. In the plan-and-execute phase, the agent might hallucinate in its plan, which needs your careful review. Iterative loops can get stuck in infinite cycles and need an exit mechanism.
 - **Auditability**: The execution path, branch decisions, and intermediate results of all orchestration patterns should be logged. This allows you to trace "what the agent was thinking" and replay the entire process.
 
