@@ -35,7 +35,7 @@ flowchart TD
 
 ## 好的初始 prompt 长什么样
 
-派活给 Sub Agent，最常见的错误：把所有聊天记录扔给它。
+派任务给 Sub Agent，最常见的错误：把所有聊天记录扔给它。
 
 正确做法——给一份精简的任务描述，只含三样：
 
@@ -130,7 +130,7 @@ Sub Agent 完成后，返回一份**摘要**给主 Agent——不是几十条完
 
 Sub Agent 的表现，取决于两件事：
 
-1. **System Instructions 的质量**：你在 CLAUDE.md 里写的项目规则，Sub Agent 也吃。规则写得好，Sub Agent 的行为就符合项目规范。这就是[知识喂养](./knowledge-feeding.md)的规则层在 Sub Agent 上的体现。
+1. **System Instructions 的质量**：你在 CLAUDE.md 里写的项目规则，Sub Agent 也会遵守。规则写得好，Sub Agent 的行为就符合项目规范。这就是[知识喂养](./knowledge-feeding.md)的规则层在 Sub Agent 上的体现。
 
 2. **主 Agent 构造的初始 prompt 的质量**：这又回到[第一原则](./context.md)——上下文质量决定输出质量。好的初始 prompt 必须是：
    - **独立的**：不依赖主上下文中的隐含信息。
