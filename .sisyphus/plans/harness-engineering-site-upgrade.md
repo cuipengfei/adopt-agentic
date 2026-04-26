@@ -415,3 +415,202 @@ grep -E "Hooks 处理“必须发生”的事|Subagent 的核心价值是上下�
 - 不把社区经验法则写成站点硬结论；像 `/clear` 阈值、CLAUDE.md 行数上限、subagent 理想时长，只能作为经验提示。
 - 不把 paywall 后不可见内容、curated list 的二手描述，当成主论证的核心证据。
 - 不安装依赖，不创建 `.opencode/`，不提交 git commit。
+
+## 附录：已并入的 Gap 分析报告
+
+这一节把 `.sisyphus/research/harness-engineering-content-gap/report.md` 的核心分析并入本计划，让后续执行者只看这一份文件也能理解：为什么要升级、缺口在哪里、哪些地方已覆盖、哪些地方只是框架层还没成形。
+
+### 背景
+
+本次升级讨论只回答一个问题：现有双语教程已经讲了很多 agentic 编程机制，如果要面向每天使用 coding agent 的工程师引入 harness engineering，还缺什么？
+
+这里的 `harness engineering` 暂不定中文名。工作定义保持不变：它是围绕模型和 agent 外层的一整套工程化约束，包括项目规则、Skills、Hooks、Subagents、MCP、验证门禁、权限边界、隔离执行、可复现工作流、可执行 Definition of Done、失败日志回流，以及审批疲劳管理。
+
+这份计划继承了 report 的三个边界：
+
+- 不修改站点正文作为既成事实。
+- 不默认新增章节。
+- 不替用户选择最终术语。
+
+### 方法
+
+本次分析做的是**站内 delta**，不是重做一次外部社区综述。判断依据来自四层输入：
+
+1. 现有站点正文：`docs/guide/*.md` 与 `docs/en/guide/*.md`。
+2. 项目约束：`CLAUDE.md`、既有 Phase 1 / Phase 2 计划。
+3. 既有 POMASA gap analysis：用于去重，避免把已补深内容再次包装成“新发现”。
+4. 外部校准来源：Fowler 两篇文章、Sean Goedecke 一篇文章，以及早期 18 个多源研究 URL 的去重共识。
+
+判断标签保持和 report 一致：
+
+- `类型: 概念`：站点基本没讲这个概念。
+- `类型: 深度`：讲了概念，但不足以指导日常工程使用。
+- `类型: 框架`：机制都在，但没有被统一命名或串成 harness engineering。
+
+### POMASA 基线与去重
+
+POMASA 的结论已经说明：站点与实践者社区话题的可映射覆盖率很高，主要问题不是缺主节点，而是缺方法深度。
+
+所以，这次合并后的计划继续沿用一个关键判断：
+
+> **机制大多已在，框架层还没成形。**
+
+也就是说，Task B-F 的重点不是“补从未出现过的新概念”，而是把已有零件组织成一套使用者能看懂、能落地的外层工程系统。
+
+已经被 POMASA 补过、这次不再当成新 gap 的内容包括：
+
+- 并行 session 治理
+- 长时 loop 治理
+- 团队级配置治理
+- 长期记忆的最小理解方式
+- Vibe → Context Engineering、职责边界、权限索引、Conductor、反模式、决策框架等既有吸收项
+
+### 覆盖矩阵摘要
+
+#### 已强覆盖，不应再夸大成“缺失概念”的部分
+
+- 项目规则 / System Instructions
+- Skills
+- Hooks / Plugins
+- MCP
+- 权限边界
+- Sub Agent 上下文隔离
+- 并行治理
+- 长循环控制
+- HITL
+- In Practice
+
+#### 已覆盖但还缺 harness framing 或工程深度的部分
+
+- validation gates
+- isolated execution
+- repeatable workflows
+- executable Definition of Done
+- failure-log-to-harness-improvement loop
+- approval-fatigue management
+- harness engineering terminology
+
+### 7 个 Gap 的合并摘要
+
+#### GAP-HE-001：缺少 harness engineering 的框架入口
+
+类型: 框架
+
+现有站点已经讲清楚 rules、tools、MCP、Commands、Skills、Hooks、Sub Agent、HITL、编排、验证，但读者还不一定会把这些零件视为一个外层工程系统。当前主线是“上下文如何流动”，这条主线没错，但还缺一句明确关系：
+
+- Context Engineering 管“怎么把 guides 和 sensors 交给 agent”
+- harness engineering 管“外层系统如何约束 agent 怎么跑、怎么停、怎么验收、怎么复盘”
+
+这就是为什么 Task H 只允许做轻量入口，而不允许重写主线。
+
+#### GAP-HE-002：验证门禁分散，缺少“可执行 DoD”的概念锚点
+
+类型: 深度
+
+当前正文已经讲测试、lint、build、人工验收和假完成，但还没把这些东西组织成一句更工程化的话：
+
+> 完成标准不只是自然语言，而是 agent 能执行的命令、exit code、文件状态和证据输出。
+
+Fowler 的 `Computational` / `Inferential` controls 给了一个很好的解释框架：便宜稳定的 tests / linters / type checks 应该尽量前移；更慢、更贵、更不确定的 semantic review / AI review 属于补充，而不是替代。
+
+#### GAP-HE-003：失败日志到 harness 改进的闭环还不够显式
+
+类型: 深度
+
+站点已经讲“踩坑写成规则”，但还没把失败回流讲成一个清晰循环。合并后的结论是：失败发生后，不只修这次结果，还要判断它是否应该进入外层约束。典型去向有四类：
+
+- rules
+- Hooks
+- tests / build gates
+- Skills / Commands
+
+这也是 Task C 之所以优先的原因：它直接连接 steering loop / Feedback Flywheel。
+
+#### GAP-HE-004：执行隔离讲了上下文，没充分讲运行环境隔离
+
+类型: 深度
+
+Sub Agent 一章已经把上下文隔离讲得很清楚，但对运行环境隔离仍偏轻。这里要补的是一条并排关系：
+
+- 上下文隔离解决“LLM 看见什么”
+- 执行隔离解决“agent 能碰到什么”
+
+通用例子应保持 agent-agnostic：独立分支、临时工作区、沙箱、只读模式。再借 harnessability / ambient affordances 解释：环境结构越清晰、越可回滚、越有结构化检查，agent 越容易被约束。
+
+#### GAP-HE-005：重复工作流的沉淀路径还不够集中
+
+类型: 框架
+
+Commands、Skills、Hooks 各自都有章节，但读者还缺一个高层判断：一个重复出现的工作流，到底该沉到哪一层。
+
+合并后的高频共识已经在 Task E 中写死：
+
+- always-on 长期规则 → `CLAUDE.md` / `AGENTS.md` / rules
+- 可复用流程 → Skills / Commands
+- 必须 deterministically 发生的门禁 → Hooks
+- 高噪声、易污染上下文的工作 → Subagents
+
+这部分不需要写成操作手册，但必须让读者知道“为什么这样分层”。
+
+#### GAP-HE-006：审批疲劳已有，但未和权限策略形成闭环
+
+类型: 框架
+
+HITL、权限梯度、Hooks 已分别出现，但还没合成一个闭环：
+
+- 权限太松，风险上升
+- 权限太紧，人会疲劳并开始无脑批准
+- 好的 harness 同时减少危险操作和无意义审批
+
+这部分还需要保留一条边界：减少 review toil，不等于把人从思考中拿掉。Sean Goedecke 的来源只支持一个温和提醒——要保留人的 cognitive engagement、监督质量和高价值判断，不支持“AI 必然造成技能退化”这种硬结论。
+
+#### GAP-HE-007：术语表缺少 harness engineering 及相关术语入口
+
+类型: 概念
+
+术语表目前有 Context Engineering、Agentic Engineering、Trust Boundary 等，但没有 Harness Engineering，也没有 guides / sensors、feedforward / feedback、Computational / Inferential controls 的轻量解释。
+
+这里继续保留用户决策点：中文名不在计划内拍板。计划和正文草稿在拍板前都应保留 `harness engineering` 英文，并在首次出现时给一句朴素解释。
+
+### No Gap / Already Covered（合并版）
+
+后续执行时，不要再把下面这些东西包装成“新概念”去卖点：
+
+- Context Engineering 主线
+- 项目规则 / System Instructions
+- Skills
+- Hooks / Plugins
+- MCP
+- 权限边界
+- Sub Agent 上下文隔离
+- 并行会话治理
+- 长时循环控制
+- HITL
+- In Practice
+
+这些都是已覆盖能力。后续任务的工作，是补强和串联，不是重发明。
+
+### 合并后的用户决策点
+
+这份计划继承 report 的 4 个关键决策点：
+
+1. 中文术语怎么选
+2. 是否允许新章节
+3. 是否允许重塑基础章节叙事
+4. 是否把人的长期能力问题轻量写进 HITL
+
+其中：
+
+- 1、2 属于 `requires-user-approval`
+- 3 属于 `high-impact requires-user-review`
+- 4 只允许温和引入，不允许扩大成职业判断或社会结论
+
+### 合并后的推荐结论
+
+把 report 合并进本计划之后，结论没有变，反而更清楚：
+
+- **默认路径不变**：不新建章节，不重写骨架，不立即修改 `docs/`
+- **优先级不变**：Task B-F 高于 Task H-I
+- **核心升级方向不变**：把已有机制串成一套外层工程系统，而不是追加一个新的概念宇宙
+
+换句话说，这份 `harness-engineering-site-upgrade.md` 现在既包含“为什么要升级”的分析，也包含“具体怎么升级”的执行拆解，已经可以作为单一事实来源使用。
