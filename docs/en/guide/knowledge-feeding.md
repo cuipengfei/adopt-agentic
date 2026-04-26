@@ -92,6 +92,31 @@ The grammar (`AGENTS.md`, Skills) is for obeying, not for reading. It's rules. I
 
 API definitions don't belong in instruction files—they're reference material, meant for the agent to look up when needed. Critical rules don't belong in some forgotten corner document—put them where the agent reads on every startup, or they might as well not exist.
 
+## How Failure Logs Feed Back into the Next Round
+
+Knowledge feeding isn't only about pushing documents, conventions, and rules to the Agent. There's another path: **failure information the Agent generates while working**, and how it flows back into the next request automatically.
+
+To be precise: this happens in the `messages` array, not the system prompt. Every time a tool call fails, a command errors out, or a test doesn't pass, the error output the Agent receives gets appended to the conversation history as a `tool_result`. The LLM reads it in the next round and decides how to adjust.
+
+The problem: **if failure output gets pushed in unfiltered, it quickly becomes context noise.**
+
+A single failed package install can produce very long output. Stuff it all into `messages`, and every subsequent round carries that baggage—effective reasoning space shrinks under the weight of error history, while the information actually needed for the task gets diluted.
+
+How to control it:
+
+| Granularity | Approach | When to use |
+| :---------- | :------- | :---------- |
+| **Coarse**: final status only | Pass "failed / succeeded" plus a one-line summary | Simple tool calls where the LLM doesn't need to diagnose |
+| **Medium**: truncated + key segment | Keep error type, first error message, top of stack trace | A reasonable default for most situations |
+| **Fine**: full log | Pass everything, no truncation | Complex debugging where the LLM needs the complete picture |
+
+Most agent tools expose a hooks mechanism at the "tool return" stage. You can intercept raw output there, filter by format, keep only the fields that matter, and then push into context. That's the cleanup gate failure logs pass through before reaching the next round.
+
+Another approach: **pass diffs, not full content**. If the previous round already included the complete contents of a file, this round only needs to say which line changed. That keeps the same information from appearing in `messages` three times over.
+
+Scope control matters just as much. Not every failure deserves to flow back at all. A lint warning doesn't need to enter `messages`—the hook should evaluate it: low severity, discard it or write it to a local log only. Only failures that block execution and require an LLM decision are worth spending context space on.
+
+
 ## How to Choose
 
 | Your knowledge is... | Use... | Because... |

@@ -55,3 +55,10 @@ visualRhythm: false
 | Context Engineering | 上下文工程 | Designing dynamic systems that provide the right information and tools, in the right format, at the right time, to give an LLM everything it needs. The evolution from "writing a good prompt" to "managing an entire context supply chain." |
 | Agentic Engineering | Agentic 工程 | The full engineering discipline of building software effectively with AI agent tools—spanning context management, tool selection, parallel orchestration, feedback loops, and quality verification. Context Engineering is its core sub-discipline. |
 | Fire-and-forget | Fire-and-forget | A messaging model where messages are sent without waiting for acknowledgment. Simplifies system design, but you cannot assume every message was processed. |
+| Harness Engineering | Harness Engineering | The engineering shell built around an LLM: system instructions, hooks, skills, approval policies, and any other mechanism that makes an agent reliable and auditable. |
+| Executable Definition of Done | 可执行 Definition of Done | Completion criteria expressed as signals that scripts, commands, or a build can verify—not just descriptive phrases like "tests pass." |
+| Failure-log feedback | 失败日志回流 | Routing debug output and error messages from a failed run back into the next agent invocation, so each failure becomes direct context for the next attempt. |
+| Execution isolation | 执行隔离 | Partitioning an agent's runtime context, permissions, and tool scope so separate sessions don't contaminate each other. |
+| Workflow distillation | 工作流沉淀 | The process of evolving a repeated sequence of ad-hoc steps into a reusable skill, command, or hook, reducing the cost of re-describing it every time. |
+| Approval-loop closure | 审批闭环 | The complete path from automated signal detection through sampling and review to escalated human approval, ensuring verification logic is traceable and upgradeable. |
+| Cognitive engagement | 认知参与 | The stance of actively understanding, judging, and directing an agent's work—as opposed to rubber-stamping approvals—so the human retains real control over the task. |

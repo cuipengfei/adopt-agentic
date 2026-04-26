@@ -36,6 +36,37 @@ flowchart TD
 
 The flow above shows the most intuitive hook scenario—intercepting tool calls. But hooks do far more than that: desktop notifications, token counting, compaction control, dynamic rule injection are all hooks. Interception is just one use case.
 
+## Hooks enforce "must happen"; rules guide "should be done this way"
+
+When most people encounter hooks for the first time, the intuition kicks in: isn't this just another kind of rule? Writing "block the delete command" in a hook versus writing "don't go deleting files casually" in System Instructions—aren't those the same thing?
+
+They're not. The two solve completely different problems.
+
+Rules in System Instructions are declarative: you tell the LLM "this is how things should go," and the rest is left to its judgment. The LLM will generally follow them, but when a task gets complex, context gets noisy, or the rule itself is ambiguous, it might quietly work around them. That's not a bug—it's how LLMs operate. They weigh everything in context and generate the most probable output. Rules are just one input among many.
+
+Hooks address a different level entirely: **certain things must happen, regardless of what the LLM decides.**
+
+For example:
+
+- Popping a confirmation dialog before every `rm` call isn't "should do"—it's "non-negotiable."
+- Writing every tool result to an audit log, regardless of whether the LLM considers this task important.
+- Routing high-privilege operations (git push, database writes) through an approval flow that cannot be bypassed.
+
+Rules rely on the LLM to self-regulate. Hooks rely on code to enforce. Their reliability guarantees are in a different league.
+
+There's a second layer to this distinction: **hooks are passively triggered; rules are actively interpreted.**
+
+Rules require the LLM to actively read them, understand them, and apply them. In long contexts, rules written early tend to fade—downweighted or simply out of the window. Hooks don't depend on the LLM's memory. When the event fires, the code runs. A before-tool-call hook doesn't care what the LLM is currently thinking about. It just triggers.
+
+So the right split is:
+
+- **Rules (System Instructions)**: Describe expected behavior—tone, format, coding style, priorities. The LLM uses these to make judgments.
+- **Hooks**: Lock down necessary actions—auditing, interception, approvals, mandatory validation. No room to route around them.
+
+Hooks also serve as **enforcement points for permission policies**. You can implement a full approval workflow inside a before-tool-call hook: read operations pass through, write operations get logged, high-risk operations pause for human confirmation. This logic runs outside the LLM's view—the LLM cannot reason or argue its way past it.
+
+Rules describe intent. Hooks guarantee the floor.
+
 ## The gatekeeper pattern
 
 An agent is capable and fast—but it has no instinct for "this operation is risky, I should ask first."

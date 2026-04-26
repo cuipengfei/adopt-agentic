@@ -177,6 +177,28 @@ You can use Sub Agents to implement sequential execution (one Sub Agent passes i
 
 Think of an orchestra conductor: the conductor doesn't play any instrument, but controls tempo, assigns sections, and coordinates all the parts. When you use parallel sessions + Sub Agents to handle complex tasks, you're no longer writing code line by line—you're dispatching work, tracking progress, accepting deliverables. You're not writing the code, but the overall direction is yours to command.
 
+## Handoff Tokens Between Main and Sub Sessions
+
+The main session decides "which task goes to whom." The sub session decides "how to do it." What actually flows between them is two tokens: one out, one back.
+
+**Out: Input Tokens**
+
+When the main agent hands a task to a sub agent, it doesn't copy its entire current context and throw it over. That's expensive and too noisy. What actually gets passed is a compact task description: what the goal is, which constraints can't be touched, and the minimum context needed to execute (relevant file paths, key variables, error messages).
+
+The smaller and more self-contained this description, the more predictable the sub agent's behavior. It doesn't need to guess "what the main session was talking about before." It executes independently from this description alone.
+
+**Back: Output Tokens**
+
+When the sub agent finishes, it doesn't return its complete session history to the main agent either. It returns a summary: what was done, where the results are, and what to flag. The main session can only work directly with this summary.
+
+The format of this summary directly determines whether the main agent can correctly merge results from multiple branches. Two parallel sub agents each returning vague natural-language descriptions will likely cause the main agent to miss details or produce conflicts during merging. A better approach is agreeing on structure upfront: "which files were modified," "what the test results are," "what's still unresolved." Explicit fields make merging mechanical.
+
+**Merging**
+
+When parallel branches converge, the main agent receives multiple summaries, not multiple full contexts. It needs to integrate these summaries into its own context and decide the next step. Integration is not concatenation. It's extracting the parts of each summary that matter for the current task and discarding the rest.
+
+This means when you design a sub agent's task, you should simultaneously think about "what its output looks like." Vague tasks produce unstructured output; unstructured output makes merging depend on the main agent's luck.
+
 ## Key Takeaways
 
 - **Context Flow**: Sequential mode is linear accumulation; parallel mode is splitting and merging; plan-and-execute is draft to final; iterative loop carries each round's lessons into the next.

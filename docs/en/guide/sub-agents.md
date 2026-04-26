@@ -103,6 +103,26 @@ What the main Agent receives is just: "Tests created, covering 201 and 400, file
 
 <SvgIllustration name="sub-agents-inline-2.svg" interactive />
 
+## Isolation Is the Point, Concurrency Is a Side Effect
+
+The common reason people reach for Sub Agents is speed: "They run in parallel, so things finish faster." That's true, but it's only half the story.
+
+Concurrency is a side effect of isolation. Isolation itself is the core value—it exists to solve a specific problem: the main context is already long and noisy, and a precise sub-task shouldn't have to run inside that mess.
+
+Four scenarios make this concrete.
+
+**Exploratory tasks.** When you send an agent to investigate an unfamiliar library or validate whether an approach is even viable, the work generates a lot of intermediate noise—attempts, errors, dead ends. Let that happen in an isolated Sub Agent. The noise stays contained; the main thread only gets the conclusion.
+
+**Review tasks.** Code review has its own analytical logic, separate from the implementation thread. Mix them in the same context and they interfere with each other. Isolated, the review result comes back clean, and the main thread isn't pulled off course by the review process.
+
+**Bulk operations.** Batch renames, formatting passes, file migrations—these generate a lot of tool-call records that carry almost no informational value for the main task. Dumping them into the main context burns tokens for nothing. Offload to a Sub Agent and get back a simple "done" or "failed."
+
+**Long-output tasks.** Some tool calls return thousands of lines—test reports, compile logs, large API responses. A Sub Agent can digest that output and return only what matters.
+
+What these four scenarios share: the sub-task's **execution process** has no reference value for the main thread. Only the result does.
+
+This is also where this chapter ends and the next one begins. Orchestration is about what happens after you have multiple Sub Agents: how to sequence steps, how to pass intermediate results, how to merge branches. This chapter handles the earlier question: **whether to isolate**, and what isolation gives you. Get that right first, then think about how to orchestrate.
+
 ## Connecting Back to the First Principle
 
 A Sub Agent’s performance depends on two things:

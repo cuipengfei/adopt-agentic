@@ -107,6 +107,22 @@ The cost? Every loaded Skill keeps occupying context. Load three Skills, and eve
 
 Then there's instruction conflicts. One Skill demands detailed comments, another demands minimalism—how does the Agent choose? Some tools support mid-session deactivation; others don't—if they don't, a loaded Skill stays until session end. The decision to load matters more than managing what's already loaded.
 
+## When Should a Repeated Task Be Distilled into a Skill?
+
+There's a reliable signal: you're on the same project, and this is the third time you've explained the same set of rules to the agent in plain language.
+
+Verbal repetition doesn't scale. Every time you say it, it takes up context. By the second half of a long session, those rules may have already been compressed away. If the agent drifts, it's not ignoring you — the rule is just no longer in the context window.
+
+Three dimensions to check.
+
+**Repetition frequency.** A one-off task isn't worth distilling. If something comes up three or more times and you're re-explaining it each time, it has earned a Skill.
+
+**"How to do" vs. "what to do."** Skills encapsulate persistent behavior patterns, not single actions. "Do a review for me" is "what to do" — say it once and you're done. "Always check error paths and type safety during reviews" is "how to do" — write it as a Skill, load it once, and it rides along every turn. If a rule needs to be active for the entire session, write a Skill. If it's just for this one request, say it inline.
+
+**Reuse scope.** Conventions that only apply to the current project belong in a project-level rules file. Rules that transfer across projects — commit message format, Go error handling style — are worth packaging into a reusable Skill.
+
+Granularity matters too. A Skill that covers too much dumps a book into the context, most of which the current task won't touch. Split by cohesive domain and load on demand. On the other end, a single rule doesn't need its own Skill — merge it into an existing one.
+
 ## Key Takeaways
 
 - **Context flow**: Loading a Skill = its content injected into every request sent to the LLM, continuously occupying the context window. Some tools support mid-session deactivation to free space; others keep it until session end. It produces stable, reproducible domain-specific behavior patterns.

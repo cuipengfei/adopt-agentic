@@ -207,6 +207,21 @@ Just saying "tools" is too abstract. What do the built-in tools of different age
 | **Gemini CLI** | Interactive confirmation + Trusted Folders + Sandbox | `~/.gemini/settings.json` |
 | **OpenCode** | Per-tool modes (allow, ask, deny) | `opencode.json` file |
 
+## Permission Gates and Execution Isolation
+
+The permission table shows how each agent is configured. But what's the underlying mechanism? Every time the agent calls a tool, more is happening than just "running a command." The tool layer is the real permission gate — the thing that decides whether an operation actually lands.
+
+The most fundamental isolation is the read-write split. Read operations (`read_file`, `grep`) usually execute without confirmation. Write operations and shell commands pause before triggering, waiting for user approval or following the configured policy. This boundary isn't just UI design — it separates "observing the world" from "changing the world" at the execution layer.
+
+Execution isolation depth varies significantly by tool. Codex's `shell` runs inside a sandbox, isolated from the host filesystem with network access restricted by default. Gemini CLI's Trusted Folders mechanism confines `run_shell_command` to reads and writes within designated directories. Claude Code and OpenCode's `bash` tool runs directly in the host environment, relying on permission policies and interactive confirmation to control boundaries — no process-level sandbox.
+
+This difference matters. "Execute a shell command" sounds the same across all four tools, but the risk profile is completely different with and without a sandbox.
+
+The other layer of the permission gate is policy presets. The `allow` (silent pass), `ask` (confirm each time), and `deny` (block execution) combination lets you find an acceptable balance between efficiency and safety. Early in development, `allow` tends to dominate. When running automated pipelines, flip high-risk operations to `deny` or `ask`.
+
+Two operation types are easy to underestimate: `write_file` overwriting core config files, and `bash` commands with pipes (like `grep ... | xargs rm`). In environments without sandbox isolation, if the LLM generates a bad argument, the operation lands before you can react.
+
+Treat your permission policy as a runtime parameter, not a one-time install setting. Adjust it to match the risk level of the current task.
 The tool names and categories differ, but the pattern is the same: read, write, execute, and search, plus tiered permission controls. This combination is the foundation of how an agent interacts with the world.
 
 ## Key Takeaways

@@ -57,6 +57,20 @@ Commands aren't just plain text. A well-designed command can bundle multiple ele
 
 System instructions define how the agent behaves *by default*. Commands define what it does *this time*. When the two conflict — say, system instructions demand "operate cautiously" while `/force-push` demands "overwrite forcefully" — the LLM receives contradictory signals and behavior becomes unpredictable.
 
+## When Should Something Be a Command?
+
+Just because something *can* be a command doesn't mean it *should* be. The threshold is simple: you've done it three or more times, the steps are fixed, and you always know when you want to trigger it.
+
+The most obvious candidates are **workflow checkpoints**. Before every code review, you check the diff, run lint, and confirm tests pass. That sequence doesn't change between projects — the steps are ordered, the timing is clear, and you already know you want to do it. You just don't want to type it out every time. That's why `/review` exists.
+
+Another category is **context switching**. Moving from debug mode to documentation work, or from feature development to performance investigation, carries cognitive overhead on its own. A `/debug-mode` or `/doc-mode` tells the agent what kind of task is ahead, and makes the mode switch a deliberate, visible act.
+
+The core value of a command is **explicit invocation**. You decide when it fires — the agent doesn't guess "this seems like a good moment for this." That certainty matters most for high-risk operations: `/deploy`, `/migrate-db`. You don't want the agent triggering those on its own. You want to be awake and deliberate when you press that `/`.
+
+**Boundary with skills**: skills are injected — the agent reads the task, decides which rules apply, and loads them silently from that point on. Commands are summoned — you decide to run them now, and they finish when they finish. If a workflow needs "I decide when this happens," it's a command. If it needs "let the agent carry these rules whenever relevant," it's a skill.
+
+**Boundary with hooks**: hooks don't need you to trigger them — they fire when an event occurs. Don't use a command to replace what a hook should do. `/start-logging` is the wrong tool; a hook that mounts logging logic at session start is the right one. Explicit invocation fits "I pick the moment." Event-driven fits "run whenever this happens."
+
 ## Key Takeaways
 
 - **Context flow**: User types `/command` → agent expands it into a prompt → injects into `messages` → LLM consumes and responds. Command-injected content stays in the current conversation but doesn't persist across sessions.

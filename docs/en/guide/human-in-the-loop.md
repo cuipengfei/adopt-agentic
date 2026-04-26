@@ -118,6 +118,33 @@ The fix is simple: set yourself a checkpoint, even if it takes just two minutes�
 
 There's an equally dangerous slide in the opposite direction: approval fatigue. The Agent pauses for your confirmation before every high-risk operation. When confirmations pop up repeatedly, your attention gives out before your willingness does—you go from "carefully reviewing the diff" to "reflexively clicking approve." The fix mirrors the "Letting Go vs. Stepping In" section above: don't prompt for low-risk ops. Save your approval budget for decisions that genuinely need your judgment.
 
+## Closing the Approval Loop: Attention Budgets and Cognitive Engagement
+
+Approval fatigue doesn't stem from too many approvals. It stems from spending human attention on things the machine could have decided on its own.
+
+Most actionable completion signals don't need a human present: tests pass, build succeeds, lint is clean, exit code is zero. These can be verified and logged automatically. Human presence is warranted in only three situations: the operation is irreversible (deleting data, pushing to production); the decision involves organizational judgment (release timing, breaking interface compatibility); or an anomaly signal exceeds a preset threshold and needs human classification. Everything else can be reviewed after the fact via sampling.
+
+Separating those three layers turns the approval policy into a funnel:
+
+```mermaid
+flowchart TD
+    A["Execution signal"] --> B{"Auto-verifiable?"}
+    B -->|"Yes"| C["Auto-pass / log"]
+    B -->|"No, low risk"| D["Post-hoc sampling review"]
+    B -->|"No, high risk"| E["Immediate human review"]
+    C --> F["Audit archive"]
+    D --> F
+    E --> F
+```
+
+The goal isn't to press fewer buttons. It's to make every remaining press worth pressing. When approval frequency drops, each prompt gets more of your attention—you stop running on reflex.
+
+There's a consequence worth keeping in mind, though. If you spend a long time looking only at high-risk nodes and ignoring everything the funnel auto-passes, your understanding of the system stays at the "anomaly detection" level. If the funnel configuration itself goes wrong—wrong thresholds, wrong risk categories—you may have already lost the ability to catch it.
+
+That's why sampling reviews aren't a formality. Every so often, pull a few auto-passed records at random and actually look at them. It's a check on current decision quality, and it's maintenance on your own judgment. You need to keep understanding this system well enough to notice and fix it when the funnel fails.
+
+Human attention is finite. The endpoint of an approval policy is directing that finite attention toward the decisions the machine genuinely cannot make.
+
 ## Key Takeaways
 
 - **Context flow**: Every decision you make (approve, reject, modify) is a context injection. The Agent's output is your input for decision-making; your decision is the Agent's input for its next reasoning round. This is the only bidirectional closed loop in the entire tutorial—human and Agent are each other's context.

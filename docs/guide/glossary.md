@@ -55,3 +55,10 @@ visualRhythm: false
 | 上下文工程        | Context Engineering                 | 设计动态系统，在正确的时间以正确的格式向 LLM 提供正确的信息和工具。从"写好一条 prompt"演进到"管理整个上下文供给链"。 |
 | Agentic 工程      | Agentic Engineering                 | 用 AI agent 工具高效构建软件的工程实践全集——涵盖上下文管理、工具选型、并行编排、反馈闭环、质量验证等全链路。上下文工程是其核心子领域。 |
 | Fire-and-forget   | Fire-and-forget                     | 消息发出后不等确认回执的通信模式。简化系统设计，但不能假设每条消息都被处理了。                               |
+| Harness Engineering     | Harness Engineering                 | 围绕 LLM 搭建的工程外壳，涵盖系统指令、hooks、skills、审批策略等使 agent 可靠运作的机制总称。              |
+| 可执行 Definition of Done | Executable Definition of Done      | 完成准则须以可被脚本、命令或构建验证的可执行信号表达，而非只写「测试通过」等描述性文字。                    |
+| 失败日志回流            | Failure Log Feedback                | 将运行过程中产生的调试信息、错误输出转化为下一轮 agent 输入的机制，让上一次失败直接成为下一次的上下文。      |
+| 执行隔离                | Execution Isolation                 | 在上下文、权限、工具范围上对 agent 运行环境进行分区，使各会话互不污染。                                      |
+| 工作流沉淀              | Workflow Crystallization            | 将反复执行的操作从一次性步骤演进为 skill、command 或 hook 的过程，减少每次重新描述的开销。                  |
+| 审批闭环                | Approval Loop                       | 从自动化信号检测到抽样回顾，再到人工审批升级的完整量化路径，确保验证逻辑可追溯、可升级。                    |
+| 认知参与                | Cognitive Engagement                | agent 协作中，人通过主动理解、判断和引导保持对任务的实质掌控，而非仅点击审批按钮。                          |

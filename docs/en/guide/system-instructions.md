@@ -155,6 +155,31 @@ One person maintaining an instruction file? Just iterate. A team maintaining the
 | Low change frequency (monthly/quarterly) | ✅ | |
 | High change frequency (daily/weekly) | | ✅ (frequently changing system prompts invite errors) |
 
+## Routing Failure Logs Back into System Instructions
+
+After an agent completes a task, it leaves behind failure records — deleted the wrong file, used a deprecated API, committed without running tests. Which failures belong in system instructions, and which ones do you just fix on the spot?
+
+Two questions settle it:
+
+1. **Will this type of failure repeat?** Across different tasks, different people, or after time passes — is the same trap still there?
+2. **Can the rule generalize?** Can you write it as one instruction that holds for all similar tasks, rather than a special case for this one situation?
+
+Both answers yes: write it into system instructions. Otherwise, correct it in the conversation and move on.
+
+| Failure Type | Goes in System Instructions | Reason |
+| :--- | :--- | :--- |
+| Agent deleted a config file it shouldn't have | ✅ Yes | Any task can trigger this — needs a global guardrail |
+| Formatting output was wrong in one task | ❌ No | One-time deviation — correct it in that conversation |
+| Used a deprecated API | ✅ Yes | Affects the whole codebase — one rule keeps everyone from hitting it |
+| Reasoning drifted, analysis went off-track | ❌ No | Reasoning failures don't generalize into static rules |
+| Always forgot to run lint before committing | ✅ Yes | A workflow gap — one global rule closes it permanently |
+
+One more practical note: rules that go into system instructions need to stay tight. Every rule lives in context on every request — pile in too many, and you crowd out reasoning space. If a failure can be distilled into one clear behavioral instruction, it's worth writing in. If all you can say is "something went wrong last time," keep it in the team's notes until a clear pattern emerges.
+
+This is the boundary between system instructions and in-session correction: the former handles predictable, repeatable systemic risks; the latter handles one-off, task-specific deviations. Force things in that don't belong, and the instruction file bloats — rules pile up, maintenance gets harder, and the agent's behavior starts drifting from what the rules actually say.
+
+Note: this routing decision belongs here — in system instructions — because it's about what gets written into the persistent behavioral baseline. How to collect and format that knowledge is a separate concern covered in knowledge feeding.
+
 ## Key Takeaways
 
 - **Context flow**: System instructions are the "static layer" of context — present unchanged in every request, providing a stable behavioral baseline for all dynamic context that follows (user inputs, tool results).

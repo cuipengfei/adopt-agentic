@@ -1,616 +1,1210 @@
 # Harness Engineering 站点升级计划
 
-> 来源：Task 1 报告 `.sisyphus/research/harness-engineering-content-gap/report.md`，并纳入两篇 Martin Fowler 站点文章（<https://martinfowler.com/articles/harness-engineering.html>、<https://martinfowler.com/articles/reduce-friction-ai/>）、Sean Goedecke 文章（<https://www.seangoedecke.com/software-engineering-may-no-longer-be-a-lifetime-career/>），以及 18 个早期多源研究 URL 的二次校准结果。本计划只把报告转成后续可执行的站点升级路线，不修改 `docs/` 正文。
+## TL;DR
 
-## 目标
+> **Quick Summary**: 把行业普遍共识里的 7 个 Harness Engineering Gap 落到现有 12 对中英章节里（含 glossary），每章新增 1 个 200-500 字中文小节并对齐英文版，glossary 补 7 个新词条，全部通过 4 路并行 review 后一次性 commit 提 PR。
+>
+> **Deliverables**:
+> - 11 个 `docs/guide/*.md` 各新增 1 个小节（中文）+ `docs/guide/glossary.md` 追加 7 个词条
+> - 11 个 `docs/en/guide/*.md` 对齐小节（英文）+ `docs/en/guide/glossary.md` 追加 7 个英文词条
+> - `docs/guide/glossary.md` + `docs/en/guide/glossary.md` 各补 7 个词条
+> - `bun run docs:build` 通过
+> - 单 commit + PR 描述列出 7 个 Gap 摘要
+>
+> **Estimated Effort**: Medium
+> **Parallel Execution**: YES — 4 个 Wave（Wave 0 单 task → Wave 1 中文 12 路并行 → Wave 2 英文 12 路并行，按 task 级依赖 staggered → Final 4 路 reviewer 并行）
+> **Critical Path**: 0.1 → 1.x → 2.x → F1-F4 → commit
 
-把 Task 1 报告中的 7 个 harness engineering Gap 转成可执行的双语内容升级任务。
+---
 
-目标不是重写骨架，也不是新增一套独立课程。Task 1 已确认：当前站点已经覆盖规则、Skills、Hooks、Sub Agent、MCP、权限边界、验证、HITL、编排等大多数零件。缺口主要在两处：
+## Context
 
-- 这些零件还没有被串成“围绕 agent 外层的工程系统”。
-- 若干实践点讲了，但还不够集中：可执行 DoD、失败日志回流、运行环境隔离、重复工作流沉淀、审批疲劳与权限策略闭环。
+### Original Request
 
-Fowler 的补充来源把这套外层系统拆得更清楚：`Guides (feedforward controls)` 在 agent 动手前引导它，`Sensors (feedback controls)` 在 agent 动手后给它反馈；`Computational` controls 包括 tests、linters、type checkers、structural analysis，`Inferential` controls 包括 semantic analysis、AI code review、LLM-as-judge。后续升级应把这些概念翻译成本站读者能直接用的说法。
+把 `.sisyphus/plans/harness-engineering-site-upgrade.md`（之前的「升级路线说明书」）转成可执行 real plan：真改 docs/ 双语正文，跑 `bun run docs:build`，准备好提 PR。
 
-Sean Goedecke 的补充来源把人的长期能力问题放回视野：即便 AI 工具带来短期收益，也不能把 harness 写成“人更少思考”的承诺。计划中的 HITL、steering loop 和 Feedback Flywheel 要强调人的 cognitive engagement、监督质量和能力保留。
+### 5 条高频共识
 
-计划默认不立即编辑 `docs/`。后续 `/start-work` 只有在用户确认术语和高影响改动范围后，才进入正文修改。
+> 这 5 条是后续每章新增小节的概念锚点。属于行业普遍共识，agent 写作时不必逐条标注来源，但必须命中论点。
 
-## 基于报告的发现
+1. **Hooks vs Rules 边界**：Hooks 处理「必须发生」的事，规则文件处理「应该这样做」的事。
+2. **Subagent 的真正价值**：上下文隔离，不只是并行——隔离让短链路能复用主线索，长链路能独立失败。
+3. **Definition of Done 必须可执行**：DoD 不能只写「测试通过」，要尽量转成可执行信号（命令、脚本、grep、构建）。
+4. **harness 从真实失败里长出来**：CLAUDE.md / hooks / skills 是踩坑后沉淀，不是预先设计。
+5. **审批策略的目标不是「更少点按钮」**：而是把人的注意力留给高价值判断；多数审批应自动化或转事后回顾。
 
-Task 1 报告给出的判断如下：
+### 7 个 Gap（GAP-HE-001 ~ GAP-HE-007）
 
-| Gap | 类型 | 报告结论 | 建议落点 |
+| Gap ID | 主题 | 类型 | 落点章节 |
 | --- | --- | --- | --- |
-| GAP-HE-001 framework entrance | 框架 | 零件都在，但缺 harness engineering 的入口、guides / sensors 框架，以及它和 Context Engineering 的关系。 | `docs/guide/index.md` + `docs/en/guide/index.md`；`docs/guide/context.md` + `docs/en/guide/context.md`；`docs/guide/glossary.md` + `docs/en/guide/glossary.md` |
-| GAP-HE-002 executable DoD | 深度 | 验证分散在 actors、HITL、In Practice；缺“DoD 要能被命令、exit code、文件状态、证据输出验证”的概念锚点，也缺 computational sensors / keep quality left 的说法。 | `docs/guide/actors.md` + `docs/en/guide/actors.md`；`docs/guide/human-in-the-loop.md` + `docs/en/guide/human-in-the-loop.md`；`docs/guide/in-practice.md` + `docs/en/guide/in-practice.md` |
-| GAP-HE-003 failure-log feedback loop | 深度 | 已讲踩坑写成规则，但没把“失败日志 → 规则 / Hook / 测试 / Skill / Command 改进”讲成 steering loop / Feedback Flywheel。 | `docs/guide/knowledge-feeding.md` + `docs/en/guide/knowledge-feeding.md`；`docs/guide/in-practice.md` + `docs/en/guide/in-practice.md`；`docs/guide/system-instructions.md` + `docs/en/guide/system-instructions.md` |
-| GAP-HE-004 execution isolation | 深度 | Sub Agent 的上下文隔离讲得清楚，运行环境隔离讲得少；还可用 harnessability / ambient affordances 解释环境结构如何影响 agent 成功率。 | `docs/guide/sub-agents.md` + `docs/en/guide/sub-agents.md`；`docs/guide/orchestration.md` + `docs/en/guide/orchestration.md`；`docs/guide/built-in-tools.md` + `docs/en/guide/built-in-tools.md` |
-| GAP-HE-005 repeatable workflow sedimentation | 框架 | Commands、Skills、Hooks 各自讲了，但缺“重复工作流进入 harness 的路径”；Fowler 五个 friction-reduction patterns 可作为组织方式。 | `docs/guide/skills.md` + `docs/en/guide/skills.md`；`docs/guide/commands.md` + `docs/en/guide/commands.md`；`docs/guide/hooks-and-plugins.md` + `docs/en/guide/hooks-and-plugins.md` |
-| GAP-HE-006 approval fatigue and permissions loop | 框架 | 审批疲劳、Hooks、权限梯度都在，但三者还没形成闭环；可用 first-pass acceptance、iteration cycles、review burden 解释为什么目标是减少 review toil，同时用 Sean Goedecke 的条件性提醒说明：减少低价值 review 不等于减少人的思考。 | `docs/guide/human-in-the-loop.md` + `docs/en/guide/human-in-the-loop.md`；`docs/guide/hooks-and-plugins.md` + `docs/en/guide/hooks-and-plugins.md`；`docs/guide/built-in-tools.md` + `docs/en/guide/built-in-tools.md` |
-| GAP-HE-007 glossary term | 概念 | 术语表没有 Harness Engineering；也没有 guides / sensors、feedforward / feedback、computational / inferential controls 的轻量解释。 | `docs/guide/glossary.md` + `docs/en/guide/glossary.md` |
+| GAP-HE-001 (B) | 可执行 Definition of Done | 深度 | actors / human-in-the-loop / in-practice |
+| GAP-HE-002 (C) | 失败日志回流到 system instructions | 框架 | knowledge-feeding / in-practice / system-instructions |
+| GAP-HE-003 (D) | 执行隔离（subagent / 沙箱 / 工具） | 概念 | sub-agents / orchestration / built-in-tools |
+| GAP-HE-004 (E) | 重复工作流沉淀路径（skills / commands / hooks） | 框架 | skills / commands / hooks-and-plugins |
+| GAP-HE-005 (F) | 审批疲劳与权限策略闭环 | 深度 | human-in-the-loop / hooks-and-plugins / built-in-tools |
+| GAP-HE-006 (F2) | 人的长期能力与认知参与 | 概念 | actors / human-in-the-loop / in-practice |
+| GAP-HE-007 (G) | 术语表补项 | 框架 | glossary |
 
-Task 1 报告还明确列出 No Gap：Context Engineering 主线、System Instructions、Skills、Hooks / Plugins、MCP、权限边界、Sub Agent 上下文隔离、并行治理、长循环控制、HITL、In Practice 都已覆盖。后续升级只做补强和串联，不把已覆盖内容包装成“全新发现”。
+### 来源处理约定
 
-## 基于 18 个来源的进一步校准
+本计划不再列具体来源 URL。所有论点按「行业普遍共识」处理，agent 在写作时：
 
-这轮额外校准的意义，不是把站点改成“18 篇文章读书笔记”，而是把已经在 Task 1 中识别出的 7 个 Gap，再用更多来源压实优先级、边界和说法。
+- 直接陈述共识，不写「根据某某文章」「来源：xxx」之类的 attribution 句式
+- 不在站点正文中出现 URL
+- 共识范围以本节「5 条高频共识」+「7 个 Gap」+「启发式」三段为准，不向外扩张
+- 涉及具体产品名（Anthropic / Cognition 等）的论述，按 Must NOT Have 规则改写为通用表达，除非落在 `built-in-tools` 章节例外区
 
-### 高可信共识（官方文档 / 官方博客 / Fowler + 多个实践来源反复出现）
+### 启发式（不能讲太满的）
 
-1. **Hooks 处理“必须发生”的事，规则文件处理“应该这样做”的事。**
-   这是本轮最稳定的共识。`CLAUDE.md` / `AGENTS.md` / rules 文件适合写项目约定、命令、架构边界、禁用做法；Hooks 适合 deterministic gate：危险命令拦截、写后 format/lint/typecheck、Stop 时验证完成条件。
+> 这些数字在共识里出现频率高但口径不一，agent 写作时**不要**当成定论：
 
-2. **Subagent 的核心价值是上下文隔离，不只是并行。**
-   多个来源都强调：探索、调研、review、长日志、批量操作之类的脏活，真正的收益不只在“更快”，而在于主会话只接收摘要，不把试错废料带回主线。
+- `/clear` 上下文阈值（不同模型、不同任务差异大）
+- CLAUDE.md / AGENTS.md 行数上限（团队差异大）
+- subagent 单次最长时长 / token 预算（项目差异大）
+- 审批 batch size（与权限模型耦合）
 
-3. **Definition of Done 必须尽量转成可执行信号。**
-   官方 best practices、Fowler 的 `Computational` / `Inferential` controls，以及多篇实践文章都指向同一件事：完成标准越能落成 tests、linters、type checks、build、evidence files、exit codes，越少依赖“看起来差不多”。
+### 术语规约
 
-4. **harness 要从真实失败里长出来，而不是预设一套大全。**
-   这是官方 best practices、Fowler、AICodeInvest、SmartScope、Paradime、Heyuan 等多来源共识。站点升级也应保持这个立场：不是介绍“最全配置”，而是介绍“如何把反复出现的问题沉淀成规则、Hook、测试、Skill、Command”。
+本 plan 所有 agent 写作时必须遵守：
 
-5. **审批策略的目标不是“更少点按钮”，而是把人的注意力留给高价值判断。**
-   这点被 PermissionRequest / PreToolUse 实践、Fowler 的 guides/sensors、Sean Goedec​ke 的 skill-retention 提醒反复支撑。好的 harness 不是把人拿掉，而是减少低价值 review toil。
+- **Harness Engineering**：保留英文，不造中文译名（无「线束工程」「护栏工程」「外层工程」）。中文正文**首次出现**时配一句中文解释，例：「Harness Engineering（围绕 LLM 搭建的工程外壳）」，之后直接用英文术语。
+- **Definition of Done**：保留英文缩写 DoD 可用，首次出现展开。
+- **subagent**：小写一词，不写「sub-agent」「Sub Agent」「子 Agent」（正文中可用「子代理」但要与 subagent 标注对应）。
+- **hooks**：小写，不写「Hooks」（专有名词上下文除外）。
+- **skills / commands**：小写复数形式，不写「技能」「命令」作为术语替代（中文可用「技能」「命令」但需在首次出现时与 skill/command 对照）。
+- 其他英文术语（`context window` / `system prompt` / `orchestration` / `workflow`）出现时保持英文，不硬译。
 
-6. **长会话不是优势；阶段切换和上下文重置是正常工作流的一部分。**
-   官方 best practices、SmartScope、ShipWithAI、ZooClaw 都明确把 `/clear`、spec/impl 分 session、explore → plan → implement → verify 视为高回报实践。站内应把它讲成“上下文管理纪律”，不是某个工具的怪癖。
+### Interview 关键决策
 
-### 可引用但不能讲太满的启发式
+- **范围**：Task A + B + C + D + E + F + F2 + G（不含 H/I）
+- **交付**：真改 docs/ 双语正文，构建过，可提 PR
+- **术语**：保留英文 `Harness Engineering`，中文正文首次出现给一句中文解释，不造中文译名
+- **篇幅**：每章 1 个新增小节，200-500 字中文，可配 1 个 Mermaid 或表格
+- **双语**：中先英后，task 拆「中文 task → 英文对齐 task」
+- **可视化**：默认纯文字，按需加 Mermaid（一旦加 Mermaid 触发 `bun run docs:build`）
+- **Commit**：全部合一个 commit，message 列出 7 个 Gap 摘要
+- **Wave 切法**：按章节切 Wave，每文件 1 task，最大并发 + MECE
+- **Final Wave**：4 路 reviewer 全保留，角色按内容站改写
 
-- “两次失败就 `/clear`”——这是有用的经验法则，但不是站内应断言的硬规则。
-- `CLAUDE.md` 200 行上下的上限——适合作为“保持精简”的经验提醒，不适合作为硬性数值结论。
-- “单个 subagent 任务最好控制在约 30 分钟内”——这是工作分解启发，不是普适标准。
-- `13` 或 `25` 种 hook 事件、某些 async / setup 行为、特定版本细节——适合出现在 In Practice 或注释型说明，不适合写进主概念层当稳定事实。
-- 被 paywall 挡住、或来自 curated list 的信息，只能作为方向校准，不能当成核心证据来源。
+---
 
-### 对升级计划的直接影响
+## Work Objectives
 
-1. **Task B-F 的优先级应高于 Task H-I。**
-   因为这轮 18 源校准进一步确认：最有用的不是先发明一个新章节，而是把可执行 DoD、失败回流、执行隔离、工作流沉淀、审批闭环这几条落到已有章节。
+### Core Objective
 
-2. **Task E 必须显式讲清“哪类东西该沉到哪一层”。**
-   多来源已经稳定收敛出分工：
-   - 总是要读到的长期规则 → `CLAUDE.md` / `AGENTS.md` / rules
-   - 可复用流程 → Skills / Commands
-   - 必须由系统强制执行的门禁 → Hooks
-   - 噪声重、上下文污染高的工作 → Subagents
+把行业共识收敛出的 7 个 Harness Engineering Gap，以最小破坏方式补强进现有 11 对中英正文章节 + glossary对，让站点对「harness 怎么从经验里长出来」这件事说得更具体、更可执行。
 
-3. **Task F / F2 应把“少想一点”排除掉。**
-   本轮来源一致支持“减少低价值审批”和“把人从机械劳动里解放出来”，但不支持把 harness 讲成“以后人可以更少思考”。这条红线要写清楚。
+### Concrete Deliverables
 
-4. **Task H 若执行，只能做轻量入口，不做术语主导的重写。**
-   多来源都说明 context/harness/skills/hooks/subagents 是层次分工，不是要把一切改名成 harness engineering。首页和 context 页若动，只能轻量解释关系，不重写主线。
+- 11 个 `docs/guide/*.md` 各新增 1 个小节（中文，200-500 字）：
+  `actors.md` / `built-in-tools.md` / `commands.md` / `hooks-and-plugins.md` / `human-in-the-loop.md` / `in-practice.md` / `knowledge-feeding.md` / `orchestration.md` / `skills.md` / `sub-agents.md` / `system-instructions.md`
+- 11 个 `docs/en/guide/*.md` 对齐小节
+- `docs/guide/glossary.md` + `docs/en/guide/glossary.md` 各补 7 个新词条（与 Gap 相关概念）
+- `bun run docs:build` 通过
+- 单 commit + PR description
 
-## 推荐默认路径
+### Definition of Done
 
-默认路径：不新建章节，不改 sidebar，不立即编辑 `docs/`，先把升级拆成一组用户可批准的现有章节补强任务。
+- [ ] 25 个 task 全部完成（1 + 12 + 12 = 25；含 Final Wave 4 路 reviewer 合计 29）
+- [ ] `bun run docs:build` exit code 0
+- [ ] 4 路 Final reviewer 全部 APPROVE
+- [ ] git diff 仅触及 24 个 docs 文件（12 个中文 + 12 个英文），sidebar / knowledge-graph / theme / illustrations 零改动
 
-推荐顺序：
+### Must Have
 
-1. 先确认术语，不在计划里替用户定中文名。
-2. 再确认是否允许触碰基础叙事：`docs/guide/index.md` + `docs/en/guide/index.md`、`docs/guide/context.md` + `docs/en/guide/context.md` 属于 `high-impact requires-user-review`。
-3. 若用户暂不批准基础叙事改动，先执行低风险章节补强：DoD、失败日志回流、执行隔离、工作流沉淀、审批闭环。
-4. 术语表新增项只在术语选定后执行；`docs/guide/glossary.md` + `docs/en/guide/glossary.md` 不能先写死中文名。
+- 每章新增小节内容必须命中对应 Gap 的核心论点
+- 中英版本信息点 1:1 对齐（论点数对等，行文可不同）
+- `Harness Engineering` 在中英版本术语统一
+- glossary 词条与正文出现的概念名一致
 
-这条默认路径对应 Task 1 报告的结论：机制大多已在，框架层还没成形。更稳的做法是用交叉引用和短段落把已有机制串起来，而不是新开一页重复讲所有零件。
+### Must NOT Have（Guardrails）
 
-Fowler 两篇文章只改变“怎么串”的语言，不改变默认路径：用 guides/feedforward、sensors/feedback、computational/inferential controls、steering loop、Feedback Flywheel、keep quality left 来补强已有章节；不新增默认章节，不把站点改成外部文章导读。
+- ❌ 主内容章节出现产品名（Cursor / Windsurf / GitHub Copilot 等）——**例外**：`built-in-tools.md` 章节允许引用 Claude Code / Codex / Gemini CLI / OpenCode 做对比
+- ❌ ASCII art 流程图（必须用 Mermaid）
+- ❌ 引用 `materials/` / `.sisyphus/` 等内部路径
+- ❌ 使用 AGENTS.md 禁用词：心智模型 / 物理形态 / 施力 / 杠杆 / 宪法 / 瞎子 / 发疯 / 伤疤 / 结晶 / 半年前 / 半小时
+- ❌ AI filler 词高密度：本质上 / 基本上 / 实际上 / 关键在于（同章不超过 1-2 次）
+- ❌ 中文造译名：不写「线束工程」「外层工程」「护栏工程」等
+- ❌ 改 sidebar (`docs/.vitepress/config.ts`)、knowledge-graph (`docs/.vitepress/data/knowledge-graph.ts`)、AgentPrompt 模板、illustrations、theme
+- ❌ 写英文版（在 Wave 1 中文 task 中）/ 写中文版（在 Wave 2 英文 task 中）
+- ❌ 单 task 触及超出其声明的文件
+- ❌ 在站点正文写出任何 URL 或来源 attribution 句式
 
-Sean Goedecke 文章只改变 HITL 和指标 framing：除了 review burden、post-merge rework、first-pass acceptance，也要提醒 harness 应保留人的技能参与和监督质量。不要把它写成“AI 必然导致技能退化”或“软件工程职业确定变短”。
+---
 
-18 个来源的二次校准进一步确认默认路径：
+## Verification Strategy
 
-- **不先新增章节**，先补强已有章节的“层次分工”和“可执行闭环”。
-- **不把主站写成某个工具的配置说明书**，尤其不把 Hook 事件枚举、某个 CLI flag、某种工作树操作写进概念层正文。
-- **不把社区经验法则包装成硬结论**。像 `/clear` 阈值、`CLAUDE.md` 行数、subagent 时长，只能作为 In Practice 的经验建议。
-- **先讲“为什么这样分层”**，再讲“这些层各自放什么”。这是避免读者把 Commands、Skills、Hooks、Subagents 混成一团的关键。
+> **ZERO HUMAN INTERVENTION** — 验证全部 agent 执行。
 
-## 用户决策点
+### Test Decision
 
-### 1. “harness engineering” 中文术语
+- **Infrastructure exists**: NO（这是内容站，无单元测试）
+- **Automated tests**: NO unit tests — 改用「构建验证 + 双语对照 + 写作纪律审查」
+- **Framework**: VitePress 构建（`bun run docs:build`）+ Final Wave 4 路 reviewer
 
-状态：requires-user-approval。
+### QA Policy
 
-不能在后续正文中静默选定术语。Task 1 report.md 只给候选：
+- 每个写作 task 必须保存 evidence 到 `.sisyphus/evidence/task-{N}-{scenario-slug}.{ext}`
+  - happy path: `.sisyphus/evidence/task-{N}-happy.txt`（含 `wc -w` + `git diff` + `grep` 输出）
+  - 加 Mermaid 时: `.sisyphus/evidence/task-{N}-build.log`
+- Final Wave evidence 集中到 `.sisyphus/evidence/final-qa/`
 
-| 候选 | 适合点 | 风险 |
+---
+
+## Execution Strategy
+
+### Parallel Execution Waves
+
+```
+Wave 0（启动 / 单 task）:
+└── 0.1 terminology-anchor [quick] — 零文件改动，确立 Harness Engineering 保留英文规则
+
+Wave 1（中文写作波 / 12 路并发，MECE）:
+├── 1.1  actors-zh             [writing] — Gap B + F2
+├── 1.2  human-in-the-loop-zh  [writing] — Gap B + F + F2
+├── 1.3  in-practice-zh        [writing] — Gap B + C + F2
+├── 1.4  system-instructions-zh[writing] — Gap C
+├── 1.5  knowledge-feeding-zh  [writing] — Gap C
+├── 1.6  sub-agents-zh         [writing] — Gap D
+├── 1.7  orchestration-zh      [writing] — Gap D
+├── 1.8  skills-zh             [writing] — Gap E
+├── 1.9  commands-zh           [writing] — Gap E
+├── 1.10 hooks-and-plugins-zh  [writing] — Gap E + F
+├── 1.11 built-in-tools-zh     [writing] — Gap D + F
+└── 1.12 glossary-zh           [writing] — Gap G（追加 7 个词条到已有文件）
+
+Wave 2（英文对齐波 / 12 路并发，task 级依赖 1.x）:
+├── 2.1  actors-en             [writing] — 依赖 1.1
+├── 2.2  human-in-the-loop-en  [writing] — 依赖 1.2
+├── 2.3  in-practice-en        [writing] — 依赖 1.3
+├── 2.4  system-instructions-en[writing] — 依赖 1.4
+├── 2.5  knowledge-feeding-en  [writing] — 依赖 1.5
+├── 2.6  sub-agents-en         [writing] — 依赖 1.6
+├── 2.7  orchestration-en      [writing] — 依赖 1.7
+├── 2.8  skills-en             [writing] — 依赖 1.8
+├── 2.9  commands-en           [writing] — 依赖 1.9
+├── 2.10 hooks-and-plugins-en  [writing] — 依赖 1.10
+├── 2.11 built-in-tools-en     [writing] — 依赖 1.11
+└── 2.12 glossary-en           [writing] — 依赖 1.12
+
+Final Wave（4 路 reviewer 并发）:
+├── F1 plan-compliance-audit          [oracle]
+├── F2 writing-discipline-review      [unspecified-high + humanizer-zh]
+├── F3 build-and-bilingual-check      [unspecified-high]
+└── F4 scope-fidelity-check           [deep]
+
+→ 4 路全 APPROVE → 单 commit → PR
+
+Critical Path: 0.1 → 1.x（最长一个）→ 2.x（对应英文）→ F1-F4 → commit
+Max Concurrent: 12（Wave 1 / Wave 2 阶段），4（Final Wave）
+```
+
+### Dependency Matrix
+
+| Task | Blocked By | Blocks |
 | --- | --- | --- |
-| Harness Engineering（保留英文） | 不误译，方便和英文资料对齐。 | 中文读者第一次见需要解释。 |
-| 护栏工程 | 好懂，和权限、Hooks、审批强相关。 | 容易缩成安全概念，盖不住 Skills、MCP、DoD、工作流。 |
-| 外层工程 | 朴素，贴近“围绕模型外面的一圈系统”。 | 术语感弱。 |
-| 运行框架工程 | 能覆盖 workflow、gates、isolation。 | 容易听成在教框架开发。 |
+| 0.1 | — | 1.1-1.12 |
+| 1.1-1.12 | 0.1 | 对应 2.x |
+| 2.x | 对应 1.x | F1-F4 |
+| F1-F4 | 2.1-2.12 全完成 | commit |
+
+### Agent Dispatch Summary
+
+- **Wave 0**: 1 task → `quick`
+- **Wave 1**: 12 task → `writing`（11 个挂 `humanizer-zh` + `adopt-agentic-writer`，`glossary-zh` 仅挂 `adopt-agentic-writer`）
+- **Wave 2**: 12 task → `writing`（仅挂 `adopt-agentic-writer`，不挂 `humanizer-zh` 因其为中文专用）
+- **Final**: F1 → `oracle`, F2 → `unspecified-high` + `humanizer-zh`, F3 → `unspecified-high`, F4 → `deep`
+- **总计**: 25 task + 4 reviewer = 29 个 agent 调度点
+
+---
+
+## TODOs
+
+- [x] 0.1 **terminology-anchor** — Wave 0
+
+  **What to do**:
+  - 在本 plan 顶部「Interview 关键决策」之上插入一段「术语规约」声明：保留英文 `Harness Engineering`，中文正文首次出现配中文解释（例：「Harness Engineering（围绕 LLM 搭建的工程外壳）」），不造中文译名。
+  - 列出本 plan 涉及的其他英文术语（`Definition of Done` / `subagent` / `hooks` / `skills` 等）的统一写法。
+  - 零 docs 文件改动。
+
+  **Must NOT do**: 不动 docs/，不改 sidebar / config / knowledge-graph。
+
+  **Recommended Agent Profile**:
+  - **Category**: `quick` — 仅 plan 内文字编辑
+  - **Skills**: none
+
+  **Parallelization**: Wave 0，串行；Blocks: 1.1-1.12；Blocked By: 无
+
+  **References**: 本 plan 现有「Interview 关键决策」节、AGENTS.md 写作纪律节
+
+  **Acceptance Criteria**:
+  - [ ] plan 中存在「术语规约」段落且明确「保留英文 Harness Engineering」
+  - [ ] git diff 仅触及本 plan 文件
+
+  **QA Scenarios**:
+  ```
+  Scenario: 术语规约段落正确插入（happy）
+    Tool: Bash + Read
+    Steps:
+      1. grep -n '术语规约' .sisyphus/plans/harness-engineering-site-upgrade.md
+      2. grep -n '保留英文.*Harness Engineering' .sisyphus/plans/harness-engineering-site-upgrade.md
+      3. git diff --name-only HEAD 仅显示 plan 文件
+    Expected: 三步全 pass
+    Evidence: .sisyphus/evidence/task-0.1-happy.txt
+  ```
+
+  **Commit**: NO（统一 commit）
+
+- [ ] 1.1 **actors-zh** — Wave 1 中文写作
+
+  **What to do**:
+  - 在 `docs/guide/actors.md` 适当位置插入 1 个新增小节（候选标题：「## 角色边界与可执行 Definition of Done」），200-500 字中文。
+  - 融合 Gap B（DoD 转可执行信号）+ Gap F2（人的长期能力）的 actors 维度。
+  - 引用共识 3：DoD 必须尽量转成可执行信号；共识 5：审批策略把人的注意力留给高价值判断。
+  - 首次出现 `Harness Engineering` 配中文解释。
+  - 可选：1 个表格列「角色 → 可执行信号 → 兜底人审」三列。
+
+  **Must NOT do**: 见 plan 顶部 Must NOT Have；本 task 额外不写英文版（Wave 2 负责）。
+
+  **Recommended Agent Profile**:
+  - **Category**: `writing` — 中文教程内容创作
+  - **Skills**: `humanizer-zh`（中文 AI 痕迹清除）, `adopt-agentic-writer`（项目本地写作风格）
+  - **Skills Evaluated but Omitted**: `adopt-agentic-vitepress`（不动站点结构）
+
+  **Parallelization**: Wave 1（与 1.2-1.12 并发）；Blocks: 2.1；Blocked By: 0.1
+
+  **References**:
+  - `docs/guide/actors.md` 现状：决定新小节插入位置和过渡句
+  - 本 plan「5 条高频共识」+「7 个 Gap」节：actors / DoD 相关论点
+  - `AGENTS.md` 写作纪律节：禁用词表、AI filler 控制、段落与逻辑、可视化节奏
+
+  **Acceptance Criteria**:
+  - [ ] 新增 1 个小节，中文 200-500 字（`wc -m` 字符数 ~ 字数）
+  - [ ] 首次出现 `Harness Engineering` 配中文解释
+  - [ ] 段落数若 ≥ 3 段需考虑表格
+  - [ ] git diff `docs/guide/actors.md` 仅显示新增 hunk
+  - [ ] grep 禁用词表在新小节段落内为空
+  - [ ] 若加 Mermaid → `bun run docs:build` exit 0
+
+  **QA Scenarios**:
+  ```
+  Scenario: 新小节合规插入（happy）
+    Tool: Bash + Read
+    Steps:
+      1. Read docs/guide/actors.md 找到新小节
+      2. wc -m 验证中文字数 200-500
+      3. grep 'Harness Engineering' docs/guide/actors.md
+      4. git diff docs/guide/actors.md 仅新增 hunk
+      5. grep -E '心智模型|物理形态|施力|杠杆|宪法|瞎子|发疯' 该 hunk 为空
+    Expected: 5 步全 pass
+    Evidence: .sisyphus/evidence/task-1.1-happy.txt
+
+  Scenario: 加 Mermaid 时构建通过（条件性）
+    Tool: Bash
+    Preconditions: 新小节含 ```mermaid 块
+    Steps: 1. bun run docs:build
+    Expected: exit 0
+    Evidence: .sisyphus/evidence/task-1.1-build.log
+  ```
 
-建议：用户未拍板前，计划和草稿里都写 `harness engineering`，首次出现时用一句中文解释，不造最终中文术语。
+  **Commit**: NO（统一 commit）
 
-### 2. 是否新增章节
+- [ ] 1.2 **human-in-the-loop-zh** — Wave 1 中文写作
 
-状态：requires-user-approval。
+  **What to do**:
+  - 在 `docs/guide/human-in-the-loop.md` 插入 1 个新增小节（候选标题：「## 审批闭环与人的注意力配额」），200-500 字中文。
+  - 融合 Gap B（DoD 信号哪些必须人审）+ Gap F（审批疲劳与权限策略闭环）+ Gap F2（人的长期能力）。
+  - 引用共识 5：审批策略目标不是「更少点按钮」而是把注意力留给高价值判断。
+  - 可选：1 个 Mermaid 图示「自动信号 → 抽样回顾 → 人审升级」三层 funnel。
 
-默认不新增章节。若用户希望把 harness engineering 做成和 Context Engineering 同级的显性主线，才考虑新增章节。
+  **Must NOT do**: 同 plan Must NOT Have；本章节是 HITL 主战场，但避免重复已有内容。
 
-新章节候选必须标记为 `requires-user-approval`，并且不是默认路径。若未来批准新增章节，至少还要同步：
+  **Recommended Agent Profile**:
+  - **Category**: `writing`
+  - **Skills**: `humanizer-zh`, `adopt-agentic-writer`
 
-- 新中文页：`docs/guide/harness-engineering.md` + 英文页：`docs/en/guide/harness-engineering.md`
-- sidebar 配置：`docs/.vitepress/config.ts`
-- 相关章节链接图：`docs/.vitepress/data/knowledge-graph.ts`
-- AgentPrompt 章节关系输出
+  **Parallelization**: Wave 1；Blocks: 2.2；Blocked By: 0.1
 
-本计划不建议立即走这条路，因为 Task 1 report.md 说现有骨架已能承载这些内容。
+  **References**:
+  - `docs/guide/human-in-the-loop.md` 现状
+  - 本 plan「5 条高频共识」+ Gap F 表述：审批闭环与权限策略
+  - `AGENTS.md` 写作纪律
 
-### 3. 是否调整基础叙事
+  **Acceptance Criteria**:
+  - [ ] 新增 1 个小节 200-500 字中文
+  - [ ] 命中 Gap B + F + F2 三个 Gap 的核心论点（审批 funnel + 注意力配额 + 人长期能力）
+  - [ ] 若加 Mermaid → `bun run docs:build` exit 0
+  - [ ] git diff 仅 `docs/guide/human-in-the-loop.md` 新增 hunk
+  - [ ] 禁用词扫描通过
 
-状态：high-impact requires-user-review。
+  **QA Scenarios**:
+  ```
+  Scenario: 新小节合规且覆盖三 Gap（happy）
+    Tool: Bash + Read
+    Steps:
+      1. Read 新小节
+      2. 验证含「审批 / 注意力 / 长期能力」相关表述
+      3. wc -m 字数 200-500
+      4. git diff 范围正确
+      5. 禁用词扫描
+    Evidence: .sisyphus/evidence/task-1.2-happy.txt
 
-以下改动会改变读者进入全书时看到的框架，不能默认执行：
+  Scenario: Mermaid 构建（条件性）
+    Tool: Bash; Steps: bun run docs:build; Expected: exit 0
+    Evidence: .sisyphus/evidence/task-1.2-build.log
+  ```
 
-- `docs/guide/index.md` + `docs/en/guide/index.md`：把 harness engineering 作为 Context Engineering 旁边的外层工程系统引入。
-- `docs/guide/context.md` + `docs/en/guide/context.md`：解释 Context Engineering 管“给模型看什么”，harness engineering 管“外层系统如何约束 agent 怎么跑、怎么停、怎么验收、怎么复盘”。
+  **Commit**: NO
 
-如果用户不批准，仍可先在低风险章节补强 GAP-HE-002 至 GAP-HE-006。
+- [ ] 1.3 **in-practice-zh** — Wave 1 中文写作
 
-## 任务分解
+  **What to do**:
+  - 在 `docs/guide/in-practice.md` 插入 1 个新增小节（候选标题：「## 把 DoD、失败回流、人审节奏放进同一个工作日」），200-500 字中文。
+  - 融合 Gap B（DoD 实践场景）+ Gap C（失败日志回流的实操路径）+ Gap F2（开发者长期能力）。
+  - 引用共识 4：harness 从真实失败里长出来。
+  - 给一个具体场景叙述（如「修一个 bug 的一次完整 agent 协作」），不要抽象列表。
 
-以下是给未来 `/start-work` 的延后实施纲要。当前 Task 2 不执行这些正文修改。
+  **Must NOT do**: 不引产品名；不写假大空场景。
 
-### Task A：术语与范围确认（不改 docs）
+  **Recommended Agent Profile**: `writing` + `humanizer-zh` + `adopt-agentic-writer`
 
-覆盖：GAP-HE-001、GAP-HE-007。
+  **Parallelization**: Wave 1；Blocks: 2.3；Blocked By: 0.1
 
-文件：无正文修改。
+  **References**: `docs/guide/in-practice.md` 现状；本 plan「5 条高频共识」+ Gap B/C/F2 表述；`AGENTS.md`
 
-动作：让用户从中文术语候选中选择，或明确继续保留英文 `harness engineering`。
+  **Acceptance Criteria**:
+  - [ ] 新增 1 个小节 200-500 字
+  - [ ] 含具体场景叙述而非抽象 bullet list
+  - [ ] 命中 B + C + F2 三 Gap
+  - [ ] git diff 仅本文件新增 hunk
+  - [ ] 禁用词扫描通过
 
-完成条件：后续正文统一使用同一个术语；术语表任务不再悬空。
+  **QA Scenarios**:
+  ```
+  Scenario: 场景叙述合规（happy）
+    Tool: Bash + Read
+    Steps: 1. Read 新小节; 2. 验证含场景叙述; 3. wc -m 200-500; 4. git diff; 5. 禁用词
+    Evidence: .sisyphus/evidence/task-1.3-happy.txt
+  ```
 
-### Task B：低风险补强可执行 DoD
+  **Commit**: NO
 
-覆盖：GAP-HE-002 executable DoD。
+- [ ] 1.4 **system-instructions-zh** — Wave 1 中文写作
 
-文件对：
+  **What to do**:
+  - 在 `docs/guide/system-instructions.md` 插入 1 个新增小节（候选标题：「## 从失败日志回流到系统指令」），200-500 字中文。
+  - 融合 Gap C（失败日志回流到 system instructions 的实操路径）。
+  - 说明「什么该进 system instructions / CLAUDE.md」与「什么只在特定 session 用」的判别准则。
+  - 可选：1 个表格列「失败类别 → 是否进 system instructions → 原因」。
 
-- `docs/guide/actors.md` + `docs/en/guide/actors.md`
-- `docs/guide/human-in-the-loop.md` + `docs/en/guide/human-in-the-loop.md`
-- `docs/guide/in-practice.md` + `docs/en/guide/in-practice.md`
+  **Must NOT do**: 同 plan Must NOT Have；不重复 knowledge-feeding 已讲的内容。
 
-建议内容边界：
+  **Recommended Agent Profile**: `writing` + `humanizer-zh` + `adopt-agentic-writer`
 
-- 在 actors 中把 stop condition 和完成标准连接到可执行信号：命令、exit code、文件状态、证据输出。
-- 在 HITL 中说明人验收的不应只是“看 agent 说完了”，而是看可执行证据。
-- 在 In Practice 中只加概念总结，不写 checklist，不扩成操作手册。
-- 引入 Fowler 的 `Computational` / `Inferential` controls：tests、linters、type checkers、structural analysis 属于便宜稳定的 computational sensors；semantic analysis、AI code review、LLM-as-judge 属于更慢、更不确定的 inferential sensors。
-- 用 keep quality left 解释：越早给 agent 可执行反馈，越少把问题拖到人工 review。
-- 加一层来自官方与实践文档的共识：expected outputs、tests、Stop hook、构建命令，不是四种互斥方案，而是把 DoD 逐步从“口头要求”压成“可运行证据”的一条连续带。
+  **Parallelization**: Wave 1；Blocks: 2.4；Blocked By: 0.1
 
-不做：不恢复已删除的 Eval 章节；不做评分表或 decision tree。
+  **References**: `docs/guide/system-instructions.md` 现状；`docs/guide/knowledge-feeding.md` 避免重复；本 plan 共识 4；`AGENTS.md`
 
-### Task C：补强失败日志回流
+  **Acceptance Criteria**: 200-500 字中文 / 命中 Gap C / git diff 仅本文件 / 禁用词扫描 / 若加 Mermaid 构建过
 
-覆盖：GAP-HE-003 failure-log feedback loop。
+  **QA Scenarios**:
+  ```
+  Scenario: 判别准则明确（happy）
+    Tool: Bash + Read
+    Steps: 1. Read 新小节; 2. 验证含判别准则叙述; 3. wc -m 200-500; 4. git diff; 5. 禁用词扫描
+    Evidence: .sisyphus/evidence/task-1.4-happy.txt
+  ```
 
-文件对：
+  **Commit**: NO
 
-- `docs/guide/knowledge-feeding.md` + `docs/en/guide/knowledge-feeding.md`
-- `docs/guide/in-practice.md` + `docs/en/guide/in-practice.md`
-- `docs/guide/system-instructions.md` + `docs/en/guide/system-instructions.md`
+- [ ] 1.5 **knowledge-feeding-zh** — Wave 1 中文写作
 
-建议内容边界：
+  **What to do**:
+  - 在 `docs/guide/knowledge-feeding.md` 插入 1 个新增小节（候选标题：「## 失败日志怎么变成下一轮的 context」），200-500 字中文。
+  - 融合 Gap C（回流机制的 knowledge-feeding 维度）。
+  - 与 1.4 划清边界：本章讲「怎么采集、怎么限范围、怎么补进下一轮」，不讲「是否进 system instructions」。
 
-- 失败不是只修本次问题，还要判断是否进入外层约束。
-- 四个去向：规则、Hook、测试 / 构建门禁、Skill / Command。
-- 强调不是每个失败都要沉淀；一次性误差不必写成长期规则，反复出现的才值得进入 harness。
-- 明确连接 Fowler 的 steering loop 和 Feedback Flywheel：重复问题应改进 feedforward guides、feedback sensors、Context Anchoring 或团队标准，而不是让人反复手改。
-- 借 18 源共识把“失败回流”讲得更具体：不要只说“记下来”，而要说明为什么有的东西应进长期规则文件，有的应进 Skill / Command，有的必须升格为 Hook。
+  **Must NOT do**: 同 plan Must NOT Have；不跳进 system-instructions 话题。
 
-不做：不新增失败日志模板，不要求用户维护固定表格。
+  **Recommended Agent Profile**: `writing` + `humanizer-zh` + `adopt-agentic-writer`
 
-### Task D：补强执行隔离
+  **Parallelization**: Wave 1；Blocks: 2.5；Blocked By: 0.1
 
-覆盖：GAP-HE-004 execution isolation。
+  **References**: `docs/guide/knowledge-feeding.md` 现状；`docs/guide/system-instructions.md` 避免重复；本 plan 共识 4；`AGENTS.md`
 
-文件对：
+  **Acceptance Criteria**: 200-500 字中文 / 命中 Gap C / 与 1.4 话题不重 / git diff 仅本文件 / 禁用词扫描
 
-- `docs/guide/sub-agents.md` + `docs/en/guide/sub-agents.md`
-- `docs/guide/orchestration.md` + `docs/en/guide/orchestration.md`
-- `docs/guide/built-in-tools.md` + `docs/en/guide/built-in-tools.md`
+  **QA Scenarios**:
+  ```
+  Scenario: 话题与 1.4 不重复（happy）
+    Tool: Bash + Read
+    Steps: 1. Read 两者新小节; 2. 论点不重叠; 3. wc -m 200-500; 4. git diff; 5. 禁用词
+    Evidence: .sisyphus/evidence/task-1.5-happy.txt
+  ```
 
-建议内容边界：
+  **Commit**: NO
 
-- 并排解释两种隔离：上下文隔离解决“LLM 看见什么”，执行隔离解决“agent 能碰到什么”。
-- 举例保持通用：独立分支、临时工作区、沙箱、只读模式。
-- 与权限边界相连：执行隔离不是替代审批，而是减少错误影响面。
-- 用 harnessability / ambient affordances 解释为什么环境结构重要：类型系统、模块边界、结构化检查、清晰目录和可回滚工作区，会让 agent 更容易被约束。
-- 结合多篇实践来源再补一句：spec / implementation 分 session、reviewer subagent 只读、探索任务 fork 到隔离上下文，都是执行隔离的日常形式，不必等到“上容器/上沙箱”才算隔离。
+- [ ] 1.6 **sub-agents-zh** — Wave 1 中文写作
 
-不做：不绑定具体产品，不写某工具 worktree / container 操作手册。
+  **What to do**:
+  - 在 `docs/guide/sub-agents.md` 插入 1 个新增小节（候选标题：「## 隔离才是主价值，并发只是顺带」），200-500 字中文。
+  - 融合 Gap D（执行隔离 → subagent 维度）。
+  - 引用共识 2：subagent 核心价值是上下文隔离，不只是并行。
+  - 说明「什么场景需要隔离」：探索 / review / 粗活 / 长日志。
 
-### Task E：补强重复工作流沉淀路径
+  **Must NOT do**: 同 plan Must NOT Have；不重复 orchestration 话题。
 
-覆盖：GAP-HE-005 repeatable workflow sedimentation。
+  **Recommended Agent Profile**: `writing` + `humanizer-zh` + `adopt-agentic-writer`
 
-文件对：
+  **Parallelization**: Wave 1；Blocks: 2.6；Blocked By: 0.1
 
-- `docs/guide/skills.md` + `docs/en/guide/skills.md`
-- `docs/guide/commands.md` + `docs/en/guide/commands.md`
-- `docs/guide/hooks-and-plugins.md` + `docs/en/guide/hooks-and-plugins.md`
+  **References**: `docs/guide/sub-agents.md` 现状；`docs/guide/orchestration.md` 边界；本 plan 共识 2；`AGENTS.md`
 
-建议内容边界：
+  **Acceptance Criteria**: 200-500 字中文 / 命中 Gap D / 与 orchestration 话题不重 / git diff 仅本文件 / 禁用词扫描
 
-- Command：这次要执行的一段固定流程。
-- Skill：从现在起要遵守的一组方法和规则。
-- Hook：必须由系统拦截或自动执行的门禁。
-- 项目文档：低频但需要被读到的背景知识。
-- 把 Fowler 的五个 friction-reduction patterns 映射到现有章节：Knowledge Priming → 知识喂养；Design-First Collaboration → 编排 / HITL；Context Anchoring → 上下文与会话交接；Encoding Team Standards → System Instructions / Skills；Feedback Flywheel → 失败回流。
-- 加入 18 源二次校准后的分层原则：长期 always-on 规则不要塞进 Skill；必须 deterministically 发生的事不要只放进 Command；噪声重又消耗上下文的工作不要一直留在主会话。
+  **QA Scenarios**:
+  ```
+  Scenario: 隔离论点明确（happy）
+    Tool: Bash + Read
+    Steps: 1. Read; 2. 含「隔离 / 上下文」关键字; 3. wc -m; 4. git diff; 5. 禁用词
+    Evidence: .sisyphus/evidence/task-1.6-happy.txt
+  ```
 
-不做：不扩成 checklist；不把已有 Command / Skill / Sub-agent 对比推翻重写。
+  **Commit**: NO
 
-### Task F：补强审批疲劳与权限策略闭环
+- [ ] 1.7 **orchestration-zh** — Wave 1 中文写作
 
-覆盖：GAP-HE-006 approval fatigue and permissions loop。
+  **What to do**:
+  - 在 `docs/guide/orchestration.md` 插入 1 个新增小节（候选标题：「## 主会话与分会话之间的令牌」），200-500 字中文。
+  - 融合 Gap D（执行隔离 → orchestration 维度）。
+  - 与 1.6 划清边界：本章讲「主/分 agent 怎么传件、怎么交付、怎么合并结果」。
 
-文件对：
+  **Must NOT do**: 同 plan Must NOT Have；不重复 sub-agents 话题。
 
-- `docs/guide/human-in-the-loop.md` + `docs/en/guide/human-in-the-loop.md`
-- `docs/guide/hooks-and-plugins.md` + `docs/en/guide/hooks-and-plugins.md`
-- `docs/guide/built-in-tools.md` + `docs/en/guide/built-in-tools.md`
+  **Recommended Agent Profile**: `writing` + `humanizer-zh` + `adopt-agentic-writer`
 
-建议内容边界：
+  **Parallelization**: Wave 1；Blocks: 2.7；Blocked By: 0.1
 
-- 权限太松，风险上升。
-- 权限太紧，人会疲劳，最后无脑批准。
-- 好的 harness 同时减少危险操作和无意义审批。
-- 用 collaboration-quality framing 解释收益：first-pass acceptance 更高，iteration cycles per task 更少，post-merge rework 更少，review burden 更低。这里是理解框架，不是团队 KPI。
-- 加入 Sean Goedecke 的条件性提醒：如果 AI 让人更少通过亲手做任务学习，harness 更需要保留人的 cognitive engagement。文中不能断言 AI 必然造成技能退化，只能说这是需要设计时留意的风险。
-- 标明目标不是“少思考”，而是把人的注意力从机械批准转到目标设定、关键 review、失败复盘和规则更新。
-- 再补一条高频共识：allowlist / denylist、PermissionRequest hook、敏感路径阻断，这些都应被讲成“减少无意义批准”的工程手段，而不是单纯的安全姿态。
+  **References**: `docs/guide/orchestration.md` 现状；`docs/guide/sub-agents.md` 边界；本 plan 共识 2；`AGENTS.md`
 
-不做：不引入组织审批流程，不写企业合规制度。
+  **Acceptance Criteria**: 200-500 字中文 / 命中 Gap D 交付维度 / 与 1.6 话题不重 / git diff 仅本文件 / 禁用词扫描
 
-### Task F2：补强人的长期能力与认知参与
+  **QA Scenarios**:
+  ```
+  Scenario: 交付令牌论点明确（happy）
+    Tool: Bash + Read
+    Steps: 1. Read; 2. 含「交付 / 令牌 / 合并」关键字; 3. wc -m; 4. git diff; 5. 禁用词
+    Evidence: .sisyphus/evidence/task-1.7-happy.txt
+  ```
 
-覆盖：GAP-HE-006 approval fatigue and permissions loop；连接 HITL 与 cognitive debt。
+  **Commit**: NO
 
-文件对：
+- [ ] 1.8 **skills-zh** — Wave 1 中文写作
 
-- `docs/guide/human-in-the-loop.md` + `docs/en/guide/human-in-the-loop.md`
-- `docs/guide/in-practice.md` + `docs/en/guide/in-practice.md`
+  **What to do**:
+  - 在 `docs/guide/skills.md` 插入 1 个新增小节（候选标题：「## 一个重复出现的任务什么时候该沉成 skill」），200-500 字中文。
+  - 融合 Gap E（重复工作流沉淀路径 → skill 维度）。
+  - 与 1.9/1.10 划清：本章讲 skill 的粒度与触发场景，不讲 command/hook。
 
-建议内容边界：
+  **Must NOT do**: 同 plan Must NOT Have；不跳进 commands / hooks 话题。
 
-- 用 Sean Goedecke 文章作为温和来源：软件工程师可能需要新的方法保持 mental engagement；不能默认旧的 learning-by-doing 循环不变。
-- 把 Feedback Flywheel / steering loop 写成人也学习的循环：失败不只喂给规则，也让人更新判断标准。
-- 指标不仅看速度，还看 review burden、post-merge rework、first-pass acceptance，以及团队是否还能发现高价值问题。
-- 明确排除一种误读：站点不能把 harness engineering 写成“以后你更少自己做、也能越来越强”；更稳妥的说法是“把人的时间从低价值机械环节移到更高价值的判断、设计、复盘”。
+  **Recommended Agent Profile**: `writing` + `humanizer-zh` + `adopt-agentic-writer`
 
-不做：不预测软件工程职业会不会终结；不说 AI 一定让工程师变笨；不写职业规划建议。
+  **Parallelization**: Wave 1；Blocks: 2.8；Blocked By: 0.1
 
-### Task G：术语表补项
+  **References**: `docs/guide/skills.md` 现状；`docs/guide/commands.md` + `docs/guide/hooks-and-plugins.md` 边界；本 plan 共识 1+4；`AGENTS.md`
 
-覆盖：GAP-HE-007 glossary term。
+  **Acceptance Criteria**: 200-500 字 / 命中 Gap E skill 维度 / 与 1.9/1.10 不重 / git diff 仅本文件 / 禁用词扫描
 
-前置条件：Task A 已完成，用户已批准术语。
+  **QA Scenarios**:
+  ```
+  Scenario: skill 粒度论点明确（happy）
+    Tool: Bash + Read
+    Steps: 1. Read; 2. 含「重复 / 沉淀 / skill」关键字; 3. wc -m; 4. git diff; 5. 禁用词
+    Evidence: .sisyphus/evidence/task-1.8-happy.txt
+  ```
 
-文件对：
+  **Commit**: NO
 
-- `docs/guide/glossary.md` + `docs/en/guide/glossary.md`
+- [ ] 1.9 **commands-zh** — Wave 1 中文写作
 
-建议内容边界：
+  **What to do**:
+  - 在 `docs/guide/commands.md` 插入 1 个新增小节（候选标题：「## 什么该写成 command」），200-500 字中文。
+  - 融合 Gap E（command 维度）：「Reusable but explicit」的调用点。
+  - 与 1.8/1.10 边界：本章讲「显式调用」不讲「被动触发」。
 
-- 中文术语按用户批准结果写。
-- 英文术语为 `Harness Engineering`。
-- 定义必须保持使用者视角：围绕 coding agent 外层的工程约束系统，不是造 agent 框架。
-- 可轻量补充：Guides / Sensors、feedforward / feedback、Computational / Inferential controls。中文解释要朴素，不把术语表写成 Fowler 文章摘要。
+  **Must NOT do**: 同 plan Must NOT Have；不重复 skills/hooks 话题。
 
-不做：不把术语表变成长文；不引入未经批准的中文名。
+  **Recommended Agent Profile**: `writing` + `humanizer-zh` + `adopt-agentic-writer`
 
-### Task H：基础叙事轻量入口
+  **Parallelization**: Wave 1；Blocks: 2.9；Blocked By: 0.1
 
-覆盖：GAP-HE-001 framework entrance。
+  **References**: `docs/guide/commands.md` 现状；`docs/guide/skills.md` + `docs/guide/hooks-and-plugins.md` 边界；本 plan 共识 1+4；`AGENTS.md`
 
-状态：high-impact requires-user-review。
+  **Acceptance Criteria**: 200-500 字 / 命中 Gap E command 维度 / 与 1.8/1.10 不重 / git diff 仅本文件 / 禁用词扫描
 
-前置条件：用户明确批准触碰基础叙事。
+  **QA Scenarios**:
+  ```
+  Scenario: command 调用点明确（happy）
+    Tool: Bash + Read
+    Steps: 1. Read; 2. 含「显式 / 调用 / command」关键字; 3. wc -m; 4. git diff; 5. 禁用词
+    Evidence: .sisyphus/evidence/task-1.9-happy.txt
+  ```
 
-文件对：
+  **Commit**: NO
 
-- `docs/guide/index.md` + `docs/en/guide/index.md`
-- `docs/guide/context.md` + `docs/en/guide/context.md`
+- [ ] 1.10 **hooks-and-plugins-zh** — Wave 1 中文写作
 
-建议内容边界：
+  **What to do**:
+  - 在 `docs/guide/hooks-and-plugins.md` 插入 1 个新增小节（候选标题：「## hooks 管「必须发生」，规则管「应该这样」」），200-500 字中文。
+  - 融合 Gap E（hook 维度）+ Gap F（权限策略闭环）。
+  - 引用共识 1：Hooks vs Rules 边界。
 
-- 只加轻量入口，不改变全书主线“上下文流动”。
-- 解释两者关系：Context Engineering 处理上下文供给；harness engineering 处理外层约束、门禁、隔离和复盘。
-- 使用 Fowler 的关系表述：Context Engineering 提供把 guides 和 sensors 放到 agent 面前的手段；为 coding agent 做 user harness engineering，是 Context Engineering 的一种具体形式。
-- 保持 agent-agnostic，不引入产品名。
+  **Must NOT do**: 同 plan Must NOT Have；不重复 skills/commands 话题。
 
-不做：不把首页改成 harness engineering 主题站；不把 context 章节重写成术语争论。
+  **Recommended Agent Profile**: `writing` + `humanizer-zh` + `adopt-agentic-writer`
 
-### Task I：新章节备选方案
+  **Parallelization**: Wave 1；Blocks: 2.10；Blocked By: 0.1
 
-覆盖：GAP-HE-001 framework entrance。
+  **References**: `docs/guide/hooks-and-plugins.md` 现状；`docs/guide/skills.md` + `docs/guide/commands.md` 边界；本 plan 共识 1+5；`AGENTS.md`
 
-状态：requires-user-approval，非默认路径。
+  **Acceptance Criteria**: 200-500 字 / 命中 Gap E hook 维度 + 边界论点 / git diff 仅本文件 / 禁用词扫描
 
-文件对：
+  **QA Scenarios**:
+  ```
+  Scenario: hooks vs rules 边界明确（happy）
+    Tool: Bash + Read
+    Steps: 1. Read; 2. 含「必须 / 应该 / 边界」论述; 3. wc -m; 4. git diff; 5. 禁用词
+    Evidence: .sisyphus/evidence/task-1.10-happy.txt
+  ```
 
-- `docs/guide/harness-engineering.md` + `docs/en/guide/harness-engineering.md`
+  **Commit**: NO
 
-附带配置：
+- [ ] 1.11 **built-in-tools-zh** — Wave 1 中文写作
 
-- `docs/.vitepress/config.ts`
-- `docs/.vitepress/data/knowledge-graph.ts`
+  **What to do**:
+  - 在 `docs/guide/built-in-tools.md` 插入 1 个新增小节（候选标题：「## 内置工具的权限闸与执行隔离」），200-500 字中文。
+  - 融合 Gap D（执行隔离 → 内置工具维度）+ Gap F（权限策略）。
+  - 本章节是 Must NOT Have 产品名规则的例外：可引 Claude Code / Codex / Gemini CLI / OpenCode 做对比。
 
-仅当用户明确要求“新增章节”时才执行。若执行，这会从规划任务升级为 VitePress 站点结构变更，应单独加载 `adopt-agentic-vitepress`，并做完整构建验证。
+  **Must NOT do**: 同 plan Must NOT Have（产品名例外范围仅限本章且仅举其内置工具不做营销）。
 
-## 双语同步
+  **Recommended Agent Profile**: `writing` + `humanizer-zh` + `adopt-agentic-writer`
 
-每个正文任务必须同时修改中文和英文文件。不能先改中文、英文以后补。
+  **Parallelization**: Wave 1；Blocks: 2.11；Blocked By: 0.1
 
-最小双语约束：
+  **References**: `docs/guide/built-in-tools.md` 现状；本 plan 共识 5 + Gap D/F；`AGENTS.md` 产品名例外规则
 
-- 每个任务都必须列出 `docs/guide/*.md` + `docs/en/guide/*.md` 文件对。
-- 中文术语未定前，英文版统一保留 `Harness Engineering`；中文版保留 `harness engineering` 并解释，不自行翻译。
-- 若中文出现 “可执行 DoD”“失败日志回流”“执行隔离”“审批疲劳”等新增概念，英文必须有对应概念表达，并保持章节位置同步。
-- 任何 cross-link 都要确认中英文路径分别可用。
+  **Acceptance Criteria**: 200-500 字 / 命中 Gap D 内置工具 + Gap F 权限 / git diff 仅本文件 / 禁用词扫描 / 产品名仅出现在对比语境
 
-建议的同步检查：
+  **QA Scenarios**:
+  ```
+  Scenario: 内置工具权限论点（happy）
+    Tool: Bash + Read
+    Steps: 1. Read; 2. 含「权限 / 隔离」表述; 3. wc -m; 4. git diff; 5. 禁用词
+    Evidence: .sisyphus/evidence/task-1.11-happy.txt
+  ```
+
+  **Commit**: NO
+
+- [ ] 1.12 **glossary-zh** — Wave 1 中文写作
+
+  **What to do**:
+  - 在现有 `docs/guide/glossary.md` 追加 7 个词条，一词条一个 Gap：
+    1. **Harness Engineering**（Gap A/术语）— 围绕 LLM 搭建的工程外壳。
+    2. **可执行 Definition of Done**（Gap B）— 可被脚本/命令/构建验证的完成准则。
+    3. **失败日志回流**（Gap C）— 将调试/运行失败转化为下一轮输入的机制。
+    4. **执行隔离**（Gap D）— 上下文/权限/工具范围上的分区。
+    5. **工作流沉淀**（Gap E）— 重复工作转为 skill/command/hook 的路径。
+    6. **审批闭环**（Gap F）— 从自动信号到抑制、抽样、人审升级的完整量化路径。
+    7. **认知参与**（Gap F2）— 在 agent 协作中人保持的主动理解、判断、指导质量。
+  - 每个词条 1-2 句中文。
+
+  **Must NOT do**: 同 plan Must NOT Have；不造中文译名（「Harness Engineering」保留英文）。
+
+  **Recommended Agent Profile**: `writing` + `humanizer-zh` + `adopt-agentic-writer`
+
+  **Parallelization**: Wave 1；Blocks: 2.12；Blocked By: 0.1
+
+  **References**: `docs/guide/glossary.md` 现状词条格式与排序、上下文；Wave 1 另 11 个 task 产出的概念名（保词条与正文一致）
+
+  **Acceptance Criteria**: 7 个新词条全部追加 / 词条名与 Wave 1 正文出现的概念名一致 / 首词条 Harness Engineering 保留英文 / git diff 仅本文件
+
+  **QA Scenarios**:
+  ```
+  Scenario: 7 词条均存在且名称一致（happy）
+    Tool: Bash + Read
+    Steps:
+      1. Read docs/guide/glossary.md
+      2. grep 上述 7 个词条名
+      3. 交叉验证词条名在 Wave 1 产出的 11 个新小节中出现
+      4. git diff 仅本文件
+    Evidence: .sisyphus/evidence/task-1.12-happy.txt
+  ```
+
+  **Commit**: NO
+
+---
+
+- [ ] 2.1 **actors-en** — Wave 2 英文对齐
+
+  **What to do**:
+  - 基于 1.1 的中文 diff，把新增小节平行落到 `docs/en/guide/actors.md`
+  - 对齐论点 N:N，不引入新概念，不省略
+  - 风格对齐已有英文章节，平实工程英文
+
+  **Must NOT do**:
+  - 不引入中文版没有的论点 / 术语 / 例子
+  - 不写 URL 或来源 attribution
+  - 不出现产品名
+
+  **Recommended Agent Profile**:
+  - **Category**: `writing`
+  - **Skills**: [`adopt-agentic-writer`]
+    - `adopt-agentic-writer`: 教程内容创作 / 双语同步规则
+  - **Skills Evaluated but Omitted**:
+    - `humanizer-zh`: 中文专用
+
+  **Parallelization**:
+  - **Parallel Group**: Wave 2 (与 2.2-2.12 并行)
+  - **Blocks**: F1
+  - **Blocked By**: 1.1
+
+  **References**:
+  - 本 plan「5 条高频共识」第 1、2、3 条
+  - Gap 表 GAP-HE-001 / GAP-HE-002
+  - `docs/guide/actors.md` 1.1 完成后的 git diff（权威信息源）
+  - `docs/en/guide/` 已有英文章节（风格对照）
+
+  **Acceptance Criteria**:
+  - [ ] `docs/en/guide/actors.md` 新增小节，论点与 1.1 中文 N:N 对齐
+  - [ ] 标题、列表、Mermaid（如有）结构与中文一致
+  - [ ] 不出现产品名 / URL / attribution 句式
+
+  **QA Scenarios**:
+  ```
+  Scenario: 双语对照检查
+    Tool: Bash (diff + grep)
+    Steps:
+      1. 列出中文 1.1 新增小节的所有论点（bullet 标题）
+      2. 列出英文 2.1 新增小节的所有论点
+      3. 验证条数一致 + 顺序一致 + 信息点一致
+      4. grep -E 'Cursor|Windsurf|Copilot|http|martinfowler|seangoedecke' docs/en/guide/actors.md → 仅历史命中
+    Evidence: .sisyphus/evidence/task-2.1-happy.txt
+  ```
+
+  **Commit**: NO
+
+---
+
+- [ ] 2.2 **human-in-the-loop-en** — Wave 2 英文对齐
+
+  **What to do**:
+  - 基于 1.2 中文 diff 平行落到 `docs/en/guide/human-in-the-loop.md`
+  - 覆盖审批疲劳 / 高价值判断 / 长期认知参与三条线
+
+  **Must NOT do**: 同 2.1
+
+  **Recommended Agent Profile**:
+  - **Category**: `writing`
+  - **Skills**: [`adopt-agentic-writer`]
+
+  **Parallelization**:
+  - **Parallel Group**: Wave 2
+  - **Blocks**: F1
+  - **Blocked By**: 1.2
+
+  **References**:
+  - 本 plan「5 条高频共识」第 5 条
+  - Gap GAP-HE-005 / GAP-HE-006
+  - `docs/guide/human-in-the-loop.md` 1.2 git diff
+
+  **Acceptance Criteria**:
+  - [ ] 新增小节论点 N:N 对齐 1.2
+  - [ ] 三条线（审批 / 判断 / 认知）均落地
+  - [ ] 无产品名 / URL / attribution
+
+  **QA Scenarios**:
+  ```
+  Scenario: 双语对照
+    Tool: Bash
+    Steps: 同 2.1 模式
+    Evidence: .sisyphus/evidence/task-2.2-happy.txt
+  ```
+
+  **Commit**: NO
+
+---
+
+- [ ] 2.3 **in-practice-en** — Wave 2 英文对齐
+
+  **What to do**:
+  - 基于 1.3 中文 diff 平行落到 `docs/en/guide/in-practice.md`
+  - 覆盖可执行 DoD / 失败日志回流 / 长期认知参与的实操片段
+
+  **Must NOT do**: 同 2.1
+
+  **Recommended Agent Profile**:
+  - **Category**: `writing`
+  - **Skills**: [`adopt-agentic-writer`]
+
+  **Parallelization**:
+  - **Parallel Group**: Wave 2
+  - **Blocks**: F1
+  - **Blocked By**: 1.3
+
+  **References**:
+  - 本 plan「5 条高频共识」第 3、4 条
+  - Gap GAP-HE-003 / GAP-HE-004 / GAP-HE-006
+  - `docs/guide/in-practice.md` 1.3 git diff
+
+  **Acceptance Criteria**:
+  - [ ] 新增小节论点 N:N 对齐 1.3
+  - [ ] 三个 in-practice 片段全部落地
+  - [ ] 无产品名 / URL / attribution
+
+  **QA Scenarios**:
+  ```
+  Scenario: 双语对照
+    Tool: Bash
+    Steps: 同 2.1 模式
+    Evidence: .sisyphus/evidence/task-2.3-happy.txt
+  ```
+
+  **Commit**: NO
+
+---
+
+- [ ] 2.4 **system-instructions-en** — Wave 2 英文对齐
+
+  **What to do**:
+  - 基于 1.4 中文 diff 平行落到 `docs/en/guide/system-instructions.md`
+  - 落地「什么进 system instructions / CLAUDE.md vs 什么只在特定 session 用」判别准则
+
+  **Must NOT do**: 同 2.1
+
+  **Recommended Agent Profile**:
+  - **Category**: `writing`
+  - **Skills**: [`adopt-agentic-writer`]
+
+  **Parallelization**:
+  - **Parallel Group**: Wave 2
+  - **Blocks**: F1
+  - **Blocked By**: 1.4
+
+  **References**:
+  - 本 plan「5 条高频共识」第 1 条
+  - Gap GAP-HE-001
+  - `docs/guide/system-instructions.md` 1.4 git diff
+
+  **Acceptance Criteria**:
+  - [ ] 判别准则 N:N 对齐 1.4
+  - [ ] 与 knowledge-feeding 的边界用同样的英文表述区分
+  - [ ] 无产品名 / URL / attribution
+
+  **QA Scenarios**:
+  ```
+  Scenario: 双语对照
+    Tool: Bash
+    Steps: 同 2.1 模式
+    Evidence: .sisyphus/evidence/task-2.4-happy.txt
+  ```
+
+  **Commit**: NO
+
+---
+
+- [ ] 2.5 **knowledge-feeding-en** — Wave 2 英文对齐
+
+  **What to do**:
+  - 基于 1.5 中文 diff 平行落到 `docs/en/guide/knowledge-feeding.md`
+  - 覆盖失败日志 → 下一轮 context 的回流路径
+
+  **Must NOT do**: 同 2.1
+
+  **Recommended Agent Profile**:
+  - **Category**: `writing`
+  - **Skills**: [`adopt-agentic-writer`]
+
+  **Parallelization**:
+  - **Parallel Group**: Wave 2
+  - **Blocks**: F1
+  - **Blocked By**: 1.5
+
+  **References**:
+  - 本 plan「5 条高频共识」第 4 条
+  - Gap GAP-HE-004
+  - `docs/guide/knowledge-feeding.md` 1.5 git diff
+
+  **Acceptance Criteria**:
+  - [ ] 回流路径 N:N 对齐 1.5
+  - [ ] 与 system-instructions 的边界一致
+  - [ ] 无产品名 / URL / attribution
+
+  **QA Scenarios**:
+  ```
+  Scenario: 双语对照
+    Tool: Bash
+    Steps: 同 2.1 模式
+    Evidence: .sisyphus/evidence/task-2.5-happy.txt
+  ```
+
+  **Commit**: NO
+
+---
+
+- [ ] 2.6 **sub-agents-en** — Wave 2 英文对齐
+
+  **What to do**:
+  - 基于 1.6 中文 diff 平行落到 `docs/en/guide/sub-agents.md`
+  - 主张「隔离才是主价值，并行只是副产品」
+
+  **Must NOT do**: 同 2.1
+
+  **Recommended Agent Profile**:
+  - **Category**: `writing`
+  - **Skills**: [`adopt-agentic-writer`]
+
+  **Parallelization**:
+  - **Parallel Group**: Wave 2
+  - **Blocks**: F1
+  - **Blocked By**: 1.6
+
+  **References**:
+  - 本 plan「5 条高频共识」第 2 条
+  - Gap GAP-HE-002
+  - `docs/guide/sub-agents.md` 1.6 git diff
+
+  **Acceptance Criteria**:
+  - [ ] 论点 N:N 对齐 1.6
+  - [ ] 与 orchestration 的分工区分清楚
+  - [ ] 无产品名 / URL / attribution
+
+  **QA Scenarios**:
+  ```
+  Scenario: 双语对照
+    Tool: Bash
+    Steps: 同 2.1 模式
+    Evidence: .sisyphus/evidence/task-2.6-happy.txt
+  ```
+
+  **Commit**: NO
+
+---
+
+- [ ] 2.7 **orchestration-en** — Wave 2 英文对齐
+
+  **What to do**:
+  - 基于 1.7 中文 diff 平行落到 `docs/en/guide/orchestration.md`
+  - 主会话 / 分会话之间的令牌（输入条件 / 返回结构）
+
+  **Must NOT do**: 同 2.1
+
+  **Recommended Agent Profile**:
+  - **Category**: `writing`
+  - **Skills**: [`adopt-agentic-writer`]
+
+  **Parallelization**:
+  - **Parallel Group**: Wave 2
+  - **Blocks**: F1
+  - **Blocked By**: 1.7
+
+  **References**:
+  - 本 plan「5 条高频共识」第 2 条
+  - Gap GAP-HE-002
+  - `docs/guide/orchestration.md` 1.7 git diff
+
+  **Acceptance Criteria**:
+  - [ ] 令牌结构 N:N 对齐 1.7
+  - [ ] 与 sub-agents 边界一致
+  - [ ] 无产品名 / URL / attribution
+
+  **QA Scenarios**:
+  ```
+  Scenario: 双语对照
+    Tool: Bash
+    Steps: 同 2.1 模式
+    Evidence: .sisyphus/evidence/task-2.7-happy.txt
+  ```
+
+  **Commit**: NO
+
+---
+
+- [ ] 2.8 **skills-en** — Wave 2 英文对齐
+
+  **What to do**:
+  - 基于 1.8 中文 diff 平行落到 `docs/en/guide/skills.md`
+  - 覆盖「什么时候该把重复操作沉成 skill」判别条件
+
+  **Must NOT do**: 同 2.1
+
+  **Recommended Agent Profile**:
+  - **Category**: `writing`
+  - **Skills**: [`adopt-agentic-writer`]
+
+  **Parallelization**:
+  - **Parallel Group**: Wave 2
+  - **Blocks**: F1
+  - **Blocked By**: 1.8
+
+  **References**:
+  - Gap GAP-HE-005
+  - `docs/guide/skills.md` 1.8 git diff
+
+  **Acceptance Criteria**:
+  - [ ] 判别条件 N:N 对齐 1.8
+  - [ ] 与 commands / hooks 的边界用相同英文表述
+  - [ ] 无产品名 / URL / attribution
+
+  **QA Scenarios**:
+  ```
+  Scenario: 双语对照
+    Tool: Bash
+    Steps: 同 2.1 模式
+    Evidence: .sisyphus/evidence/task-2.8-happy.txt
+  ```
+
+  **Commit**: NO
+
+---
+
+- [ ] 2.9 **commands-en** — Wave 2 英文对齐
+
+  **What to do**:
+  - 基于 1.9 中文 diff 平行落到 `docs/en/guide/commands.md`
+  - 覆盖「什么该写成显式 command」
+
+  **Must NOT do**: 同 2.1
+
+  **Recommended Agent Profile**:
+  - **Category**: `writing`
+  - **Skills**: [`adopt-agentic-writer`]
+
+  **Parallelization**:
+  - **Parallel Group**: Wave 2
+  - **Blocks**: F1
+  - **Blocked By**: 1.9
+
+  **References**:
+  - Gap GAP-HE-005
+  - `docs/guide/commands.md` 1.9 git diff
+
+  **Acceptance Criteria**:
+  - [ ] 判别条件 N:N 对齐 1.9
+  - [ ] 与 skills / hooks 的边界一致
+  - [ ] 无产品名 / URL / attribution
+
+  **QA Scenarios**:
+  ```
+  Scenario: 双语对照
+    Tool: Bash
+    Steps: 同 2.1 模式
+    Evidence: .sisyphus/evidence/task-2.9-happy.txt
+  ```
+
+  **Commit**: NO
+
+---
+
+- [ ] 2.10 **hooks-and-plugins-en** — Wave 2 英文对齐
+
+  **What to do**:
+  - 基于 1.10 中文 diff 平行落到 `docs/en/guide/hooks-and-plugins.md`
+  - hooks 处理「必须发生」/ rules 处理「应该这样做」边界
+
+  **Must NOT do**: 同 2.1
+
+  **Recommended Agent Profile**:
+  - **Category**: `writing`
+  - **Skills**: [`adopt-agentic-writer`]
+
+  **Parallelization**:
+  - **Parallel Group**: Wave 2
+  - **Blocks**: F1
+  - **Blocked By**: 1.10
+
+  **References**:
+  - 本 plan「5 条高频共识」第 1 条
+  - Gap GAP-HE-005 / GAP-HE-006
+  - `docs/guide/hooks-and-plugins.md` 1.10 git diff
+
+  **Acceptance Criteria**:
+  - [ ] 边界划分 N:N 对齐 1.10
+  - [ ] 与 skills / commands 一致
+  - [ ] 无产品名 / URL / attribution
+
+  **QA Scenarios**:
+  ```
+  Scenario: 双语对照
+    Tool: Bash
+    Steps: 同 2.1 模式
+    Evidence: .sisyphus/evidence/task-2.10-happy.txt
+  ```
+
+  **Commit**: NO
+
+---
+
+- [ ] 2.11 **built-in-tools-en** — Wave 2 英文对齐
+
+  **What to do**:
+  - 基于 1.11 中文 diff 平行落到 `docs/en/guide/built-in-tools.md`
+  - 权限闸 + 执行隔离视角；本章允许产品名（Claude Code / Codex / Gemini CLI / OpenCode）但仅作对比
+
+  **Must NOT do**:
+  - 不写营销话术
+  - 不引入未在中文版出现的产品名
+  - 不写 URL 或来源 attribution
+
+  **Recommended Agent Profile**:
+  - **Category**: `writing`
+  - **Skills**: [`adopt-agentic-writer`]
+
+  **Parallelization**:
+  - **Parallel Group**: Wave 2
+  - **Blocks**: F1
+  - **Blocked By**: 1.11
+
+  **References**:
+  - 本 plan「5 条高频共识」第 5 条
+  - Gap GAP-HE-006
+  - `docs/guide/built-in-tools.md` 1.11 git diff
+
+  **Acceptance Criteria**:
+  - [ ] 论点与产品名表 N:N 对齐 1.11
+  - [ ] 不引入新产品名
+  - [ ] 无 URL / attribution
+
+  **QA Scenarios**:
+  ```
+  Scenario: 双语对照 + 产品名白名单
+    Tool: Bash
+    Steps:
+      1. 对比中英新增小节论点条数
+      2. grep 产品名集合，确认与中文版一致
+    Evidence: .sisyphus/evidence/task-2.11-happy.txt
+  ```
+
+  **Commit**: NO
+
+---
+
+- [ ] 2.12 **glossary-en** — Wave 2 英文对齐
+
+  **What to do**:
+  - 基于 1.12 中文 diff 平行落到 `docs/en/guide/glossary.md`
+  - 追加 7 个词条英文版：Harness Engineering / Executable DoD / Failure-log feedback / Execution isolation / Workflow distillation / Approval-loop closure / Cognitive engagement
+  - `Harness Engineering` 词条本身不翻译（与 1.12 一致）
+
+  **Must NOT do**:
+  - 不动既有词条
+  - 不引入中文版没有的术语
+
+  **Recommended Agent Profile**:
+  - **Category**: `writing`
+  - **Skills**: [`adopt-agentic-writer`]
+
+  **Parallelization**:
+  - **Parallel Group**: Wave 2
+  - **Blocks**: F1
+  - **Blocked By**: 1.12
+
+  **References**:
+  - `docs/guide/glossary.md` 1.12 git diff
+  - 既有英文 glossary 风格
+
+  **Acceptance Criteria**:
+  - [ ] 7 个词条全部追加
+  - [ ] 词条名与中文 N:N 对齐（含 Harness Engineering 不翻译）
+  - [ ] 风格与既有英文词条一致
+
+  **QA Scenarios**:
+  ```
+  Scenario: 词条数量与名称对照
+    Tool: Bash (grep)
+    Steps:
+      1. 列出中文新增词条 7 个
+      2. 列出英文新增词条 7 个
+      3. 验证名称一一对应
+    Evidence: .sisyphus/evidence/task-2.12-happy.txt
+  ```
+
+  **Commit**: NO
+
+
+## Final Verification Wave
+
+> 4 路 reviewer 并行。**全部 APPROVE 才能进 commit 步骤**；任意一路 REJECT → 修复对应 task → 重跑该路 + F4 → 全 APPROVE 才放行。
+
+- [ ] F1. **plan-compliance-audit** — `oracle`
+  读 plan，对照「Must Have」逐条验证：24 个文件是否都有新增小节或 glossary 追加、术语是否统一、glossary 是否补了 7 个词条。扫「Must NOT have」：grep 整个 docs/ diff 找产品名（built-in-tools 章节例外）、ASCII art、`materials/` / `.sisyphus/` 路径引用。验证 evidence 文件全部存在。
+  Output: `Must Have [N/N] | Must NOT Have [N/N] | Tasks [25/25] | VERDICT: APPROVE/REJECT`
+  Evidence: `.sisyphus/evidence/final-qa/F1-compliance.md`
+
+- [ ] F2. **writing-discipline-review** — `unspecified-high` + skill `humanizer-zh`
+  对 11 个中文新增小节 + glossary 中文追加部分逐一跑 humanizer-zh 检测。grep AGENTS.md 禁用词表；检测 AI filler 词密度（同章不超过 1-2 次）；段落与逻辑（每段单一主旨、长句拆短、列举用 list）。
+  Output: `Humanizer [N/11 pass] | 禁用词 [CLEAN/N issues] | Filler [CLEAN/N issues] | VERDICT`
+  Evidence: `.sisyphus/evidence/final-qa/F2-writing.md`
+
+- [ ] F3. **build-and-bilingual-check** — `unspecified-high`
+  跑 `bun install && bun run docs:build`，验证 exit code 0。中英对照阅读 12 对文件（含 glossary），列出每对中文核心论点 → 验证英文有对应表达。验证 `Harness Engineering` 中英术语一致。验证 glossary 中英 7 个词条对齐。
+  Output: `Build [PASS/FAIL] | Bilingual [12/12 aligned] | Glossary [7/7 aligned] | VERDICT`
+  Evidence: `.sisyphus/evidence/final-qa/F3-build.log` + `F3-bilingual.md`
+
+- [ ] F4. **scope-fidelity-check** — `deep`
+  `git diff --stat HEAD` 列出所有改动文件，验证只在 `docs/guide/*.md`（12 个）+ `docs/en/guide/*.md`（12 个）范围内。验证 sidebar / knowledge-graph / AgentPrompt 模板 / illustrations / theme 未被偷改。验证邻近章节文件（`cli-tools.md` / `context.md` / `index.md` / `mcp.md` / `peer-to-peer-agents.md`）未被偷改。每个 task 的 git log 只触及它声明的文件。
+  Output: `Files [24 in scope/0 out] | Sidebar [INTACT] | KG [INTACT] | Theme [INTACT] | Cross-task [CLEAN/N issues] | VERDICT`
+  Evidence: `.sisyphus/evidence/final-qa/F4-scope.md`
+
+---
+
+## Commit Strategy
+
+**单 commit 一次性提交所有 24 个文件**。Final Wave 4 路全 APPROVE 后执行：
 
 ```bash
-git diff --name-only -- docs/guide docs/en/guide
+git add docs/guide/{actors,built-in-tools,commands,glossary,hooks-and-plugins,human-in-the-loop,in-practice,knowledge-feeding,orchestration,skills,sub-agents,system-instructions}.md
+git add docs/en/guide/{actors,built-in-tools,commands,glossary,hooks-and-plugins,human-in-the-loop,in-practice,knowledge-feeding,orchestration,skills,sub-agents,system-instructions}.md
+git commit -m "docs(harness): 补强 Harness Engineering 七大维度，覆盖中英双语正文
+
+- DoD 可执行信号（actors / human-in-the-loop / in-practice）
+- 失败日志回流（knowledge-feeding / system-instructions）
+- 执行隔离（sub-agents / orchestration / built-in-tools）
+- 重复工作流沉淀（skills / commands / hooks-and-plugins）
+- 审批疲劳与权限闭环（human-in-the-loop / hooks-and-plugins / built-in-tools）
+- 人的长期能力与认知参与（actors / human-in-the-loop / in-practice）
+- 术语表统一收录 Harness Engineering 相关 7 个新条目
+
+术语保留英文 Harness Engineering，中文正文首次出现给中文解释。"
 ```
 
-预期：每个中文文件都有对应英文文件出现在 diff 中。
+---
 
-## 验证策略
+## Success Criteria
 
-当前 Task 2 只验证计划产物，不构建站点，因为不修改 `docs/`。
-
-本任务验证命令：
+### Verification Commands
 
 ```bash
-test -f .sisyphus/plans/harness-engineering-site-upgrade.md
-grep -E "^## (目标|基于报告的发现|推荐默认路径|用户决策点|任务分解|双语同步|验证策略|不做事项)" .sisyphus/plans/harness-engineering-site-upgrade.md
-grep -E "report.md|Task 1|Gap|martinfowler.com/articles/harness-engineering.html|martinfowler.com/articles/reduce-friction-ai|seangoedecke.com/software-engineering-may-no-longer-be-a-lifetime-career" .sisyphus/plans/harness-engineering-site-upgrade.md
-grep -E "requires-user-approval|high-impact requires-user-review" .sisyphus/plans/harness-engineering-site-upgrade.md
-grep -E "docs/guide/.+\.md" .sisyphus/plans/harness-engineering-site-upgrade.md
-grep -E "docs/en/guide/.+\.md" .sisyphus/plans/harness-engineering-site-upgrade.md
+# 构建验证
+bun install && bun run docs:build  # exit 0
+
+# 范围验证
+git diff --stat HEAD --name-only | grep -v -E '^docs/(guide|en/guide)/(actors|built-in-tools|commands|glossary|hooks-and-plugins|human-in-the-loop|in-practice|knowledge-feeding|orchestration|skills|sub-agents|system-instructions)\.md$'
+# 期望: 输出为空（无任何越界文件）
+
+# 禁用词验证
+grep -nE '心智模型|物理形态|施力|杠杆|宪法|瞎子|发疯|伤疤|结晶|半年前|半小时' docs/guide/*.md
+# 期望: 在新增小节中无匹配
 ```
 
-证据文件：
-
-- `.sisyphus/evidence/task-2-plan-structure.txt`：保存文件存在、H2 结构、Task 1 report / Gap 可追踪性。
-- `.sisyphus/evidence/task-2-scope-and-bilingual.txt`：保存 `docs/` diff、决策门标签、双语路径检查。
-
-未来 `/start-work` 修改正文后，至少还要执行：
-
-```bash
-bun run docs:build
-git diff --name-only -- docs/guide docs/en/guide
-grep -R -n -E "materials/|\.sisyphus/" docs/guide docs/en/guide
-grep -R -n -E "Cursor|Windsurf|GitHub Copilot|\.cursorrules|copilot-instructions\.md" docs/guide docs/en/guide
-```
-
-预期：构建通过；双语文件成对出现；站点正文不泄漏内部路径；主内容不新增禁用产品名。
-
-若后续要验证这轮 18 源校准已沉到计划中，至少还应补跑：
-
-```bash
-grep -E "Hooks 处理“必须发生”的事|Subagent 的核心价值是上下文隔离|Definition of Done 必须尽量转成可执行信号|harness 要从真实失败里长出来|审批策略的目标不是“更少点按钮”" .sisyphus/plans/harness-engineering-site-upgrade.md
-```
-
-预期：这 5 条高频共识都能在计划中找到对应表述。
-
-## 不做事项
-
-- 不修改 `docs/`、`docs/.vitepress/`、配置、package 文件或源码。
-- 不修改 `.sisyphus/plans/harness-engineering-content-gap-and-upgrade.md`。
-- 不把新章节作为默认方案；任何新章节都是 `requires-user-approval`。
-- 不替用户确定 “harness engineering” 的最终中文术语。
-- 不把 `index.md` 或 `context.md` 的基础叙事改动当成低风险任务；它们必须标记 `high-impact requires-user-review`。
-- 不引入主内容产品名，除非未来任务明确落在既有例外范围。
-- 不写完整文章草稿，不写 checklist / worksheet / decision tree。
-- 不做外部文献综述；Task 1 report.md 已是本计划的事实来源。
-- 不把社区经验法则写成站点硬结论；像 `/clear` 阈值、CLAUDE.md 行数上限、subagent 理想时长，只能作为经验提示。
-- 不把 paywall 后不可见内容、curated list 的二手描述，当成主论证的核心证据。
-- 不安装依赖，不创建 `.opencode/`，不提交 git commit。
-
-## 附录：已并入的 Gap 分析报告
-
-这一节把 `.sisyphus/research/harness-engineering-content-gap/report.md` 的核心分析并入本计划，让后续执行者只看这一份文件也能理解：为什么要升级、缺口在哪里、哪些地方已覆盖、哪些地方只是框架层还没成形。
-
-### 背景
-
-本次升级讨论只回答一个问题：现有双语教程已经讲了很多 agentic 编程机制，如果要面向每天使用 coding agent 的工程师引入 harness engineering，还缺什么？
-
-这里的 `harness engineering` 暂不定中文名。工作定义保持不变：它是围绕模型和 agent 外层的一整套工程化约束，包括项目规则、Skills、Hooks、Subagents、MCP、验证门禁、权限边界、隔离执行、可复现工作流、可执行 Definition of Done、失败日志回流，以及审批疲劳管理。
-
-这份计划继承了 report 的三个边界：
-
-- 不修改站点正文作为既成事实。
-- 不默认新增章节。
-- 不替用户选择最终术语。
-
-### 方法
-
-本次分析做的是**站内 delta**，不是重做一次外部社区综述。判断依据来自四层输入：
-
-1. 现有站点正文：`docs/guide/*.md` 与 `docs/en/guide/*.md`。
-2. 项目约束：`CLAUDE.md`、既有 Phase 1 / Phase 2 计划。
-3. 既有 POMASA gap analysis：用于去重，避免把已补深内容再次包装成“新发现”。
-4. 外部校准来源：Fowler 两篇文章、Sean Goedecke 一篇文章，以及早期 18 个多源研究 URL 的去重共识。
-
-判断标签保持和 report 一致：
-
-- `类型: 概念`：站点基本没讲这个概念。
-- `类型: 深度`：讲了概念，但不足以指导日常工程使用。
-- `类型: 框架`：机制都在，但没有被统一命名或串成 harness engineering。
-
-### POMASA 基线与去重
-
-POMASA 的结论已经说明：站点与实践者社区话题的可映射覆盖率很高，主要问题不是缺主节点，而是缺方法深度。
-
-所以，这次合并后的计划继续沿用一个关键判断：
-
-> **机制大多已在，框架层还没成形。**
-
-也就是说，Task B-F 的重点不是“补从未出现过的新概念”，而是把已有零件组织成一套使用者能看懂、能落地的外层工程系统。
-
-已经被 POMASA 补过、这次不再当成新 gap 的内容包括：
-
-- 并行 session 治理
-- 长时 loop 治理
-- 团队级配置治理
-- 长期记忆的最小理解方式
-- Vibe → Context Engineering、职责边界、权限索引、Conductor、反模式、决策框架等既有吸收项
-
-### 覆盖矩阵摘要
-
-#### 已强覆盖，不应再夸大成“缺失概念”的部分
-
-- 项目规则 / System Instructions
-- Skills
-- Hooks / Plugins
-- MCP
-- 权限边界
-- Sub Agent 上下文隔离
-- 并行治理
-- 长循环控制
-- HITL
-- In Practice
-
-#### 已覆盖但还缺 harness framing 或工程深度的部分
-
-- validation gates
-- isolated execution
-- repeatable workflows
-- executable Definition of Done
-- failure-log-to-harness-improvement loop
-- approval-fatigue management
-- harness engineering terminology
-
-### 7 个 Gap 的合并摘要
-
-#### GAP-HE-001：缺少 harness engineering 的框架入口
-
-类型: 框架
-
-现有站点已经讲清楚 rules、tools、MCP、Commands、Skills、Hooks、Sub Agent、HITL、编排、验证，但读者还不一定会把这些零件视为一个外层工程系统。当前主线是“上下文如何流动”，这条主线没错，但还缺一句明确关系：
-
-- Context Engineering 管“怎么把 guides 和 sensors 交给 agent”
-- harness engineering 管“外层系统如何约束 agent 怎么跑、怎么停、怎么验收、怎么复盘”
-
-这就是为什么 Task H 只允许做轻量入口，而不允许重写主线。
-
-#### GAP-HE-002：验证门禁分散，缺少“可执行 DoD”的概念锚点
-
-类型: 深度
-
-当前正文已经讲测试、lint、build、人工验收和假完成，但还没把这些东西组织成一句更工程化的话：
-
-> 完成标准不只是自然语言，而是 agent 能执行的命令、exit code、文件状态和证据输出。
-
-Fowler 的 `Computational` / `Inferential` controls 给了一个很好的解释框架：便宜稳定的 tests / linters / type checks 应该尽量前移；更慢、更贵、更不确定的 semantic review / AI review 属于补充，而不是替代。
-
-#### GAP-HE-003：失败日志到 harness 改进的闭环还不够显式
-
-类型: 深度
-
-站点已经讲“踩坑写成规则”，但还没把失败回流讲成一个清晰循环。合并后的结论是：失败发生后，不只修这次结果，还要判断它是否应该进入外层约束。典型去向有四类：
-
-- rules
-- Hooks
-- tests / build gates
-- Skills / Commands
-
-这也是 Task C 之所以优先的原因：它直接连接 steering loop / Feedback Flywheel。
-
-#### GAP-HE-004：执行隔离讲了上下文，没充分讲运行环境隔离
-
-类型: 深度
-
-Sub Agent 一章已经把上下文隔离讲得很清楚，但对运行环境隔离仍偏轻。这里要补的是一条并排关系：
-
-- 上下文隔离解决“LLM 看见什么”
-- 执行隔离解决“agent 能碰到什么”
-
-通用例子应保持 agent-agnostic：独立分支、临时工作区、沙箱、只读模式。再借 harnessability / ambient affordances 解释：环境结构越清晰、越可回滚、越有结构化检查，agent 越容易被约束。
-
-#### GAP-HE-005：重复工作流的沉淀路径还不够集中
-
-类型: 框架
-
-Commands、Skills、Hooks 各自都有章节，但读者还缺一个高层判断：一个重复出现的工作流，到底该沉到哪一层。
-
-合并后的高频共识已经在 Task E 中写死：
-
-- always-on 长期规则 → `CLAUDE.md` / `AGENTS.md` / rules
-- 可复用流程 → Skills / Commands
-- 必须 deterministically 发生的门禁 → Hooks
-- 高噪声、易污染上下文的工作 → Subagents
-
-这部分不需要写成操作手册，但必须让读者知道“为什么这样分层”。
-
-#### GAP-HE-006：审批疲劳已有，但未和权限策略形成闭环
-
-类型: 框架
-
-HITL、权限梯度、Hooks 已分别出现，但还没合成一个闭环：
-
-- 权限太松，风险上升
-- 权限太紧，人会疲劳并开始无脑批准
-- 好的 harness 同时减少危险操作和无意义审批
-
-这部分还需要保留一条边界：减少 review toil，不等于把人从思考中拿掉。Sean Goedecke 的来源只支持一个温和提醒——要保留人的 cognitive engagement、监督质量和高价值判断，不支持“AI 必然造成技能退化”这种硬结论。
-
-#### GAP-HE-007：术语表缺少 harness engineering 及相关术语入口
-
-类型: 概念
-
-术语表目前有 Context Engineering、Agentic Engineering、Trust Boundary 等，但没有 Harness Engineering，也没有 guides / sensors、feedforward / feedback、Computational / Inferential controls 的轻量解释。
-
-这里继续保留用户决策点：中文名不在计划内拍板。计划和正文草稿在拍板前都应保留 `harness engineering` 英文，并在首次出现时给一句朴素解释。
-
-### No Gap / Already Covered（合并版）
-
-后续执行时，不要再把下面这些东西包装成“新概念”去卖点：
-
-- Context Engineering 主线
-- 项目规则 / System Instructions
-- Skills
-- Hooks / Plugins
-- MCP
-- 权限边界
-- Sub Agent 上下文隔离
-- 并行会话治理
-- 长时循环控制
-- HITL
-- In Practice
-
-这些都是已覆盖能力。后续任务的工作，是补强和串联，不是重发明。
-
-### 合并后的用户决策点
-
-这份计划继承 report 的 4 个关键决策点：
-
-1. 中文术语怎么选
-2. 是否允许新章节
-3. 是否允许重塑基础章节叙事
-4. 是否把人的长期能力问题轻量写进 HITL
-
-其中：
-
-- 1、2 属于 `requires-user-approval`
-- 3 属于 `high-impact requires-user-review`
-- 4 只允许温和引入，不允许扩大成职业判断或社会结论
-
-### 合并后的推荐结论
-
-把 report 合并进本计划之后，结论没有变，反而更清楚：
-
-- **默认路径不变**：不新建章节，不重写骨架，不立即修改 `docs/`
-- **优先级不变**：Task B-F 高于 Task H-I
-- **核心升级方向不变**：把已有机制串成一套外层工程系统，而不是追加一个新的概念宇宙
-
-换句话说，这份 `harness-engineering-site-upgrade.md` 现在既包含“为什么要升级”的分析，也包含“具体怎么升级”的执行拆解，已经可以作为单一事实来源使用。
+### Final Checklist
+
+- [ ] 25 个 task 全部 ✅
+- [ ] Final Wave 4 路全 APPROVE
+- [ ] `bun run docs:build` PASS
+- [ ] git diff 范围正确（24 个 docs 文件）
+- [ ] sidebar / knowledge-graph / theme / illustrations 零改动
+- [ ] 中英术语统一
+- [ ] glossary 中英对齐
+- [ ] 单 commit message 列出 7 个 Gap 摘要
