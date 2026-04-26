@@ -217,7 +217,15 @@ Agent 会**真实执行** LLM 请求的操作。好的工具分两级信任：
 
 最基本的隔离是读写分离。不同工具默认值不同，但大体上，读操作（`read_file`、`grep`）更容易被直接放行；写操作和 shell 命令更常在触发前暂停，等用户审批或按配置策略自动放行。这道分界线不是单纯的 UI 设计，而是把“观察世界”和“改变世界”两类行为在执行层分开处理。
 
-执行隔离的深度因工具不同而差异明显。Claude Code 默认先做权限流分层：Read-only 操作通常直接允许，Bash/Edit 这类会改变环境的操作进入确认或策略判断；如果启用 sandbox，才多一层 OS 级隔离。Codex 的 `shell` 工具通常在沙箱内运行，把写权限限制在 workspace，网络访问默认受限；未 trust 的目录可能从 read-only 模式开始。Gemini CLI 有两层：Trusted Folders 先控制配置加载安全，Sandbox 启用后再处理文件系统和网络隔离。OpenCode 的重点是 permission 策略，通过规则决定命令是 `allow`、`ask` 还是 `deny`。
+执行隔离的深度因工具不同而差异明显。
+
+**Claude Code** 默认先做权限流分层：Read-only 操作通常直接允许，Bash/Edit 这类会改变环境的操作进入确认或策略判断；如果启用 sandbox，才多一层 OS 级隔离。
+
+**Codex** 的 `shell` 工具支持沙箱模式，启用后通常把写权限限制在 workspace，并且网络访问受限。沙箱的具体行为与配置和版本有关，并非所有场景都默认开启完整隔离。
+
+**Gemini CLI** 从两个不同维度做控制：Trusted Folders 管配置加载——未 trust 的目录不会加载项目级 settings、自定义工具和 env 文件；Sandbox 管执行隔离——启用后限制文件系统和网络访问。两者各司其职，不是严格的层级关系。
+
+**OpenCode** 的重点是 permission 策略，通过规则决定命令是 `allow`、`ask` 还是 `deny`。
 
 这种差异很重要：同样叫“执行 shell 命令”，有沙箱和没沙箱的风险截面完全不同。
 

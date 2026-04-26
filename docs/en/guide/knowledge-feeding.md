@@ -96,25 +96,25 @@ API definitions don't belong in instruction files—they're reference material, 
 
 Knowledge feeding isn't only about pushing documents, conventions, and rules to the Agent. There's another path: **failure information the Agent generates while working**, and how it flows back into the next request automatically.
 
-To be precise: this happens in the `messages` array, not the system prompt. Every time a tool call fails, a command errors out, or a test doesn't pass, the error output the Agent receives gets appended to the conversation history as a `tool_result`. The LLM reads it in the next round and decides how to adjust.
+To be precise: this happens in the conversation history, not the system prompt. Every time a tool call fails, a command errors out, or a test doesn't pass, the error output the Agent receives gets appended to subsequent requests as a tool result. The exact API shape varies: OpenAI typically appends a `role: "tool"` message; Claude typically puts a `tool_result` block inside a `user` message. The LLM reads it in the next round and decides how to adjust.
 
 The problem: **if failure output gets pushed in unfiltered, it quickly becomes context noise.**
 
-A single failed package install can produce very long output. Stuff it all into `messages`, and every subsequent round carries that baggage—effective reasoning space shrinks under the weight of error history, while the information actually needed for the task gets diluted.
+A complete dependency-install error log can be very long. Stuff it all into messages and every subsequent round drags it along. Old error logs crowd out context, and information actually needed for the task gets diluted.
 
 How to control it:
 
 | Granularity | Approach | When to use |
 | :---------- | :------- | :---------- |
-| **Coarse**: final status only | Pass "failed / succeeded" plus a one-line summary | Simple tool calls where the LLM doesn't need to diagnose |
-| **Medium**: truncated + key segment | Keep error type, first error message, top of stack trace | A reasonable default for most situations |
-| **Fine**: full log | Pass everything, no truncation | Complex debugging where the LLM needs the complete picture |
+| **Coarse**: final status only | Pass "failed / succeeded" plus a one-line summary | Simple tool calls where the LLM doesn't need to diagnose the cause |
+| **Medium**: truncated + key segments | Keep error type, first error message, top of the stack trace, plus the summary at the tail of the log | A reasonable default for most situations |
+| **Fine**: full log | Pass it as-is, no truncation; for very long logs, save them to a file and put only the path and a summary into context | Exception cases: complex debugging where the LLM needs the complete picture to locate the issue |
 
-Most agent tools expose a hooks mechanism at the "tool return" stage. You can intercept raw output there, filter by format, keep only the fields that matter, and then push into context. That's the cleanup gate failure logs pass through before reaching the next round.
+Some agent tools' hooks mechanism lets you preprocess at the "tool return" stage: intercept raw output, filter by format, keep only the fields that matter, then push into context. That's the summarize/filter gate failure logs pass through before reaching the next round. A practical output shape can look like this: `{status, exit_code, failing_command, first_error, relevant_tail}`.
 
-Another approach: **pass diffs, not full content**. If the previous round already included the complete contents of a file, this round only needs to say which line changed. That keeps the same information from appearing in `messages` three times over.
+Another approach: **diff-first, not diff-only**. If a hook or orchestration layer can control input, and a previous round already passed the full content of a file, prefer a diff this round; supplement with relevant snippets when intent, interfaces, or context need to be judged. Avoid the same information appearing three times in messages.
 
-Scope control matters just as much. Not every failure deserves to flow back at all. A lint warning doesn't need to enter `messages`—the hook should evaluate it: low severity, discard it or write it to a local log only. Only failures that block execution and require an LLM decision are worth spending context space on.
+Scope control matters just as much. Not every failure deserves to flow back. Low-risk lint warnings usually don't need to enter messages, but you should evaluate four things first: does it block execution, does it require changing the plan, does it contain new facts, does it recur. If all four answers are no, the hook can discard it or write it only to a local log. Only failures that block execution and require an LLM decision are worth spending context space on.
 
 
 ## How to Choose

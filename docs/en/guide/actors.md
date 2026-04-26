@@ -204,19 +204,19 @@ Restarting isn't failure. It's **context subtraction**. You're cutting away nois
 
 Once the three roles are clear, the most commonly overlooked question is: **who decides when a task is done?**
 
-A Definition of Done written in natural language is usually a trap. "Tests pass," "code is clean," "feature works" — the agent can't act on these, and your own judgment tends to drift with your mood. A useful DoD is an executable signal: run a command, check the exit code; run a grep, check for matches; kick off a build, see whether it errors. Commands can be run directly by the agent, and the result doesn't depend on anyone's interpretation. This is the core logic of Harness Engineering — the engineering wrapper built around an LLM — which turns "done" from a description into a machine-verifiable assertion.
+A Definition of Done written in natural language is usually a trap. "Tests pass," "code is clean," "feature works" — the agent can read these, but it can't reliably produce the same set of verification actions every time, and your own judgment tends to drift with your subjective state. A useful DoD is an executable signal: run a command, check the exit code; run a grep, check for matches; kick off a build, see whether it errors. Commands can be run directly by the agent, and the result reduces how much weight rides on in-the-moment subjective judgment. This is the core logic of Harness Engineering — the engineering wrapper built around an LLM — which makes verification something more than the LLM's own self-assessment, turning "done" from a description into a machine-verifiable assertion.
 
 Executable signals also draw role boundaries more precisely.
 
 | Role | Executable signal examples | When human review is still needed |
 | ----- | -------------------------- | --------------------------------- |
-| You | Define `bun test && tsc --noEmit` as DoD | Business judgments that signals can't cover |
+| You | Define `<test-command> && <type-check-command>` as DoD | Business judgments that signals can't cover |
 | Agent | Run signals automatically after each step and report results | Pause on signal failure, wait for instructions |
-| LLM | Use signal results as input when reasoning about next steps | No fallback role — it has no persistent state |
+| LLM | Use signal results as input when reasoning about next steps | No fallback — it just continues reasoning from the available context |
 
 Human review isn't about clicking fewer buttons. Automated checks reduce mechanical confirmation, not judgment itself. What deserves your attention is what the agent can't self-verify: does this change match the product intent? Does this refactor cross a boundary it shouldn't? That kind of judgment can't be compiled into a shell command — it stays with the human. Everything that *can* become an executable signal should become one. What can't goes into the human queue. That's how review actually saves cognitive resources, rather than turning you into a rubber stamp.
 
-Over time, this division of labor also affects your own judgment. If every decision gets delegated to the agent, your sense of how the system actually behaves will quietly erode. Keeping high-value decisions in your own hands isn't just process design — it's how you stay genuinely connected to what the codebase is doing.
+From some teams' experience, this division of labor also shapes your judgment over time. If every decision gets delegated to the agent, your sense of how the system actually behaves can quietly dull. Keeping high-value decisions in your own hands at least keeps you in continuous contact with the real state of the codebase.
 
 ## Key Takeaways
 

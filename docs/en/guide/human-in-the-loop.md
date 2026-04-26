@@ -120,15 +120,19 @@ There's an equally dangerous slide in the opposite direction: approval fatigue. 
 
 ## Closing the Approval Loop: Attention Budgets and Cognitive Engagement
 
-Approval fatigue doesn't stem from too many approvals. It stems from spending human attention on things the machine could have decided on its own.
+Too many approvals is usually just the symptom. What actually drains people is low-value approvals: things the machine could decide, log, and replay—yet still demands a human click.
 
-Most actionable completion signals don't need a human present: tests pass, build succeeds, lint is clean, exit code is zero. These can be verified and logged automatically. Human presence is warranted in only three situations: the operation is irreversible (deleting data, pushing to production); the decision involves organizational judgment (release timing, breaking interface compatibility); or an anomaly signal exceeds a preset threshold and needs human classification. Everything else can be reviewed after the fact via sampling.
+Most actionable completion signals don't need a human present: tests pass, build succeeds, lint is clean, exit code is zero. These can be verified and logged automatically. The archive should at minimum include the check, the result, the timestamp, the triggering task, and the corresponding commit or run id.
+
+The cases that warrant human presence usually fall into three buckets: the operation is irreversible (deleting data, pushing to production); the decision involves organizational judgment; or an anomaly signal exceeds a preset threshold and needs human classification.
+
+Organizational judgment isn't something the model can decide for you by thinking harder. Examples: whether the release window collides with a business event, whether breaking interface compatibility needs to be announced to downstream teams in advance, whether a security exception is acceptable, or whether this change shifts behavior the team has already promised. Everything else, low-risk by nature, can usually be handled by post-hoc sampling review.
 
 Separating those three layers turns the approval policy into a funnel:
 
 ```mermaid
 flowchart TD
-    A["Execution signal"] --> B{"Auto-verifiable?"}
+    A["Execution signal"] --> B{"Low risk and auto-verifiable?"}
     B -->|"Yes"| C["Auto-pass / log"]
     B -->|"No, low risk"| D["Post-hoc sampling review"]
     B -->|"No, high risk"| E["Immediate human review"]
@@ -137,13 +141,13 @@ flowchart TD
     E --> F
 ```
 
-The goal isn't to press fewer buttons. It's to make every remaining press worth pressing. When approval frequency drops, each prompt gets more of your attention—you stop running on reflex.
+The goal isn't to press fewer buttons; it's to make every remaining press worth pressing. Once approval frequency drops, you actually have room to judge carefully, instead of sliding into reflex.
 
-There's a consequence worth keeping in mind, though. If you spend a long time looking only at high-risk nodes and ignoring everything the funnel auto-passes, your understanding of the system stays at the "anomaly detection" level. If the funnel configuration itself goes wrong—wrong thresholds, wrong risk categories—you may have already lost the ability to catch it.
+There's a consequence worth keeping in mind, though. If you spend a long time looking only at high-risk nodes and ignore everything the funnel auto-passes, your understanding of the system tends to stay at the "anomaly detection" level. By the time the funnel configuration itself goes wrong—what counts as high risk, whether the thresholds are right—you'll find it harder and harder to read why the funnel routes things the way it does.
 
-That's why sampling reviews aren't a formality. Every so often, pull a few auto-passed records at random and actually look at them. It's a check on current decision quality, and it's maintenance on your own judgment. You need to keep understanding this system well enough to notice and fix it when the funnel fails.
+That's why sampling reviews aren't a formality. Every so often, sample by risk tier and look at a handful of auto-passed records; also pull the records that were auto-passed but later turned out to be problems. That's how you confirm the funnel is filtering the right things. It's a check on current decision quality, and it's maintenance on your own judgment. You have to keep understanding this system well enough to notice and fix it when the funnel fails.
 
-Human attention is finite. The endpoint of an approval policy is directing that finite attention toward the decisions the machine genuinely cannot make.
+Human attention is finite. The point of an approval policy is to spend that finite attention on the decisions the machine genuinely can't make.
 
 ## Key Takeaways
 

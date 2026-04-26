@@ -67,7 +67,7 @@ LLM 并不知道你输入了 `/review`。它看到的只是一个非常具体的
 
 command 的核心价值在于**显式调用**。你主动触发，agent 才执行；有些工具也允许模型调用 command，但这不等于所有 command 都该开放给模型。涉及 deploy、migrate、force push 的动作，不应允许模型自动调用。你按下那个 `/` 的时候，应该是在主动承担这次操作。
 
-和 skill 的边界：skill 更像可被 agent 按需拿起的能力包；command 更像用户主动按下的按钮。Claude Code 新版把 command 并入 skills 体系，通过 frontmatter 控制如何 invoke，所以边界不再只看文件夹名字，而要看触发权交给谁。如果一套工作流需要"我来决定什么时候做"，它不应允许模型自动调用；如果是"让 agent 在合适时机自己带上这套规则"，可以允许模型自动加载。
+和 skill 的边界：skill 更像可被 agent 按需拿起的能力包；command 更像用户主动按下的按钮。不同工具的实现方式不同——有的把 command 和 skill 放在同一个体系里，通过配置控制触发方式（比如 Claude Code 新版通过 frontmatter 区分 invoke 模式），所以边界不再只看文件夹名字，而要看触发权交给谁。如果一套工作流需要"我来决定什么时候做"，它不应允许模型自动调用；如果是"让 agent 在合适时机自己带上这套规则"，可以允许模型自动加载。
 
 和 hook 的边界：hook 不需要你触发，事件发生时自动执行。不要用 command 替代 hook 能做的事——不要写 `/start-logging` 这种命令，该用 hook 在 session 启动时自动挂载日志逻辑。显式调用适合"我来决定时机"的场景，事件触发适合"只要事件发生就执行"的场景。
 

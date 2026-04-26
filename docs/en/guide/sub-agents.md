@@ -103,26 +103,27 @@ What the main Agent receives is just: "Tests created, covering 201 and 400, file
 
 <SvgIllustration name="sub-agents-inline-2.svg" interactive />
 
-## Isolation Is the Point, Concurrency Is a Side Effect
+## Isolation Often Matters More Than Concurrency
 
-The common reason people reach for Sub Agents is speed: "They run in parallel, so things finish faster." That's true, but it's only half the story.
+Most introductions to Sub Agents lead with concurrency: you can run several tasks at once, things finish faster. That's true, but it's only half the story.
 
-Concurrency is a side effect of isolation. Isolation itself is the core value—it exists to solve a specific problem: the main context is already long and noisy, and a precise sub-task shouldn't have to run inside that mess.
+Concurrency is just a scheduling mode; isolation is a way of managing context. The common problem isolation solves: the main context is already long and noisy, and a precise sub-task shouldn't have to run inside that mess.
 
 Four scenarios make this concrete.
 
-**Exploratory tasks.** When you send an agent to investigate an unfamiliar library or validate whether an approach is even viable, the work generates a lot of intermediate noise—attempts, errors, dead ends. Let that happen in an isolated Sub Agent. The noise stays contained; the main thread only gets the conclusion.
+**Exploratory tasks.** When you send an agent to investigate an unfamiliar library or validate whether an approach is even viable, the work generates a lot of intermediate noise — attempts, errors, dead ends. Dumping all of that into the main context easily disturbs later decisions. Before handing such a task to an isolated Sub Agent, agree up front on what comes back: conclusion, evidence, risks — not the full exploration trail.
 
-**Review tasks.** Code review has its own analytical logic, separate from the implementation thread. Mix them in the same context and they interfere with each other. Isolated, the review result comes back clean, and the main thread isn't pulled off course by the review process.
+**Review tasks.** Code review often fits isolation too. It has its own analytical path, which doesn't always align with the implementation thread. Mixed into the same context, the two interfere with each other, and the review can be pulled off course by the implementer's framing. Isolation isn't only about saving context; it's also about reducing bias. The main thread only receives the review conclusions, evidence, and recommendation priorities.
 
-**Bulk operations.** Batch renames, formatting passes, file migrations—these generate a lot of tool-call records that carry almost no informational value for the main task. Dumping them into the main context burns tokens for nothing. Offload to a Sub Agent and get back a simple "done" or "failed."
+**Bulk operations.** Batch renames, formatting passes, file migrations — these pile up large volumes of tool-call records, while the main thread usually only needs the final state, the impact scope, and the exceptions. Stuffing the entire process verbatim into the main context is usually a waste of context space. When delegating to a Sub Agent, make the risk boundaries explicit: return the change list, the failed items, the unhandled files — not just a curt "done."
 
-**Long-output tasks.** Some tool calls return thousands of lines—test reports, compile logs, large API responses. A Sub Agent can digest that output and return only what matters.
+**Long-output tasks.** Some tool calls return enormous output: test reports, compile logs, large API response bodies. In tools that support summarized return, a Sub Agent can digest that mass and bring back the error category, key evidence, and next-step suggestions. The point isn't taking up less space; it's compressing noise into signal.
 
-What these four scenarios share: the sub-task's **execution process** has no reference value for the main thread. Only the result does.
+These four scenarios share a common feature: the main thread doesn't need to consume the full execution process — only the result and the necessary evidence. Drill in further if needed, but that depends on whether the tool retains the trace.
 
-This is also where this chapter ends and the next one begins. Orchestration is about what happens after you have multiple Sub Agents: how to sequence steps, how to pass intermediate results, how to merge branches. This chapter handles the earlier question: **whether to isolate**, and what isolation gives you. Get that right first, then think about how to orchestrate.
+This is also the boundary between this chapter and the next. If the question is "should this be done off to the side," that's isolation. If the question becomes "between several results, which goes first, which depends on which," that's orchestration. This chapter handles the earlier step: **whether to isolate**, and what isolation gives you.
 
+Don't reach for concurrency for its own sake; first ask whether this stretch of execution will pollute the main thread.
 ## Connecting Back to the First Principle
 
 A Sub Agent’s performance depends on two things:

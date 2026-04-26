@@ -109,19 +109,23 @@ Then there's instruction conflicts. One Skill demands detailed comments, another
 
 ## When Should a Repeated Task Be Distilled into a Skill?
 
-There's a reliable signal: you're on the same project, and this is the third time you've explained the same set of rules to the agent in plain language.
+A useful rule of thumb: you're on the same project, and this is the third time you've explained the same set of rules to the agent in plain language.
 
-Verbal repetition doesn't scale. Every time you say it, it takes up context. By the second half of a long session, those rules may have already been compressed away. If the agent drifts, it's not ignoring you — the rule is just no longer in the context window.
+Verbal repetition doesn't scale. You have to say it every time, and every time it costs context; deeper into the conversation, those rules may already be truncated or compressed away. Even if they survive, they get diluted by other content. The longer the session, the higher the chance the rule gets ignored, truncated, or buried.
 
-Three dimensions to check.
+Three dimensions to check: frequency, stability, scope.
 
-**Repetition frequency.** A one-off task isn't worth distilling. If something comes up three or more times and you're re-explaining it each time, it has earned a Skill.
+**Repetition frequency.** A one-off task isn't worth distilling. A practical guideline: the same thing comes up three or more times, you re-explain it each round, and the maintenance or error cost is now clearly higher than writing the Skill once. Only then is it worth crystallizing.
 
-**"How to do" vs. "what to do."** Skills encapsulate persistent behavior patterns, not single actions. "Do a review for me" is "what to do" — say it once and you're done. "Always check error paths and type safety during reviews" is "how to do" — write it as a Skill, load it once, and it rides along every turn. If a rule needs to be active for the entire session, write a Skill. If it's just for this one request, say it inline.
+**"How to do" vs. "what to do."** Skills encapsulate persistent behavior patterns, not single actions. "Do a review for me" is "what to do" — say it once and you're done. "Always check error paths and type safety during reviews" is "how to do" — write it as a Skill, load it once, and it rides along every turn.
 
-**Reuse scope.** Conventions that only apply to the current project belong in a project-level rules file. Rules that transfer across projects — commit message format, Go error handling style — are worth packaging into a reusable Skill.
+What's easiest to overlook here is the skill description itself. Write the trigger condition precisely, and the agent knows when to load it; write it too broadly, and the Skill will land in unrelated tasks and burn context. If a rule only serves the current task, just say it inline; only consider distillation when it keeps recurring.
 
-Granularity matters too. A Skill that covers too much dumps a book into the context, most of which the current task won't touch. Split by cohesive domain and load on demand. On the other end, a single rule doesn't need its own Skill — merge it into an existing one.
+**Reuse scope.** Static conventions that only hold for the current project usually belong in a project-level rules file first. Repeated step-based workflows — for example, "how to verify the site before a release" — are better split into project-level Skills. Rules that transfer across projects — commit message format, Go error handling style — are the ones worth packaging into a reusable Skill.
+
+Granularity also matters. A Skill that covers too much is like dumping a book into the context — most of which the current task won't touch. A better pattern is progressive disclosure (layered loading): the description carries only the trigger condition and a one-line capability summary; the body holds the stable workflow; detailed templates, long examples, and script notes go into referenced files, read only when needed.
+
+Split by cohesive domain and load on demand — that beats one big catch-all Skill. Conversely, a single rule with no independent trigger scenario shouldn't get its own Skill; merge it into an existing one.
 
 ## Key Takeaways
 

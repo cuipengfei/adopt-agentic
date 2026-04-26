@@ -159,26 +159,29 @@ One person maintaining an instruction file? Just iterate. A team maintaining the
 
 After an agent completes a task, it leaves behind failure records — deleted the wrong file, used a deprecated API, committed without running tests. Which failures belong in system instructions, and which ones do you just fix on the spot?
 
-Two questions settle it:
+Before judging, first confirm the cause of the failure: is this an instruction gap, or a problem with tools, permissions, or workflow design? Insufficient permissions, missing hooks, a workflow with no approval step — system instructions alone can rarely backstop those.
 
-1. **Will this type of failure repeat?** Across different tasks, different people, or after time passes — is the same trap still there?
-2. **Can the rule generalize?** Can you write it as one instruction that holds for all similar tasks, rather than a special case for this one situation?
+Then ask three questions:
 
-Both answers yes: write it into system instructions. Otherwise, correct it in the conversation and move on.
+1. **Is the root cause an instruction gap?** If the real issue is an unavailable tool, wrong permissions, or a poorly designed workflow, fix the tools and the workflow first.
+2. **Will this type of failure repeat?** Across different tasks, different people, or after time passes — is the same trap still there?
+3. **Can the rule generalize?** Can it be written as one instruction that holds for all similar tasks, rather than a special case for this one task?
+
+All three answers yes: it's usually worth considering for system instructions. If the rule needs hard enforcement, it fits better in a hook, an approval step, or a validation check. Otherwise, correct it in the conversation first; don't rush to crystallize it.
 
 | Failure Type | Goes in System Instructions | Reason |
 | :--- | :--- | :--- |
-| Agent deleted a config file it shouldn't have | ✅ Yes | Any task can trigger this — needs a global guardrail |
-| Formatting output was wrong in one task | ❌ No | One-time deviation — correct it in that conversation |
-| Used a deprecated API | ✅ Yes | Affects the whole codebase — one rule keeps everyone from hitting it |
-| Reasoning drifted, analysis went off-track | ❌ No | Reasoning failures don't generalize into static rules |
-| Always forgot to run lint before committing | ✅ Yes | A workflow gap — one global rule closes it permanently |
+| Agent deleted a config file it shouldn't have | ✅ Yes | High-risk, broadly applicable; system instructions can serve as a first-layer reminder, but irreversible operations must also be backed by a hook or approval |
+| Formatting deviation in one specific task | ❌ No | One-off deviation — correct it in that conversation |
+| Used a deprecated API | ✅ Yes | The whole codebase is affected; a global rule gives a unified reminder, and where it can be detected automatically, pair it with lint or tests |
+| Reasoning drifted, analysis went off-track | Depends | That specific reasoning trace doesn't crystallize well; only when it can be distilled into a stable practice should it become a rule |
+| Always forgot to run lint before committing | ✅ Yes | A workflow gap — fits as a global rule; also push it into pre-commit or CI, where automated blocking is more reliable |
 
-One more practical note: rules that go into system instructions need to stay tight. Every rule lives in context on every request — pile in too many, and you crowd out reasoning space. If a failure can be distilled into one clear behavioral instruction, it's worth writing in. If all you can say is "something went wrong last time," keep it in the team's notes until a clear pattern emerges.
+One more operational principle: rules that go into system instructions should be tight. A good rule is short, executable, and reusable across different tasks. Every rule consumes the context window — pile in too many, and you crowd out the information the current task actually needs; the more rules, the easier it is for them to conflict.
 
-This is the boundary between system instructions and in-session correction: the former handles predictable, repeatable systemic risks; the latter handles one-off, task-specific deviations. Force things in that don't belong, and the instruction file bloats — rules pile up, maintenance gets harder, and the agent's behavior starts drifting from what the rules actually say.
+It's worth writing in only when a failure log can be distilled into one accurate behavioral instruction. If all you can say is "something went wrong last time," leave it in the failure log, an issue, or a postmortem until the trace is clear enough and the pattern is stable enough to crystallize.
 
-Note: this routing decision belongs here — in system instructions — because it's about what gets written into the persistent behavioral baseline. How to collect and format that knowledge is a separate concern covered in knowledge feeding.
+This is the boundary between system instructions and in-session correction: system instructions handle "how it should be done every time from now on"; in-session correction handles "how to fix this one task right now." The former mainly addresses predictable, repeatable systemic risks; one-off, task-specific deviations are usually corrected in the conversation first. Force things in that don't belong, and the instruction file bloats — rules pile up and become harder to maintain.
 
 ## Key Takeaways
 

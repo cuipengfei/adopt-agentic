@@ -190,19 +190,25 @@ The first two layers passing didn't prevent the third from rejecting. The user s
 
 > Related concepts: [Human-in-the-Loop](/en/guide/human-in-the-loop), [System Instructions](/en/guide/system-instructions)
 
-A bug needed fixing. A Mermaid diagram rendered in the production build, but its right-side labels were getting clipped in the browser. Local preview looked fine. Problems that only surface in build artifacts are hard for an agent to catch on its own.
+A bug needed fixing. There had been issues like this before: a Mermaid diagram rendered fine in the production build, but its right-side labels got clipped in the browser, while local preview showed nothing wrong. Problems that only surface in build artifacts are ones the agent rarely catches on its own unless screenshot verification is part of the DoD.
 
-When the task went out, the DoD was spelled out explicitly: `bun run docs:build` with zero errors, Mermaid rendering in the affected chapter visibly showing all labels in a screenshot, and git diff touching only that one file. No "just fix it"—the agent doesn't know what "fixed" looks like, but it knows how to run commands, read output, and compare screenshots.
+When the task went out, the DoD was spelled out explicitly:
 
-The first round finished. Build passed. Old habit would have called it done right there. But the DoD still required screenshot verification—and when the screenshot came in, the arrow was right but the right-side labels were still clipped. Technical verification passed. Task verification didn't.
+- Command verification: `bun run docs:build` with zero errors.
+- Visual verification: Mermaid rendering for affected chapters must visibly show all labels in screenshots.
+- Scope verification: `git diff` only touches the target files.
 
-The agent didn't decide unilaterally what to do next. It brought the screenshot and current state back to the user: build passes, but there's clipping here—how do you want to handle this? The user glanced at it: "Redo the layout, switch to vertical stacking." Said that and moved on. The agent continued. Second round: all three DoD conditions cleared.
+No "just fix it." The agent doesn't know what "good" looks like, but it knows how to run commands, read output, and compare screenshots.
 
-Then came the failure feedback step. Instead of closing things out, the agent flagged something: the same horizontal layout appeared in two other files—probably the same truncation issue. One defensive search confirmed it. Fixed those too.
+The first round finished and the build passed. By old habits, this is exactly where things would have been called done. But the DoD still required screenshot verification—when the screenshot came in, the arrow was right but the right-side labels were still clipped. Technical verification passed. Task verification didn't.
 
-Last came the step that makes the lesson stick: "Mermaid horizontal layout clips in browsers—switch to vertical or grouped layouts" went into CLAUDE.md. Not a rule designed upfront. Forced out by this specific truncation. The next session's agent, the next sub-agent assigned to charts—both ship with that rule, and neither will hit the same wall again. That's how the harness grows: the rules and conventions accumulate from actual mistakes, not from advance planning.
+The agent didn't decide unilaterally what to do next. It brought the screenshot and current state back to the user: build passes, but there's clipping here—how do you want to handle this? Human review was required at this point because layout choice is a tradeoff: a horizontal diagram is more compact, vertical stacking is steadier but makes the page longer. The user glanced at it: "Redo the layout, switch to vertical stacking." Said that and moved on. The agent continued. Second round: all three DoD conditions cleared.
 
-DoD gives "done" a standard, not a feeling. Failure feedback lifts lessons out of a single conversation and makes them available to every future agent. Human review rhythm decides which step to pause on and which to let run. The three run together—not one after another.
+Then came the failure feedback step: treat this clipping as a lead for the same class of problem. Instead of closing things out, the agent flagged something: the same horizontal layout was used in other files too, and probably had the same clipping issue. One defensive search confirmed it. Those files got pulled into the same verification round and fixed against the same DoD.
+
+Last came the step that makes the lesson stick: write "after modifying Mermaid or layout, you must run `bun run docs:build` to check rendering" into the system instructions file. This rule wasn't designed upfront—it was forced out by this specific clipping. Future sessions, when loading those instructions, will see this constraint first; relevant agents will be shaped by it too, less likely to hit the same wall. That's how the harness grows: the system instructions file and hooks absorb part of the lessons learned, but not every lesson is worth promoting into the harness.
+
+DoD gives "done" a standard, not a feeling. Failure feedback lifts lessons out of a single conversation and makes them a reference for future sessions and relevant agents. Human review rhythm decides which step to pause on and which to let run. The three run together—not one after another.
 
 ## People — More Process Corrections Than Content Corrections
 

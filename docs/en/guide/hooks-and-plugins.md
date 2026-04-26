@@ -42,28 +42,28 @@ When most people encounter hooks for the first time, the intuition kicks in: isn
 
 They're not. The two solve completely different problems.
 
-Rules in System Instructions are declarative: you tell the LLM "this is how things should go," and the rest is left to its judgment. The LLM will generally follow them, but when a task gets complex, context gets noisy, or the rule itself is ambiguous, it might quietly work around them. That's not a bug—it's how LLMs operate. They weigh everything in context and generate the most probable output. Rules are just one input among many.
+Rules in System Instructions are declarative: you tell the LLM "this is how things should go," and the rest is left to the model to apply at generation time. System Instructions are high-priority rules, but they still take effect through the model's generation process. When tasks get complex, context gets noisy, or a rule is ambiguous, the model may not apply it correctly. That's not a bug—it's how LLMs operate: they weigh everything in context and produce the most probable output.
 
-Hooks address a different level entirely: **certain things must happen, regardless of what the LLM decides.**
+Hooks address a different level entirely: **certain things must happen, as long as they happen at an event or tool entry point that a hook covers.**
 
 For example:
 
-- Popping a confirmation dialog before every `rm` call isn't "should do"—it's "non-negotiable."
-- Writing every tool result to an audit log, regardless of whether the LLM considers this task important.
-- Routing high-privilege operations (git push, database writes) through an approval flow that cannot be bypassed.
+- A `PreToolUse` hook before `rm` must return one of `allow`, `deny`, or `ask`—that's not "should do," it's a gatekeeping decision at the tool entry point.
+- `PreToolUse` can demand approval before high-risk operations; `PostToolUse` is better suited for writing the tool name, arguments, exit code, and an output summary into an audit log.
+- High-privilege operations (git push, database writes) can be routed through an approval flow—as long as the relevant tool entry points are covered by hooks, the approval policy must be satisfied before they continue.
 
-Rules rely on the LLM to self-regulate. Hooks rely on code to enforce. Their reliability guarantees are in a different league.
+Rules rely on the model applying them correctly at generation time. Hooks rely on the host program executing code at the event point. Their reliability guarantees are in a different league.
 
-There's a second layer to this distinction: **hooks are passively triggered; rules are actively interpreted.**
+There's a second layer to this distinction: **hooks are event-driven; rules are actively interpreted.**
 
-Rules require the LLM to actively read them, understand them, and apply them. In long contexts, rules written early tend to fade—downweighted or simply out of the window. Hooks don't depend on the LLM's memory. When the event fires, the code runs. A before-tool-call hook doesn't care what the LLM is currently thinking about. It just triggers.
+Rules require the LLM to actively read them, understand them, and apply them. In long contexts, rules written early tend to fade—downweighted or simply out of the window. Hooks don't depend on the LLM's memory: when the event fires and is covered by a hook, the code runs. A before-tool-call hook doesn't read the LLM's current reasoning; it only handles the event data at the tool entry point.
 
 So the right split is:
 
 - **Rules (System Instructions)**: Describe expected behavior—tone, format, coding style, priorities. The LLM uses these to make judgments.
-- **Hooks**: Lock down necessary actions—auditing, interception, approvals, mandatory validation. No room to route around them.
+- **Hooks**: Lock down necessary actions—auditing, interception, approvals, mandatory validation. Pin the critical boundaries down at the code layer.
 
-Hooks also serve as **enforcement points for permission policies**. You can implement a full approval workflow inside a before-tool-call hook: read operations pass through, write operations get logged, high-risk operations pause for human confirmation. This logic runs outside the LLM's view—the LLM cannot reason or argue its way past it.
+Hooks also serve as **enforcement points for permission policies**. You can implement approval logic inside a before-tool-call hook: low-risk operations pass through, high-risk ones return `ask` or `deny`. Approval points should be few and precise—otherwise you create approval fatigue. As long as the approval logic runs independently of LLM output and every relevant tool entry point is covered, the model can't reword its way past it.
 
 Rules describe intent. Hooks guarantee the floor.
 

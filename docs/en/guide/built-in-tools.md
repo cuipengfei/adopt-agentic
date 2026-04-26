@@ -211,17 +211,26 @@ Just saying "tools" is too abstract. What do the built-in tools of different age
 
 The permission table shows how each agent is configured. But what's the underlying mechanism? Every time the agent calls a tool, more is happening than just "running a command." The tool layer is the real permission gate — the thing that decides whether an operation actually lands.
 
-The most fundamental isolation is the read-write split. Read operations (`read_file`, `grep`) usually execute without confirmation. Write operations and shell commands pause before triggering, waiting for user approval or following the configured policy. This boundary isn't just UI design — it separates "observing the world" from "changing the world" at the execution layer.
+The most basic isolation is the read-write split. Defaults vary by tool, but broadly: read operations (`read_file`, `grep`) are more likely to pass through directly; write operations and shell commands more often pause before triggering, waiting for user approval or following the configured policy. This boundary isn't just UI design — it separates "observing the world" from "changing the world" at the execution layer.
 
-Execution isolation depth varies significantly by tool. Codex's `shell` runs inside a sandbox, isolated from the host filesystem with network access restricted by default. Gemini CLI's Trusted Folders mechanism confines `run_shell_command` to reads and writes within designated directories. Claude Code and OpenCode's `bash` tool runs directly in the host environment, relying on permission policies and interactive confirmation to control boundaries — no process-level sandbox.
+Execution isolation depth varies significantly by tool.
 
-This difference matters. "Execute a shell command" sounds the same across all four tools, but the risk profile is completely different with and without a sandbox.
+**Claude Code** layers permissions first: read-only operations are usually allowed directly, while environment-changing operations like Bash/Edit go through confirmation or policy evaluation. Enabling the sandbox adds an extra layer of OS-level isolation on top.
 
-The other layer of the permission gate is policy presets. The `allow` (silent pass), `ask` (confirm each time), and `deny` (block execution) combination lets you find an acceptable balance between efficiency and safety. Early in development, `allow` tends to dominate. When running automated pipelines, flip high-risk operations to `deny` or `ask`.
+**Codex**'s `shell` tool supports a sandbox mode. When enabled, write permissions are typically scoped to the workspace and network access is restricted. The exact sandbox behavior depends on configuration and version — full isolation isn't on by default in every scenario.
 
-Two operation types are easy to underestimate: `write_file` overwriting core config files, and `bash` commands with pipes (like `grep ... | xargs rm`). In environments without sandbox isolation, if the LLM generates a bad argument, the operation lands before you can react.
+**Gemini CLI** controls things along two distinct axes: Trusted Folders governs configuration loading — untrusted directories won't load project-level settings, custom tools, or env files; Sandbox governs execution isolation — when enabled, it restricts filesystem and network access. The two are independent, not strictly hierarchical.
 
-Treat your permission policy as a runtime parameter, not a one-time install setting. Adjust it to match the risk level of the current task.
+**OpenCode** focuses on permission policy, using rules to decide whether a command is `allow`, `ask`, or `deny`.
+
+This difference matters: "execute a shell command" sounds the same across tools, but the risk surface with and without a sandbox is completely different.
+
+The other layer of the permission gate is policy presets. Naming differs across tools; taking OpenCode as an example, the `allow` (silent pass), `ask` (confirm each time), and `deny` (block execution) combination lets you find a currently acceptable balance between efficiency and safety. OpenCode's object syntax also supports finer-grained rule matching; when multiple rules match simultaneously, the last matching rule wins. Early in development, `allow` tends to dominate; when running automated pipelines, flip high-risk operations to `deny` or `ask`.
+
+Two operation types are easy to underestimate: `write_file` overwriting core config files, and `bash` commands with pipes (like `grep ... | xargs rm`). The risk with pipe commands is that several small actions get strung into a single execution, and permission policies don't always split them apart the way you'd intuitively expect. Without effective sandboxing or approval boundaries, if the LLM generates a bad argument, the operation may land before you can react.
+
+Treat your permission policy as a runtime parameter, not a one-time install setting. It should follow the danger level of the current task.
+
 The tool names and categories differ, but the pattern is the same: read, write, execute, and search, plus tiered permission controls. This combination is the foundation of how an agent interacts with the world.
 
 ## Key Takeaways
