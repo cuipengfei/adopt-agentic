@@ -125,7 +125,7 @@ What's easiest to overlook here is the skill description itself. Write the trigg
 
 Granularity also matters. A Skill that covers too much is like dumping a book into the context — most of which the current task won't touch. A better pattern is progressive disclosure (layered loading): the description carries only the trigger condition and a one-line capability summary; the body holds the stable workflow; detailed templates, long examples, and script notes go into referenced files, read only when needed.
 
-Split by cohesive domain and load on demand — that beats one big catch-all Skill. Conversely, a single rule with no independent trigger scenario shouldn't get its own Skill; merge it into an existing one.
+Split by domain and load on demand — that beats one big catch-all Skill. Conversely, a single rule with no independent trigger scenario shouldn't get its own Skill; merge it into an existing one.
 
 ## Key Takeaways
 
