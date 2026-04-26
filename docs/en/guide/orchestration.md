@@ -183,7 +183,7 @@ The main session decides "which task goes to whom." The sub session decides "how
 
 **Out: Input Content**
 
-When the main agent hands a task to a sub agent, don't blindly copy the current context. Some handoff implementations default to bringing the full history along, but that doesn't mean you should hand all the noise off to the branch. The sturdier move is to pass a compact task description: what the goal is, which constraints can't be touched, and the minimum context needed to execute (relevant file paths, key variables, error messages).
+When the main agent hands a task to a sub agent, don't copy the entire current context. Some handoff implementations default to bringing the full history along, but that doesn't mean you should hand all the noise off to the branch. The safer approach is to pass a compact task description: what the goal is, which constraints can't be touched, and the minimum context needed to execute (relevant file paths, key variables, error messages).
 
 The smaller and more self-contained this description, the more predictable the sub agent's execution becomes. Compact doesn't mean stripping critical conditions: constraints, information sources, and acceptance criteria can't be lost. The sub agent shouldn't need to guess "what the main session discussed before"—it executes independently from this description alone.
 

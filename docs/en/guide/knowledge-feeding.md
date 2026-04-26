@@ -112,7 +112,7 @@ How to control it:
 
 Some agent tools' hooks mechanism lets you preprocess at the "tool return" stage: intercept raw output, filter by format, keep only the fields that matter, then push into context. That's the summarize/filter gate failure logs pass through before reaching the next round. A practical output shape can look like this: `{status, exit_code, failing_command, first_error, relevant_tail}`.
 
-Another approach: **diff-first, not diff-only**. If a hook or orchestration layer can control input, and a previous round already passed the full content of a file, prefer a diff this round; supplement with relevant snippets when intent, interfaces, or context need to be judged. Avoid the same information appearing three times in messages.
+Another approach: **diff-first, not diff-only**. If a hook or orchestration layer can control input, and a previous round already passed the full content of a file, prefer a diff this round; supplement with relevant snippets when intent, interfaces, or context need to be judged. Avoid the same information appearing repeatedly in messages.
 
 Scope control matters just as much. Not every failure deserves to flow back. Low-risk lint warnings usually don't need to enter messages, but you should evaluate four things first: does it block execution, does it require changing the plan, does it contain new facts, does it recur. If all four answers are no, the hook can discard it or write it only to a local log. Only failures that block execution and require an LLM decision are worth spending context space on.
 

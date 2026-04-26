@@ -195,7 +195,7 @@ If you care about security, you'll notice a theme running through several nodes:
 [MCP](./mcp.md) is next. Its permissions are bound by a protocol, but you have to trust the provider.
 Hooks and plugins have the most power and the most risk. They are just code. They can do anything.
 
-With great power comes great responsibility to review. You can use built-in tools without a thought. You should glance at an MCP's declared permissions. You must review hooks and plugins line-by-line, just like any other code.
+With great power comes great responsibility to review. You can use built-in tools without overthinking. You should glance at an MCP's declared permissions. You must review hooks and plugins line-by-line, just like any other code.
 
 ## Key Takeaways
 
