@@ -255,7 +255,7 @@ Max Concurrent: 12（Wave 1 / Wave 2 阶段），4（Final Wave）
 
   **Commit**: NO（统一 commit）
 
-- [ ] 1.1 **actors-zh** — Wave 1 中文写作
+- [x] 1.1 **actors-zh** — Wave 1 中文写作
 
   **What to do**:
   - 在 `docs/guide/actors.md` 适当位置插入 1 个新增小节（候选标题：「## 角色边界与可执行 Definition of Done」），200-500 字中文。
@@ -309,7 +309,7 @@ Max Concurrent: 12（Wave 1 / Wave 2 阶段），4（Final Wave）
 
   **Commit**: NO（统一 commit）
 
-- [ ] 1.2 **human-in-the-loop-zh** — Wave 1 中文写作
+- [x] 1.2 **human-in-the-loop-zh** — Wave 1 中文写作
 
   **What to do**:
   - 在 `docs/guide/human-in-the-loop.md` 插入 1 个新增小节（候选标题：「## 审批闭环与人的注意力配额」），200-500 字中文。
@@ -356,7 +356,7 @@ Max Concurrent: 12（Wave 1 / Wave 2 阶段），4（Final Wave）
 
   **Commit**: NO
 
-- [ ] 1.3 **in-practice-zh** — Wave 1 中文写作
+- [x] 1.3 **in-practice-zh** — Wave 1 中文写作
 
   **What to do**:
   - 在 `docs/guide/in-practice.md` 插入 1 个新增小节（候选标题：「## 把 DoD、失败回流、人审节奏放进同一个工作日」），200-500 字中文。
@@ -389,7 +389,7 @@ Max Concurrent: 12（Wave 1 / Wave 2 阶段），4（Final Wave）
 
   **Commit**: NO
 
-- [ ] 1.4 **system-instructions-zh** — Wave 1 中文写作
+- [x] 1.4 **system-instructions-zh** — Wave 1 中文写作
 
   **What to do**:
   - 在 `docs/guide/system-instructions.md` 插入 1 个新增小节（候选标题：「## 从失败日志回流到系统指令」），200-500 字中文。
@@ -417,7 +417,7 @@ Max Concurrent: 12（Wave 1 / Wave 2 阶段），4（Final Wave）
 
   **Commit**: NO
 
-- [ ] 1.5 **knowledge-feeding-zh** — Wave 1 中文写作
+- [x] 1.5 **knowledge-feeding-zh** — Wave 1 中文写作
 
   **What to do**:
   - 在 `docs/guide/knowledge-feeding.md` 插入 1 个新增小节（候选标题：「## 失败日志怎么变成下一轮的 context」），200-500 字中文。
@@ -444,7 +444,7 @@ Max Concurrent: 12（Wave 1 / Wave 2 阶段），4（Final Wave）
 
   **Commit**: NO
 
-- [ ] 1.6 **sub-agents-zh** — Wave 1 中文写作
+- [x] 1.6 **sub-agents-zh** — Wave 1 中文写作
 
   **What to do**:
   - 在 `docs/guide/sub-agents.md` 插入 1 个新增小节（候选标题：「## 隔离才是主价值，并发只是顺带」），200-500 字中文。
@@ -472,7 +472,7 @@ Max Concurrent: 12（Wave 1 / Wave 2 阶段），4（Final Wave）
 
   **Commit**: NO
 
-- [ ] 1.7 **orchestration-zh** — Wave 1 中文写作
+- [x] 1.7 **orchestration-zh** — Wave 1 中文写作
 
   **What to do**:
   - 在 `docs/guide/orchestration.md` 插入 1 个新增小节（候选标题：「## 主会话与分会话之间的令牌」），200-500 字中文。
@@ -499,7 +499,7 @@ Max Concurrent: 12（Wave 1 / Wave 2 阶段），4（Final Wave）
 
   **Commit**: NO
 
-- [ ] 1.8 **skills-zh** — Wave 1 中文写作
+- [x] 1.8 **skills-zh** — Wave 1 中文写作
 
   **What to do**:
   - 在 `docs/guide/skills.md` 插入 1 个新增小节（候选标题：「## 一个重复出现的任务什么时候该沉成 skill」），200-500 字中文。
@@ -526,7 +526,7 @@ Max Concurrent: 12（Wave 1 / Wave 2 阶段），4（Final Wave）
 
   **Commit**: NO
 
-- [ ] 1.9 **commands-zh** — Wave 1 中文写作
+- [x] 1.9 **commands-zh** — Wave 1 中文写作
 
   **What to do**:
   - 在 `docs/guide/commands.md` 插入 1 个新增小节（候选标题：「## 什么该写成 command」），200-500 字中文。
@@ -553,7 +553,7 @@ Max Concurrent: 12（Wave 1 / Wave 2 阶段），4（Final Wave）
 
   **Commit**: NO
 
-- [ ] 1.10 **hooks-and-plugins-zh** — Wave 1 中文写作
+- [x] 1.10 **hooks-and-plugins-zh** — Wave 1 中文写作
 
   **What to do**:
   - 在 `docs/guide/hooks-and-plugins.md` 插入 1 个新增小节（候选标题：「## hooks 管「必须发生」，规则管「应该这样」」），200-500 字中文。
@@ -580,7 +580,7 @@ Max Concurrent: 12（Wave 1 / Wave 2 阶段），4（Final Wave）
 
   **Commit**: NO
 
-- [ ] 1.11 **built-in-tools-zh** — Wave 1 中文写作
+- [x] 1.11 **built-in-tools-zh** — Wave 1 中文写作
 
   **What to do**:
   - 在 `docs/guide/built-in-tools.md` 插入 1 个新增小节（候选标题：「## 内置工具的权限闸与执行隔离」），200-500 字中文。
@@ -607,7 +607,7 @@ Max Concurrent: 12（Wave 1 / Wave 2 阶段），4（Final Wave）
 
   **Commit**: NO
 
-- [ ] 1.12 **glossary-zh** — Wave 1 中文写作
+- [x] 1.12 **glossary-zh** — Wave 1 中文写作
 
   **What to do**:
   - 在现有 `docs/guide/glossary.md` 追加 7 个词条，一词条一个 Gap：
@@ -646,7 +646,7 @@ Max Concurrent: 12（Wave 1 / Wave 2 阶段），4（Final Wave）
 
 ---
 
-- [ ] 2.1 **actors-en** — Wave 2 英文对齐
+- [x] 2.1 **actors-en** — Wave 2 英文对齐
 
   **What to do**:
   - 基于 1.1 的中文 diff，把新增小节平行落到 `docs/en/guide/actors.md`
@@ -697,7 +697,7 @@ Max Concurrent: 12（Wave 1 / Wave 2 阶段），4（Final Wave）
 
 ---
 
-- [ ] 2.2 **human-in-the-loop-en** — Wave 2 英文对齐
+- [x] 2.2 **human-in-the-loop-en** — Wave 2 英文对齐
 
   **What to do**:
   - 基于 1.2 中文 diff 平行落到 `docs/en/guide/human-in-the-loop.md`
@@ -736,7 +736,7 @@ Max Concurrent: 12（Wave 1 / Wave 2 阶段），4（Final Wave）
 
 ---
 
-- [ ] 2.3 **in-practice-en** — Wave 2 英文对齐
+- [x] 2.3 **in-practice-en** — Wave 2 英文对齐
 
   **What to do**:
   - 基于 1.3 中文 diff 平行落到 `docs/en/guide/in-practice.md`
@@ -775,7 +775,7 @@ Max Concurrent: 12（Wave 1 / Wave 2 阶段），4（Final Wave）
 
 ---
 
-- [ ] 2.4 **system-instructions-en** — Wave 2 英文对齐
+- [x] 2.4 **system-instructions-en** — Wave 2 英文对齐
 
   **What to do**:
   - 基于 1.4 中文 diff 平行落到 `docs/en/guide/system-instructions.md`
@@ -814,7 +814,7 @@ Max Concurrent: 12（Wave 1 / Wave 2 阶段），4（Final Wave）
 
 ---
 
-- [ ] 2.5 **knowledge-feeding-en** — Wave 2 英文对齐
+- [x] 2.5 **knowledge-feeding-en** — Wave 2 英文对齐
 
   **What to do**:
   - 基于 1.5 中文 diff 平行落到 `docs/en/guide/knowledge-feeding.md`
@@ -853,7 +853,7 @@ Max Concurrent: 12（Wave 1 / Wave 2 阶段），4（Final Wave）
 
 ---
 
-- [ ] 2.6 **sub-agents-en** — Wave 2 英文对齐
+- [x] 2.6 **sub-agents-en** — Wave 2 英文对齐
 
   **What to do**:
   - 基于 1.6 中文 diff 平行落到 `docs/en/guide/sub-agents.md`
@@ -892,7 +892,7 @@ Max Concurrent: 12（Wave 1 / Wave 2 阶段），4（Final Wave）
 
 ---
 
-- [ ] 2.7 **orchestration-en** — Wave 2 英文对齐
+- [x] 2.7 **orchestration-en** — Wave 2 英文对齐
 
   **What to do**:
   - 基于 1.7 中文 diff 平行落到 `docs/en/guide/orchestration.md`
@@ -931,7 +931,7 @@ Max Concurrent: 12（Wave 1 / Wave 2 阶段），4（Final Wave）
 
 ---
 
-- [ ] 2.8 **skills-en** — Wave 2 英文对齐
+- [x] 2.8 **skills-en** — Wave 2 英文对齐
 
   **What to do**:
   - 基于 1.8 中文 diff 平行落到 `docs/en/guide/skills.md`
@@ -969,7 +969,7 @@ Max Concurrent: 12（Wave 1 / Wave 2 阶段），4（Final Wave）
 
 ---
 
-- [ ] 2.9 **commands-en** — Wave 2 英文对齐
+- [x] 2.9 **commands-en** — Wave 2 英文对齐
 
   **What to do**:
   - 基于 1.9 中文 diff 平行落到 `docs/en/guide/commands.md`
@@ -1007,7 +1007,7 @@ Max Concurrent: 12（Wave 1 / Wave 2 阶段），4（Final Wave）
 
 ---
 
-- [ ] 2.10 **hooks-and-plugins-en** — Wave 2 英文对齐
+- [x] 2.10 **hooks-and-plugins-en** — Wave 2 英文对齐
 
   **What to do**:
   - 基于 1.10 中文 diff 平行落到 `docs/en/guide/hooks-and-plugins.md`
@@ -1046,7 +1046,7 @@ Max Concurrent: 12（Wave 1 / Wave 2 阶段），4（Final Wave）
 
 ---
 
-- [ ] 2.11 **built-in-tools-en** — Wave 2 英文对齐
+- [x] 2.11 **built-in-tools-en** — Wave 2 英文对齐
 
   **What to do**:
   - 基于 1.11 中文 diff 平行落到 `docs/en/guide/built-in-tools.md`
@@ -1090,7 +1090,7 @@ Max Concurrent: 12（Wave 1 / Wave 2 阶段），4（Final Wave）
 
 ---
 
-- [ ] 2.12 **glossary-en** — Wave 2 英文对齐
+- [x] 2.12 **glossary-en** — Wave 2 英文对齐
 
   **What to do**:
   - 基于 1.12 中文 diff 平行落到 `docs/en/guide/glossary.md`
@@ -1137,22 +1137,22 @@ Max Concurrent: 12（Wave 1 / Wave 2 阶段），4（Final Wave）
 
 > 4 路 reviewer 并行。**全部 APPROVE 才能进 commit 步骤**；任意一路 REJECT → 修复对应 task → 重跑该路 + F4 → 全 APPROVE 才放行。
 
-- [ ] F1. **plan-compliance-audit** — `oracle`
+- [x] F1. **plan-compliance-audit** — `oracle`
   读 plan，对照「Must Have」逐条验证：24 个文件是否都有新增小节或 glossary 追加、术语是否统一、glossary 是否补了 7 个词条。扫「Must NOT have」：grep 整个 docs/ diff 找产品名（built-in-tools 章节例外）、ASCII art、`materials/` / `.sisyphus/` 路径引用。验证 evidence 文件全部存在。
   Output: `Must Have [N/N] | Must NOT Have [N/N] | Tasks [25/25] | VERDICT: APPROVE/REJECT`
   Evidence: `.sisyphus/evidence/final-qa/F1-compliance.md`
 
-- [ ] F2. **writing-discipline-review** — `unspecified-high` + skill `humanizer-zh`
+- [x] F2. **writing-discipline-review** — `unspecified-high` + skill `humanizer-zh`
   对 11 个中文新增小节 + glossary 中文追加部分逐一跑 humanizer-zh 检测。grep AGENTS.md 禁用词表；检测 AI filler 词密度（同章不超过 1-2 次）；段落与逻辑（每段单一主旨、长句拆短、列举用 list）。
   Output: `Humanizer [N/11 pass] | 禁用词 [CLEAN/N issues] | Filler [CLEAN/N issues] | VERDICT`
   Evidence: `.sisyphus/evidence/final-qa/F2-writing.md`
 
-- [ ] F3. **build-and-bilingual-check** — `unspecified-high`
+- [x] F3. **build-and-bilingual-check** — `unspecified-high`
   跑 `bun install && bun run docs:build`，验证 exit code 0。中英对照阅读 12 对文件（含 glossary），列出每对中文核心论点 → 验证英文有对应表达。验证 `Harness Engineering` 中英术语一致。验证 glossary 中英 7 个词条对齐。
   Output: `Build [PASS/FAIL] | Bilingual [12/12 aligned] | Glossary [7/7 aligned] | VERDICT`
   Evidence: `.sisyphus/evidence/final-qa/F3-build.log` + `F3-bilingual.md`
 
-- [ ] F4. **scope-fidelity-check** — `deep`
+- [x] F4. **scope-fidelity-check** — `deep`
   `git diff --stat HEAD` 列出所有改动文件，验证只在 `docs/guide/*.md`（12 个）+ `docs/en/guide/*.md`（12 个）范围内。验证 sidebar / knowledge-graph / AgentPrompt 模板 / illustrations / theme 未被偷改。验证邻近章节文件（`cli-tools.md` / `context.md` / `index.md` / `mcp.md` / `peer-to-peer-agents.md`）未被偷改。每个 task 的 git log 只触及它声明的文件。
   Output: `Files [24 in scope/0 out] | Sidebar [INTACT] | KG [INTACT] | Theme [INTACT] | Cross-task [CLEAN/N issues] | VERDICT`
   Evidence: `.sisyphus/evidence/final-qa/F4-scope.md`
@@ -1200,11 +1200,11 @@ grep -nE '心智模型|物理形态|施力|杠杆|宪法|瞎子|发疯|伤疤|�
 
 ### Final Checklist
 
-- [ ] 25 个 task 全部 ✅
-- [ ] Final Wave 4 路全 APPROVE
-- [ ] `bun run docs:build` PASS
-- [ ] git diff 范围正确（24 个 docs 文件）
-- [ ] sidebar / knowledge-graph / theme / illustrations 零改动
-- [ ] 中英术语统一
-- [ ] glossary 中英对齐
-- [ ] 单 commit message 列出 7 个 Gap 摘要
+- [x] 25 个 task 全部 ✅
+- [x] Final Wave 4 路全 APPROVE
+- [x] `bun run docs:build` PASS
+- [x] git diff 范围正确（24 个 docs 文件）
+- [x] sidebar / knowledge-graph / theme / illustrations 零改动
+- [x] 中英术语统一
+- [x] glossary 中英对齐
+- [x] 单 commit message 列出 7 个 Gap 摘要
