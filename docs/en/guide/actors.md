@@ -216,6 +216,15 @@ Executable signals also draw role boundaries more precisely.
 
 Human review isn't about clicking fewer buttons. Automated checks reduce mechanical confirmation, not judgment itself. What deserves your attention is what the agent can't self-verify: does this change match the product intent? Does this refactor cross a boundary it shouldn't? That kind of judgment can't be compiled into a shell command — it stays with the human. Everything that *can* become an executable signal should become one. What can't goes into the human queue. That's how review actually saves cognitive resources, rather than turning you into a rubber stamp.
 
+One practical trick helps a lot: before formal acceptance, ask the Agent to list the claims it is making about the work.
+
+- Which files it changed
+- Which boundaries it did not touch
+- Which checks it already ran
+- Which parts remain unverified
+
+List the claims first, then review. It's more stable than jumping straight into a diff. You see what the Agent believes it accomplished, then judge whether those claims are actually backed by evidence.
+
 From some teams' experience, this division of labor also shapes your judgment over time. If every decision gets delegated to the agent, your sense of how the system actually behaves can quietly dull. Keeping high-value decisions in your own hands at least keeps you in continuous contact with the real state of the codebase.
 
 ## Key Takeaways

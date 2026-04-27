@@ -110,6 +110,18 @@ Don't tell the Agent "don't delete files." Like humans, LLMs focus on the prohib
 
 Show it the path, don't fence off every pitfall. That's positive invariants.
 
+There's another practical split: don't mash every rule into one sentence.
+
+| What you're writing | What problem it solves | Typical shape |
+| :--- | :--- | :--- |
+| **Boundary** | Defines what must stay off-limits | "Only delete files when the user explicitly asks for deletion." |
+| **Judgment criterion** | Defines what counts as correct | "After changes, run the tests. All green = done." |
+| **Example** | Shows what the result should look like | "Return JSON in this shape. Do not invent field names." |
+
+Boundaries control scope. Judgment criteria control acceptance. Examples control output shape.
+
+Write them separately and the Agent is much less likely to blur constraints, goals, and format into one vague instruction block.
+
 ### Approach 2: Onboard It, Don't Lint It
 
 `AGENTS.md` only has code styles ("use tabs, not spaces")? You're treating it like a linter. Treat it like a new hire. Don't just give it rules; tell it **"how we do things here."**

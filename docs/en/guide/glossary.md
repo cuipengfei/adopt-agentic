@@ -17,6 +17,7 @@ visualRhythm: false
 | Lost-in-the-middle | Lost-in-the-middle | An LLM attention phenomenon identified by Liu et al. (2023): models attend more to the beginning and end of context, while information in the middle is more likely to be overlooked. Affects placement strategy for critical information in long contexts. |
 | Context Isolation | 上下文隔离 | Running a Sub Agent in its own context so its reasoning isn't polluted by the main Agent's history, and the main Agent's window isn't consumed by sub-task details. |
 | Context Summarization | 上下文摘要 | Compressing a long context into key points before passing it back—balancing information retention against window space. |
+| Structural Segmentation | 结构分段 | Separating rules, background material, the current task, and tool results so the model is less likely to blur different kinds of information together. |
 | Context Pollution | 上下文污染 | Accumulated irrelevant or noisy content that degrades model reasoning quality. |
 | Signal-to-Noise Ratio (SNR) | 信噪比 | The ratio of useful signal to noise in context. Higher SNR generally yields more stable model decisions. |
 | Context Supply Chain | 上下文供给链 | The full context delivery path from task goal to system instructions, tool capabilities, and execution results. |

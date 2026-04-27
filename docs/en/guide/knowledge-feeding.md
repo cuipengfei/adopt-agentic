@@ -76,6 +76,12 @@ There's another layer: your technology choices are context too. Mature, well-doc
 
 Agents, like people, can't remember everything. Hand them an encyclopedia, and they'll just skip it.
 
+::: warning Putting material in context does not automatically set priorities
+Stuffing a pile of docs into context only guarantees the Agent can see them. It does not guarantee the Agent knows which parts actually matter for the current task.
+
+Besides feeding material, explicitly point to the files, sections, or rules that should drive this decision. Otherwise it sees a lot of information, not a clear priority order.
+:::
+
 Don't stuff your entire API documentation or database schema into `AGENTS.md`. Instead, provide an index. "For the DB schema, see `docs/db-schema.md`."
 
 The Agent will look up that schema file when it actually needs to write SQL. Let it pull knowledge, don't push it.

@@ -17,6 +17,7 @@ visualRhythm: false
 | Lost-in-the-middle | Lost-in-the-middle                  | Liu et al. (2023) 发现的现象：LLM 对上下文开头和末尾关注度高，中间部分容易被忽略。影响长上下文中关键信息的放置策略。 |
 | 上下文隔离        | Context Isolation                   | 让 Sub Agent 在独立的上下文中运行，使其推理不被主 Agent 的历史干扰，主 Agent 的窗口也不被子任务细节撑满。    |
 | 上下文摘要        | Context Summarization               | 将长上下文压缩为要点后回传，在信息保留和窗口空间之间取平衡。                                                 |
+| 结构分段          | Structural Segmentation             | 把规则、背景材料、当前任务、工具结果分开摆放，减少模型把不同类型的信息混成一团。                             |
 | 上下文污染        | Context Pollution                   | 无关或噪声信息累积导致模型推理质量下降。                                                                     |
 | 信噪比            | Signal-to-Noise Ratio (SNR)         | 上下文中有效信息与噪声的比例。信噪比越高，模型越容易做出稳定判断。                                           |
 | 上下文供给链      | Context Supply Chain                | 从任务目标到系统指令、工具能力、执行结果的完整上下文供给路径。                                                |

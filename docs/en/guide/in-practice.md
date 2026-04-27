@@ -210,6 +210,10 @@ Last came the step that makes the lesson stick: write "after modifying Mermaid o
 
 DoD gives "done" a standard, not a feeling. Failure feedback lifts lessons out of a single conversation and makes them a reference for future sessions and relevant agents. Human review rhythm decides which step to pause on and which to let run. The three run together—not one after another.
 
+Take one more step and a good rule stops being a vague requirement list.
+
+It separates task boundaries, judgment criteria, and verification signals. Then the agent isn't reading a blob of "figure it out" instructions. It's reading a workflow it can execute, check, and report back on.
+
 ## People — More Process Corrections Than Content Corrections
 
 > Related concepts: [Human-in-the-Loop](/en/guide/human-in-the-loop), [The Triangle](/en/guide/actors)
